@@ -1,0 +1,15 @@
+<h1>Update Translations</h1>
+
+<!-- render-jinja -->
+<!-- no-sidebar -->
+{% set data = frappe.get_attr("translator.translator.doctype.language.language.get_data")() %}
+
+<h2>{{ data.language_name }}</h2>
+
+{% for message in data.messages %}
+<div class="row">
+	<div class="col-sm-5">{{ message.source }}</div>
+	<div class="col-sm-6">{{ message.translated }}</div>
+	<div class="col-sm-1"><span class="label label-{{ "success" if message.verified else "danger" }}">{{ message.verfied or 0 }}</span></div>
+</div>
+{% endfor %}

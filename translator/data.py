@@ -4,6 +4,8 @@
 from __future__ import unicode_literals
 import frappe, os
 
+from frappe.translate import read_csv_file
+
 def import_languages():
 	with open(frappe.get_app_path("frappe", "data", "languages.txt"), "r") as f:
 		for l in unicode(f.read(), "utf-8").splitlines():
@@ -24,8 +26,24 @@ def import_translations():
 	for app in os.listdir(apps_path):
 		translations_folder = os.path.join(apps_path, app, app, "translations")
 		if os.path.exists(translations_folder):
-			for l in frappe.db.sql_list("select name from tabLangauges"):
-				pass
+			for lang in frappe.db.sql_list("select name from tabLanguage"):
+				path = os.path.join(translations_folder, lang + ".csv")
+				if os.path.exists(path):
+					print "Evaluating {0}...".format(lang)
+					data = read_csv_file(path)
+					for m in data:
+						if not frappe.db.get_value("Translated Message",
+							{"language": lang, "source": m[0]}):
+							frappe.get_doc({
+								"doctype": "Translated Message",
+								"language": lang,
+								"source": m[0],
+								"translated": m[1],
+								"verfied": 0
+							}).insert()
+							frappe.db.commit()
+				else:
+					print path + " does not exist"
 
 
 def export_translations():
