@@ -23,7 +23,7 @@ def get_data():
 	lang = frappe.get_doc("Language", frappe.form_dict.lang)
 	data = {
 		"language_name": lang.language_name,
-		"messages": frappe.db.sql("""select name, source, translated, verified
+		"messages": frappe.db.sql("""select name, source, translated, verified, modified
 			from `tabTranslated Message`
 			where language = %s order by source""", lang.name, as_dict=True)
 	}

@@ -1,15 +1,43 @@
-<h1>Update Translations</h1>
-
 <!-- render-jinja -->
 <!-- no-sidebar -->
 {% set data = frappe.get_attr("translator.translator.doctype.language.language.get_data")() %}
+{% set karma = frappe.db.get_value("User", frappe.session.user, "karma") or 0 %}
 
-<h2>{{ data.language_name }}</h2>
+<script>
+window.language_name = "{{ data.language_name }}";
+window.user_karma = {{ karma }};
+</script>
+
+{% if frappe.session.user == "Guest" %}
+<div class="alert alert-info">You must <a href="/login">login</a> to edit translations</div>
+{% else %}
+<div class="alert alert-info">Please edit or verify translations. You have karma {{ karma }}!</div>
+<div class="row">
+	<div class="col-sm-5"></div>
+	<div class="col-sm-5"><p class="text-muted">Click on the message to edit</p></div>
+</div>
+{% endif %}
 
 {% for message in data.messages %}
-<div class="row">
-	<div class="col-sm-5">{{ message.source }}</div>
-	<div class="col-sm-6">{{ message.translated }}</div>
-	<div class="col-sm-1"><span class="label label-{{ "success" if message.verified else "danger" }}">{{ message.verfied or 0 }}</span></div>
+{% if "<" not in message.source %}
+<div class="row" style="margin-bottom: 7px; padding-bottom: 7px;
+	border-bottom: 1px solid #f2f2f2;">
+	<div class="col-sm-5">{{ message.source }}
+		<br><span class="text-muted small message-ts"
+			data-timestamp="{{ message.modified }}"></span></div>
+	<div class="col-sm-5 translated"
+		data-message-id="{{ message.name }}"
+		data-verified="{{ message.verified or 0 }}">
+		{{ message.translated }}</div>
+	<div class="col-sm-2">
+		{% if frappe.session.user != "Guest" %}
+		<button
+			class="btn btn-small btn-verify
+				btn-{{ "success" if message.verified else "danger" }}"
+			data-message-id="{{ message.name }}"
+			data-verified="{{ message.verified or 0 }}"
+			>Verify ({{ message.verified or 0 }})</button>{% endif %}
+	</div>
 </div>
+{% endif %}
 {% endfor %}

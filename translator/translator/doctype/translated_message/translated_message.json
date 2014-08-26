@@ -82,6 +82,12 @@
    "reqd": 0, 
    "search_index": 0, 
    "set_only_once": 0
+  }, 
+  {
+   "fieldname": "suggestion", 
+   "fieldtype": "Text", 
+   "label": "Suggestion", 
+   "permlevel": 0
   }
  ], 
  "hide_heading": 0, 
@@ -92,7 +98,7 @@
  "is_submittable": 0, 
  "issingle": 0, 
  "istable": 0, 
- "modified": "2014-08-25 15:55:11.956620", 
+ "modified": "2014-08-26 16:16:05.266788", 
  "modified_by": "Administrator", 
  "module": "Translator", 
  "name": "Translated Message", 

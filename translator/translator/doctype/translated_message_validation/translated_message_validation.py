@@ -13,15 +13,16 @@ class TranslatedMessageValidation(Document):
 			frappe.throw(_("You have already verifed"))
 
 	def after_insert(self):
-		frappe.db.sql("""update `tabTranslation Message`
-			set verified = ifnull(verified, 0) + 1""")
+		frappe.db.sql("""update `tabTranslated Message`
+			set verified = ifnull(verified, 0) + 1 where name=%s""", self.message)
+
+		user = frappe.db.get_value("Translated Message", self.message, "modified_by")
+		if user==frappe.session.user:
+			frappe.throw("You can't verify your own edits!")
+		if user != "Administrator":
+			frappe.db.sql("""update `tabUser`
+				set karma = ifnull(karma, 0) + 1 where name=%s""", user)
 
 		frappe.cache().delete_value("lang-data:" + frappe.db.get_value("Translated Message",
 			self.message, "language"))
 
-@frappe.whitelist()
-def validate(message):
-	frappe.db.get_doc({
-		"doctype": "Translated Message Validation",
-		"message": message
-	}).insert()

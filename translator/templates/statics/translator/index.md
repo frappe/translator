@@ -4,6 +4,7 @@
 <!-- no-sidebar -->
 <div class="lang-list" style="max-width: 700px;">
 	{% for lang in frappe.db.sql("""select * from tabLanguage order by name asc""", as_dict=True) %}
+	{% if lang.name != "en" %}
 	{% set info = frappe.get_attr("translator.translator.doctype.language.language.get_info")(lang.name) %}
 	{% set percent = info.verified * 100 / (info.total + 1) %}
 	<div class="lang row">
@@ -24,5 +25,6 @@
 				>{{ info.verified }} verified of {{ info.total }}</p>
 		</div>
 	</div>
+	{% endif %}
 	{% endfor %}
 </div>

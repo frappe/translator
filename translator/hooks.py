@@ -10,6 +10,8 @@ app_version = "0.0.1"
 
 clear_cache = "translator.translator.doctype.language.language.clear_cache"
 
+fixtures = ["Custom Field"]
+
 # Includes in <head>
 # ------------------
 
@@ -19,7 +21,7 @@ clear_cache = "translator.translator.doctype.language.language.clear_cache"
 
 # include js, css files in header of web template
 # web_include_css = "/assets/translator/css/translator.css"
-# web_include_js = "/assets/translator/js/translator.js"
+web_include_js = "/assets/translator/js/translator.js"
 
 # Home Pages
 # ----------
