@@ -8,8 +8,37 @@ window.language_name = "{{ data.language_name }}";
 window.user_karma = {{ karma }};
 </script>
 
+<ul class="pagination">
+  <li data-char="A"><a href="/translator/view?c=A&lang={{ frappe.form_dict.lang }}">A</a></li>
+  <li data-char="B"><a href="/translator/view?c=B&lang={{ frappe.form_dict.lang }}">B</a></li>
+  <li data-char="C"><a href="/translator/view?c=C&lang={{ frappe.form_dict.lang }}">C</a></li>
+  <li data-char="D"><a href="/translator/view?c=D&lang={{ frappe.form_dict.lang }}">D</a></li>
+  <li data-char="E"><a href="/translator/view?c=E&lang={{ frappe.form_dict.lang }}">E</a></li>
+  <li data-char="F"><a href="/translator/view?c=F&lang={{ frappe.form_dict.lang }}">F</a></li>
+  <li data-char="G"><a href="/translator/view?c=G&lang={{ frappe.form_dict.lang }}">G</a></li>
+  <li data-char="H"><a href="/translator/view?c=H&lang={{ frappe.form_dict.lang }}">H</a></li>
+  <li data-char="I"><a href="/translator/view?c=I&lang={{ frappe.form_dict.lang }}">I</a></li>
+  <li data-char="J"><a href="/translator/view?c=J&lang={{ frappe.form_dict.lang }}">J</a></li>
+  <li data-char="K"><a href="/translator/view?c=K&lang={{ frappe.form_dict.lang }}">K</a></li>
+  <li data-char="L"><a href="/translator/view?c=L&lang={{ frappe.form_dict.lang }}">L</a></li>
+  <li data-char="M"><a href="/translator/view?c=M&lang={{ frappe.form_dict.lang }}">M</a></li>
+  <li data-char="N"><a href="/translator/view?c=N&lang={{ frappe.form_dict.lang }}">N</a></li>
+  <li data-char="O"><a href="/translator/view?c=O&lang={{ frappe.form_dict.lang }}">O</a></li>
+  <li data-char="P"><a href="/translator/view?c=P&lang={{ frappe.form_dict.lang }}">P</a></li>
+  <li data-char="Q"><a href="/translator/view?c=Q&lang={{ frappe.form_dict.lang }}">Q</a></li>
+  <li data-char="R"><a href="/translator/view?c=R&lang={{ frappe.form_dict.lang }}">R</a></li>
+  <li data-char="S"><a href="/translator/view?c=S&lang={{ frappe.form_dict.lang }}">S</a></li>
+  <li data-char="T"><a href="/translator/view?c=T&lang={{ frappe.form_dict.lang }}">T</a></li>
+  <li data-char="U"><a href="/translator/view?c=U&lang={{ frappe.form_dict.lang }}">U</a></li>
+  <li data-char="V"><a href="/translator/view?c=V&lang={{ frappe.form_dict.lang }}">V</a></li>
+  <li data-char="W"><a href="/translator/view?c=W&lang={{ frappe.form_dict.lang }}">W</a></li>
+  <li data-char="X"><a href="/translator/view?c=X&lang={{ frappe.form_dict.lang }}">X</a></li>
+  <li data-char="Y"><a href="/translator/view?c=Y&lang={{ frappe.form_dict.lang }}">Y</a></li>
+  <li data-char="Z"><a href="/translator/view?c=Z&lang={{ frappe.form_dict.lang }}">Z</a></li>
+</ul>
+
 {% if frappe.session.user == "Guest" %}
-<div class="alert alert-info">You must <a href="/login">login</a> to edit translations</div>
+<div class="alert alert-info">You must <a href="/login">login</a> to edit or verify  translations</div>
 {% else %}
 <div class="alert alert-info">Please edit or verify translations. You have karma {{ karma }}!</div>
 <div class="row">
@@ -36,7 +65,13 @@ window.user_karma = {{ karma }};
 				btn-{{ "success" if message.verified else "danger" }}"
 			data-message-id="{{ message.name }}"
 			data-verified="{{ message.verified or 0 }}"
-			>Verify ({{ message.verified or 0 }})</button>{% endif %}
+			>Verify ({{ message.verified or 0 }})</button>
+		{% else %}
+		<span
+			class="label
+				label-{{ "success" if message.verified else "danger" }}"
+			>Verfied ({{ message.verified or 0 }})</span>
+		{% endif %}
 	</div>
 </div>
 {% endif %}

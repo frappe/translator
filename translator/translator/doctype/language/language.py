@@ -25,7 +25,9 @@ def get_data():
 		"language_name": lang.language_name,
 		"messages": frappe.db.sql("""select name, source, translated, verified, modified
 			from `tabTranslated Message`
-			where language = %s order by source""", lang.name, as_dict=True)
+			where language = %s
+			and source like %s
+			order by source""", (lang.name, (frappe.form_dict.c or "A") + "%"), as_dict=True)
 	}
 	return data
 

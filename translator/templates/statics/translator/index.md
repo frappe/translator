@@ -2,6 +2,8 @@
 
 <!-- render-jinja -->
 <!-- no-sidebar -->
+<p class="lead">Help translate ERPNext and other Frappe Apps. Click on a Language to Start</p>
+<hr>
 <div class="lang-list" style="max-width: 700px;">
 	{% for lang in frappe.db.sql("""select * from tabLanguage order by name asc""", as_dict=True) %}
 	{% if lang.name != "en" %}
