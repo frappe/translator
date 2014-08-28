@@ -15,4 +15,4 @@ class TranslatedMessage(Document):
 			self.verified = 0
 
 def on_doctype_update():
-	frappe.db.add_index("Translated Message", ["language", "source"])
+	frappe.db.add_index("Translated Message", ["language", "source(10)"])
