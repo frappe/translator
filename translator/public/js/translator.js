@@ -97,6 +97,7 @@ $(document).ready(function() {
 frappe.ready(function() {
 	if(location.pathname=="/translator/view") {
 		$(".page-header h2").html("Translate " + window.language_name);
+		document.title = "Translate " + window.language_name;
 		$("[data-char='"+(get_url_arg("c") || "A")+"']").addClass("active");
 	}
 

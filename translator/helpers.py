@@ -12,4 +12,4 @@ def verify(message):
 def update(message, translated):
 	message = frappe.get_doc("Translated Message", message)
 	message.translated = translated
-	message.save()
+	message.save(ignore_permissions=1)
