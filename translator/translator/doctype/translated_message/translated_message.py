@@ -13,3 +13,6 @@ class TranslatedMessage(Document):
 				frappe.throw(_("Only user with more than 100 karma can edit verified translations"))
 
 			self.verified = 0
+
+def on_doctype_update():
+	frappe.db.add_index("Translated Message", ["language", "source"])
