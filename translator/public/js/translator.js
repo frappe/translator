@@ -32,6 +32,11 @@ var translator = {
 
 	},
 	activate: function($div) {
+		if(getCookie("sid")==="Guest") {
+			frappe.msgprint("Please <a href='/login'>login</a> to edit / verify");
+			return;
+		}
+
 		if($div.hasClass("active"))
 			return;
 
