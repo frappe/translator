@@ -51,7 +51,9 @@ window.lang = "{{ frappe.form_dict.lang }}";
 				class="icon-flag text-warning {{ '' if message.flagged else 'hide' }}"></i>
 		</div>
 		<div class="text-muted small">
-			<span class="message-ts" data-timestamp="{{ message.modified }}"></span>
+			<span class="message-ts" data-timestamp="{{ message.modified }}">
+				{{ message.modified }}
+			</span>
 			by {{ (message.first_name or "") + " " + (message.last_name or "") }}
 		</div>
 	</div>

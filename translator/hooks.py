@@ -79,7 +79,7 @@ web_include_js = "/assets/translator/js/translator.js"
 # Scheduled Tasks
 # ---------------
 
-# scheduler_events = {
+scheduler_events = {
 # 	"all": [
 # 		"translator.tasks.all"
 # 	],
@@ -89,13 +89,13 @@ web_include_js = "/assets/translator/js/translator.js"
 # 	"hourly": [
 # 		"translator.tasks.hourly"
 # 	],
-# 	"weekly": [
-# 		"translator.tasks.weekly"
-# 	]
+	"weekly": [
+		"translator.helpers.weekly_updates"
+	]
 # 	"monthly": [
 # 		"translator.tasks.monthly"
 # 	]
-# }
+}
 
 # Testing
 # -------

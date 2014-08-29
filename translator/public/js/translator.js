@@ -1,3 +1,28 @@
+$(document).ready(function() {
+	$("body").on("click", ".translated", function(e) {
+		translator.activate($(this));
+	});
+
+	$("body").on("click", ".btn-verify", function() {
+		translator.verify($(this));
+	});
+});
+
+frappe.ready(function() {
+	if(location.pathname=="/translator/view") {
+		$(".page-header h2").html("Translate " + window.language_name);
+		document.title = "Translate " + window.language_name;
+		$("[data-char='"+(get_url_arg("c") || "A")+"']").addClass("active");
+	}
+
+	$(".message-ts").each(function() {
+		var ts = $(this).attr("data-timestamp");
+		$(this).html("Last Updated: "
+		 + (comment_when(ts) || ts));
+	});
+});
+
+
 var translator = {
 	remove: function(cancel) {
 		var $txt = $(".edit-value"),
@@ -117,26 +142,3 @@ var translator = {
 	}
 }
 
-$(document).ready(function() {
-	$("body").on("click", ".translated", function(e) {
-		translator.activate($(this));
-	});
-
-	$("body").on("click", ".btn-verify", function() {
-		translator.verify($(this));
-	});
-});
-
-frappe.ready(function() {
-	if(location.pathname=="/translator/view") {
-		$(".page-header h2").html("Translate " + window.language_name);
-		document.title = "Translate " + window.language_name;
-		$("[data-char='"+(get_url_arg("c") || "A")+"']").addClass("active");
-	}
-
-	$(".message-ts").each(function() {
-		var ts = $(this).attr("data-timestamp");
-		$(this).html("Last Updated: "
-		 + (comment_when(ts) || ts));
-	});
-});
