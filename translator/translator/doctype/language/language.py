@@ -19,18 +19,6 @@ def get_info(lang):
 
 	return frappe.cache().get_value("lang-data:" + lang, _get)
 
-def get_data():
-	lang = frappe.get_doc("Language", frappe.form_dict.lang)
-	data = {
-		"language_name": lang.language_name,
-		"messages": frappe.db.sql("""select name, source, translated, verified, modified
-			from `tabTranslated Message`
-			where language = %s
-			and source like %s
-			order by source""", (lang.name, (frappe.form_dict.c or "A") + "%"), as_dict=True)
-	}
-	return data
-
 def clear_cache():
 	for lang in frappe.db.sql_list("select name from tabLanguage"):
 		frappe.cache().delete_value("lang-data:" + lang)

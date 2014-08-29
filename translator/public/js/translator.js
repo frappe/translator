@@ -20,7 +20,7 @@ var translator = {
 		frappe.call({
 			method: "translator.helpers.update",
 			args: {
-				message: $txt.parent().attr("data-message-id"),
+				message: $txt.parents(".row:first").attr("data-message-id"),
 				translated: val
 			},
 			callback: function(data) {
@@ -65,14 +65,28 @@ var translator = {
 				.css({"margin-left": "5px"})
 				.on("click", function() {
 					translator.remove();
+				}),
+
+			// report
+			$p1 = $('<p style="margin-top: 5px;"></p>').appendTo($me),
+			$check = $('<div class="checkbox">\
+				<label class="text-muted"><input type="checkbox"> This message is badly framed in English.</label></div>')
+				.appendTo($p1)
+				.change(function() {
+					translator.report($(this).parents(".row:first"), $(this).prop("checked"));
 				});
+
+
+		if(window.lang=="ar") {
+			$txt.addClass('text-right');
+		}
 
 	},
 	verify: function($btn) {
 		frappe.call({
 			method: "translator.helpers.verify",
 			args: {
-				message: $btn.attr("data-message-id")
+				message: $btn.parents(".row:first").attr("data-message-id")
 			},
 			callback: function(data) {
 				if(!data.exc) {
@@ -86,6 +100,20 @@ var translator = {
 			}
 		});
 
+	},
+	report: function($row, value) {
+		frappe.call({
+			method: "translator.helpers.report",
+			args: {
+				message: $row.attr("data-message-id"),
+				value: value ? 1 : 0,
+			},
+			callback: function(data) {
+				if(!data.exc) {
+					$row.find(".icon-flag").toggleClass("hide", value);
+				}
+			}
+		});
 	}
 }
 

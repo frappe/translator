@@ -13,3 +13,9 @@ def update(message, translated):
 	message = frappe.get_doc("Translated Message", message)
 	message.translated = translated
 	message.save(ignore_permissions=1)
+
+@frappe.whitelist()
+def report(message, value):
+	message = frappe.get_doc("Translated Message", message)
+	message.flagged = value
+	message.save(ignore_permissions=1)
