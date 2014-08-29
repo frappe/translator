@@ -16,7 +16,7 @@ def get_info(lang):
 			"verified": frappe.db.sql("""select count(*) from `tabTranslated Message`
 				where language=%s and verified > 0""", lang)[0][0],
 			"edited": frappe.db.sql("""select count(*) from `tabTranslated Message`
-				where modified_by != 'Administrator'""", lang)[0][0],
+				where language=%s and modified_by != 'Administrator'""", lang)[0][0],
 		}
 
 	return frappe.cache().get_value("lang-data:" + lang, _get)
