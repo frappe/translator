@@ -24,16 +24,18 @@ window.lang = "{{ frappe.form_dict.lang }}";
 </ul>
 
 {% if frappe.session.user == "Guest" %}
-<div class="alert alert-info">You must <a href="/login">login</a> to edit or verify  translations</div>
+<div class="alert alert-info">
+	You must <a href="/login">login</a> to edit or verify  translations
+</div>
 {% else %}
-<div class="alert alert-info">Please edit or verify translations. You have karma {{ karma }}!</div>
-<p>
+<div class="alert alert-info">
+	Please edit or verify translations. You have karma {{ karma }}!
+</div>
 <ol>
 	<li>Click on the message to edit. </li>
 	<li>For help, comments, <a href="https://github.com/frappe/translator/issues" target="_blank">please use GitHub Issues</a>. </li>
 	<li>You get a karma point every time someone upvotes your edit. </li>
 </ol>
-</p>
 <hr>
 {% endif %}
 
