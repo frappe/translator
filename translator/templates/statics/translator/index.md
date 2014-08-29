@@ -8,7 +8,7 @@
 	{% for lang in frappe.db.sql("""select * from tabLanguage order by name asc""", as_dict=True) %}
 	{% if lang.name != "en" %}
 	{% set info = frappe.get_attr("translator.translator.doctype.language.language.get_info")(lang.name) %}
-	{% set percent = info.verified * 100 / (info.total + 1) %}
+	{% set verified = info.verified * 100 / (info.total + 1) %}
 	<div class="lang row">
 		<div class="col-sm-1">
 			{{ lang.name }}
@@ -24,7 +24,7 @@
 				</div>
 			</div>
 			<p class="small text-muted" style="margin-top: -20px"
-				>{{ info.verified }} verified of {{ info.total }}</p>
+				>{{ info.edited or 0 }} messages edited. {{ info.verified }} verified of {{ info.total }}</p>
 		</div>
 	</div>
 	{% endif %}
