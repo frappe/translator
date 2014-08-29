@@ -135,6 +135,8 @@ frappe.ready(function() {
 	}
 
 	$(".message-ts").each(function() {
-		$(this).html("Last Updated: " +comment_when($(this).attr("data-timestamp")));
+		var ts = $(this).attr("data-timestamp");
+		$(this).html("Last Updated: "
+		 + (comment_when(ts) || ts));
 	});
 });
