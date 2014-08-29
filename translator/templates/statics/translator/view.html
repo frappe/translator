@@ -73,6 +73,9 @@ window.lang = "{{ frappe.form_dict.lang }}";
 				label-{{ "success" if message.verified else "danger" }}"
 			>Verfied ({{ message.verified or 0 }})</span>
 		{% endif %}
+		{% if message.modified_by != "Administrator" %}
+		<i class="icon-plus" title="Edited"></i>
+		{% endif %}
 	</div>
 </div>
 {% endif %}
