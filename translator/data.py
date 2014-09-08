@@ -47,10 +47,11 @@ def import_translations():
 
 
 def export_translations():
-	for lang in get_all_languages:
-		print "exporting " + lang
-		full_dict = dict(frappe.db.sql("""select source, translated
-			from `tabTranslated Message` where language=%s""", lang))
-		for app in frappe.get_all_apps(True):
-			write_translations_file(app, lang, full_dict)
+	for lang in get_all_languages():
+		if lang!="en":
+			print "exporting " + lang
+			full_dict = dict(frappe.db.sql("""select source, translated
+				from `tabTranslated Message` where language=%s""", lang))
+			for app in frappe.get_all_apps(True):
+				write_translations_file(app, lang, full_dict, sorted(full_dict.keys()))
 
