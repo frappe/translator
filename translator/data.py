@@ -56,6 +56,10 @@ def export_translations():
 				path = os.path.join(frappe.get_app_path(app, "translations", lang + ".csv"))
 				if os.path.exists(path):
 					# only update existing strings
-					cleaned = dict([item for item in dict(read_csv_file(path)).iteritems() if item[1]])
-					write_translations_file(app, lang, full_dict, sorted(cleaned.keys()))
+					cleaned = dict(read_csv_file(path))
+
+					for key in cleaned:
+						cleaned[key] = full_dict.get(key) or cleaned[key]
+
+					write_translations_file(app, lang, cleaned, sorted(cleaned.keys()))
 
