@@ -5,7 +5,6 @@ from __future__ import unicode_literals
 import frappe, os
 
 from frappe.translate import read_csv_file, get_all_languages, write_translations_file
-from frappe.utils.csvutils import read_csv_content
 
 def import_languages():
 	with open(frappe.get_app_path("frappe", "data", "languages.txt"), "r") as f:
@@ -57,8 +56,7 @@ def export_translations():
 				path = os.path.join(frappe.get_app_path(app, "translations", lang + ".csv"))
 				if os.path.exists(path):
 					# only update existing strings
-					with open(path, "r") as f:
-						current = dict(read_csv_content(f.read()))
+					current = dict(read_csv_file(path))
 
 					for key in current:
 						current[key] = edited.get(key) or current[key]
