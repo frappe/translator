@@ -5,6 +5,7 @@ from __future__ import unicode_literals
 import frappe, os
 
 from frappe.translate import read_csv_file, get_all_languages, write_translations_file
+from frappe.utils.csvutils import read_csv_content
 
 def import_languages():
 	with open(frappe.get_app_path("frappe", "data", "languages.txt"), "r") as f:
@@ -50,16 +51,16 @@ def export_translations():
 	for lang in get_all_languages():
 		if lang!="en":
 			print "exporting " + lang
-			full_dict = dict(frappe.db.sql("""select source, translated
+			edited = dict(frappe.db.sql("""select source, translated
 				from `tabTranslated Message` where language=%s""", lang))
 			for app in frappe.get_all_apps(True):
 				path = os.path.join(frappe.get_app_path(app, "translations", lang + ".csv"))
 				if os.path.exists(path):
 					# only update existing strings
-					cleaned = dict(read_csv_file(path))
+					current = dict(read_csv_content(path))
 
-					for key in cleaned:
-						cleaned[key] = full_dict.get(key) or cleaned[key]
+					for key in current:
+						current[key] = edited.get(key) or current[key]
 
-					write_translations_file(app, lang, cleaned, sorted(cleaned.keys()))
+					write_translations_file(app, lang, current, sorted(current.keys()))
 
