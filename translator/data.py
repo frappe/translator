@@ -53,5 +53,9 @@ def export_translations():
 			full_dict = dict(frappe.db.sql("""select source, translated
 				from `tabTranslated Message` where language=%s""", lang))
 			for app in frappe.get_all_apps(True):
-				write_translations_file(app, lang, full_dict, sorted(full_dict.keys()))
+				path = os.path.join(frappe.get_app_path(app, "translations", lang + ".csv"))
+				if os.path.exists(path):
+					# only update existing strings
+					cleaned = dict([item for item in dict(read_csv_file(path)).iteritems() if item[1]])
+					write_translations_file(app, lang, full_dict, sorted(cleaned.keys()))
 
