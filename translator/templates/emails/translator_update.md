@@ -1,8 +1,8 @@
-### Translation Updates!
+<h4>Translation Updates!<h3>
 
-Translators,
+<p>Translators,</p>
 
-Here is a quick update of translation activity this week:
+<p>Here is a quick update of translation activity this week:</p>
 
 <table style="width: 100%" cellspacing="0px" border="1px">
 	<thead>
@@ -32,12 +32,12 @@ Here is a quick update of translation activity this week:
 			<a href="/translator/view?lang={{ lang.name }}">{{ lang.language_name }}</a>
 		</td>
 		<td>
-			{{ week.edited or 0 }} / {{ week.total }} Edited
-			<br>{{ week.veified or 0 }} / {{ week.total }} Verified
+			{{ week.edited or 0 }} Edited
+			<br>{{ week.verified or 0 }} Verified
 		</td>
 		<td>
-			{{ info.edited or 0 }} / {{ info.total }} Edited
-			<br>{{ info.veified or 0 }} / {{ info.total }} Verified
+			{{ info.edited or 0 }}
+			<br>{{ info.verified or 0 }}
 		</td>
 	</tr>
 	{% endif %}

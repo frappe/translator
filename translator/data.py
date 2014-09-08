@@ -4,7 +4,7 @@
 from __future__ import unicode_literals
 import frappe, os
 
-from frappe.translate import read_csv_file
+from frappe.translate import read_csv_file, get_all_languages, write_translations_file
 
 def import_languages():
 	with open(frappe.get_app_path("frappe", "data", "languages.txt"), "r") as f:
@@ -47,4 +47,10 @@ def import_translations():
 
 
 def export_translations():
-	pass
+	for lang in get_all_languages:
+		print "exporting " + lang
+		full_dict = dict(frappe.db.sql("""select source, translated
+			from `tabTranslated Message` where language=%s""", lang))
+		for app in frappe.get_all_apps(True):
+			write_translations_file(app, lang, full_dict)
+
