@@ -57,7 +57,8 @@ def export_translations():
 				path = os.path.join(frappe.get_app_path(app, "translations", lang + ".csv"))
 				if os.path.exists(path):
 					# only update existing strings
-					current = dict(read_csv_content(path))
+					with open(path, "r") as f:
+						current = dict(read_csv_content(f.read()))
 
 					for key in current:
 						current[key] = edited.get(key) or current[key]
