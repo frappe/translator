@@ -57,11 +57,11 @@ web_include_js = "/assets/translator/js/translator.js"
 # Permissions evaluated in scripted ways
 
 # permission_query_conditions = {
-# 	"Event": "frappe.core.doctype.event.event.get_permission_query_conditions",
+# 	"Event": "frappe.desk.doctype.event.event.get_permission_query_conditions",
 # }
 #
 # has_permission = {
-# 	"Event": "frappe.core.doctype.event.event.has_permission",
+# 	"Event": "frappe.desk.doctype.event.event.has_permission",
 # }
 
 # Document Events
@@ -106,6 +106,6 @@ scheduler_events = {
 # ------------------------------
 #
 # override_whitelisted_methods = {
-# 	"frappe.core.doctype.event.event.get_events": "translator.event.get_events"
+# 	"frappe.desk.doctype.event.event.get_events": "translator.event.get_events"
 # }
 

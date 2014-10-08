@@ -1,4 +1,4 @@
-<h4>Translation Updates!<h3>
+<h4>Translation Updates!</h4>
 
 <p>Translators,</p>
 
