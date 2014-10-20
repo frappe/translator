@@ -7,7 +7,7 @@
 <div class="lang-list" style="max-width: 700px;">
 	{% for lang in frappe.get_all("Language", fields=["*"], order_by = "name asc") %}
 	{% if lang.name != "en" %}
-	{% set info = frappe.get_attr("translator.helpers.get_info")(lang.name) %}
+	{% set info = get_info(lang.name) %}
 	{% set percent = info.verified * 100 / (info.total + 1) %}
 	<div class="lang row">
 		<div class="col-sm-1">
