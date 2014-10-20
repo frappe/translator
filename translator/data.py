@@ -47,6 +47,7 @@ def import_translations():
 
 
 def export_translations():
+	# ssh -p 9999 frappe@frappe.io "cd /home/frappe/frappe-bench/apps/frappe && git diff" | patch -p1
 	for lang in get_all_languages():
 		if lang!="en":
 			print "exporting " + lang

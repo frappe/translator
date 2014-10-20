@@ -1,13 +1,7 @@
 <!-- render-jinja -->
 <!-- no-sidebar -->
 {% set lang = frappe.get_doc("Language", frappe.form_dict.lang) %}
-{% set messages = frappe.db.sql("""select t1.name, t1.source, t1.translated, t1.verified,
-	t1.flagged, t1.modified, t1.modified_by, t2.first_name, t2.last_name
-	from `tabTranslated Message` t1, tabUser t2
-	where t1.language = %s and t1.source like %s and t2.name = t1.modified_by
-	order by t1.source""", (lang.name, (frappe.form_dict.c or "A") + "%"), as_dict=True)
-%}
-{% set karma = frappe.db.get_value("User", frappe.session.user, "karma") or 0 %}
+{% set karma = frappe.db.get_value("User", frappe.user, "karma") or 0 %}
 
 <script>
 window.language_name = "{{ lang.language_name }}";
@@ -23,7 +17,7 @@ window.lang = "{{ frappe.form_dict.lang }}";
 {% endfor %}
 </ul>
 
-{% if frappe.session.user == "Guest" %}
+{% if frappe.user == "Guest" %}
 <div class="alert alert-info">
 	You must <a href="/login">login</a> to edit or verify  translations
 </div>
@@ -63,7 +57,7 @@ window.lang = "{{ frappe.form_dict.lang }}";
 		{{ message.translated }}
 	</div>
 	<div class="col-sm-2">
-		{% if frappe.session.user != "Guest" %}
+		{% if frappe.user != "Guest" %}
 		<button
 			class="btn btn-small btn-verify
 				btn-{{ "success" if message.verified else "danger" }}"
