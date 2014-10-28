@@ -6,3 +6,8 @@ def get_context(context):
 	from `tabTranslated Message` t1, tabUser t2
 	where t1.language = %s and t1.source like %s and t2.name = t1.modified_by
 	order by t1.source""", (frappe.form_dict.lang, (frappe.form_dict.c or "A") + "%"), as_dict=True)
+
+	context.parents = [
+		{"title": "Community", "name":"community"},
+		{"title": "Languages", "name":"translator"}
+	]
