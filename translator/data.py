@@ -64,3 +64,17 @@ def export_translations():
 
 					write_translations_file(app, lang, current, sorted(current.keys()))
 
+def import_translations_from_file(lang, fname, editor):
+	from frappe.translate import read_csv_file
+
+	frappe.local.session.user = editor
+
+	for m in read_csv_file(fname):
+		src = frappe.db.get_value("Translated Message", {"language": lang, "source": m[0]}, ["name", "source", "translated"])
+		if src and src[2] != m[1]:
+			message = frappe.get_doc("Translated Message")
+			message.translated = m[1]
+			message.save()
+
+			print src + " updated"
+
