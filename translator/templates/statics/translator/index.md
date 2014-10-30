@@ -5,7 +5,7 @@
 <p class="lead">Help translate ERPNext and other Frappe Apps. Click on a Language to Start</p>
 <hr>
 <div class="lang-list" style="max-width: 700px;">
-	{% for lang in frappe.get_all("Language", fields=["*"], order_by = "name asc") %}
+	{% for lang in frappe.get_all("Language", fields=["*"], order_by = "name asc", limit_page_length=1000) %}
 	{% if lang.name != "en" %}
 	{% set info = get_info(lang.name) %}
 	{% set percent = info.verified * 100 / (info.total + 1) %}

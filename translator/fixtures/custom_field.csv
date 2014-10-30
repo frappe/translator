@@ -11,11 +11,11 @@
 "For updating, you can update only selective columns."
 "You can only upload upto 5000 records in one go. (may be less in some cases)"
 ""
-"DocType:","Custom Field","","","","","","","","","","","","","","","","","","","","",""
-"Column Labels:","ID","Document","Field Type","Label","Insert After","Options","Field Description","Fieldname","Permission Level","Is Mandatory Field","Read Only","Ignore User Permissions","Width","Default Value","Hidden","Depends On","Print Hide","No Copy","Allow on Submit","In Report Filter","In List View","Report Hide"
-"Column Name:","name","dt","fieldtype","label","insert_after","options","description","fieldname","permlevel","reqd","read_only","ignore_user_permissions","width","default","hidden","depends_on","print_hide","no_copy","allow_on_submit","in_filter","in_list_view","report_hide"
-"Mandatory:","Yes","Yes","Yes","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No"
-"Type:","Data (text)","Link","Select","Data","Select","Text","Text","Data","Int","Check","Check","Check","Data","Text","Check","Data","Check","Check","Check","Check","Check","Check"
-"Info:","","Valid DocType","One of: Button, Check, Code, Column Break, Currency, Data, Date, Datetime, Dynamic Link, Float, HTML, Image, Int, Link, Long Text, Password, Percent, Read Only, Section Break, Select, Small Text, Table, Text, Text Editor, Time","","","","","","Integer","0 or 1","0 or 1","0 or 1","","","0 or 1","","0 or 1","0 or 1","0 or 1","0 or 1","0 or 1","0 or 1"
+"DocType:","Custom Field","","","","","","","","","","","","","","","","","","","","","","",""
+"Column Labels:","ID","Document","Field Type","Label","Insert After","Precision","Options","Field Description","Fieldname","Permission Level","Is Mandatory Field","Unique","Read Only","Ignore User Permissions","Width","Default Value","Hidden","Depends On","Print Hide","No Copy","Allow on Submit","In Report Filter","In List View","Report Hide"
+"Column Name:","name","dt","fieldtype","label","insert_after","precision","options","description","fieldname","permlevel","reqd","unique","read_only","ignore_user_permissions","width","default","hidden","depends_on","print_hide","no_copy","allow_on_submit","in_filter","in_list_view","report_hide"
+"Mandatory:","Yes","Yes","Yes","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No","No"
+"Type:","Data (text)","Link","Select","Data","Select","Select","Text","Text","Data","Int","Check","Check","Check","Check","Data","Text","Check","Data","Check","Check","Check","Check","Check","Check"
+"Info:","","Valid DocType","One of: Button, Check, Code, Column Break, Currency, Data, Date, Datetime, Dynamic Link, Float, HTML, Image, Int, Link, Long Text, Password, Percent, Read Only, Section Break, Select, Small Text, Table, Text, Text Editor, Time","","","One of: 1, 2, 3, 4, 5, 6","","","","Integer","0 or 1","0 or 1","0 or 1","0 or 1","","","0 or 1","","0 or 1","0 or 1","0 or 1","0 or 1","0 or 1","0 or 1"
 "Start entering data below this line"
-"","""User-karma""","User","Int","Karma","github_username","","","karma",0,0,0,0,"","0",0,"",0,0,0,0,0,0
+"","""User-karma""","User","Int","Karma","github_username","","","","karma",0,0,"",0,0,"","0",0,"",0,0,0,0,0,0

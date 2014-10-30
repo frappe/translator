@@ -72,9 +72,12 @@ def import_translations_from_file(lang, fname, editor):
 	for m in read_csv_file(fname):
 		src = frappe.db.get_value("Translated Message", {"language": lang, "source": m[0]}, ["name", "source", "translated"])
 		if src and src[2] != m[1]:
-			message = frappe.get_doc("Translated Message")
+			message = frappe.get_doc("Translated Message", src[0])
 			message.translated = m[1]
-			message.save()
-
-			print src + " updated"
+			try:
+				message.save()
+				frappe.db.commit()
+				print src[1] + " updated"
+			except frappe.ValidationError:
+				print src[1] + " ignored"
 
