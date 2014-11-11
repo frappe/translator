@@ -1,6 +1,6 @@
 # Translation Portal
 
-<!-- render-jinja -->
+<!-- jinja -->
 <!-- no-sidebar -->
 <p class="lead">Help translate ERPNext and other Frappe Apps. Click on a Language to Start</p>
 <hr>

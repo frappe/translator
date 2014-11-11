@@ -1,4 +1,4 @@
-<!-- render-jinja -->
+<!-- jinja -->
 <!-- no-sidebar -->
 {% set lang = frappe.get_doc("Language", frappe.form_dict.lang) %}
 {% set karma = frappe.db.get_value("User", frappe.user, "karma") or 0 %}
