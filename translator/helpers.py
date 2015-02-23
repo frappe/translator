@@ -8,8 +8,8 @@ def get_info(lang, this_week = False):
 			condition = " and modified > DATE_SUB(NOW(), INTERVAL 1 WEEK)"
 
 		return {
-			"total": frappe.db.sql("""select count(*) from `tabTranslated Message`
-				where language=%s {0}""".format(condition), lang)[0][0],
+			"total": frappe.db.sql("""select count(*) from `tabSource Message`
+				where disabled != 1""")[0][0],
 			"verified": frappe.db.sql("""select count(*) from `tabTranslated Message`
 				where language=%s and verified > 0 {0}""".format(condition), lang)[0][0],
 			"edited": frappe.db.sql("""select count(*) from `tabTranslated Message`
@@ -37,7 +37,7 @@ def update(message, translated):
 
 @frappe.whitelist()
 def report(message, value):
-	message = frappe.get_doc("Translated Message", message)
+	message = frappe.get_doc("Source Message", message)
 	message.flagged = value
 	message.save(ignore_permissions=1)
 

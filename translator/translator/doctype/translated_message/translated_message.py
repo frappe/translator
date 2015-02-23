@@ -7,6 +7,13 @@ from frappe import _
 from frappe.model.document import Document
 
 class TranslatedMessage(Document):
+	def autoname(self):
+		self.name = frappe.generate_hash()
+	
+	def before_insert(self):
+		if frappe.db.count("Translated Message", {"source": self.source, "language":self.language}):
+			raise frappe.ValidationError("Translated Message for this source message already exists")
+
 	def validate(self):
 		if self.verified > 0:
 			if frappe.db.get_value("User", frappe.session.user, "karma") < 100:

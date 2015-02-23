@@ -8,17 +8,34 @@ $(document).ready(function() {
 	});
 });
 
+function getParameterByName(name) {
+    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+        results = regex.exec(location.search);
+    return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+}
+
 frappe.ready(function() {
 	if(location.pathname=="/translator/view") {
 		$(".page-header h2").html("Translate " + window.language_name);
 		document.title = "Translate " + window.language_name;
-		$("[data-char='"+(get_url_arg("c") || "A")+"']").addClass("active");
+		$("[data-char='"+(get_url_arg("c") || "*")+"']").addClass("active");
 	}
 
 	$(".message-ts").each(function() {
 		var ts = $(this).attr("data-timestamp");
 		$(this).html("Last Updated: "
 		 + (comment_when(ts) || ts));
+	});
+
+	$("input#search-box").keyup(function(event){
+		if(event.keyCode == 13){
+			search_param = $(this).val()
+			lang = getParameterByName('lang')
+			if (search_param && lang) {
+				window.location = "/translator/view?lang="+lang+"&search="+search_param
+			}
+		}
 	});
 });
 
@@ -130,7 +147,7 @@ var translator = {
 		frappe.call({
 			method: "translator.helpers.report",
 			args: {
-				message: $row.attr("data-message-id"),
+				message: $row.attr("data-source-message-id"),
 				value: value ? 1 : 0,
 			},
 			callback: function(data) {
