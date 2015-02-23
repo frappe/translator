@@ -5,6 +5,7 @@ from __future__ import unicode_literals
 import frappe, os
 
 from frappe.translate import read_csv_file, get_all_languages, write_translations_file, get_messages_for_app
+from translator.doctype.translated_message.translated_message import get_placeholders_count
 import frappe.utils
 from csv import writer
 
@@ -143,6 +144,10 @@ def import_translated_from_text_files(untranslated_dir, translated_dir):
 			if not source:
 				print 'Cannot find source message for', s
 				continue
+
+			if not get_placeholders_count(s) == get_placeholders_count(t):
+				continue
+
 			if dest:
 				frappe.db.set_value("Translated Message", dest, "translated", restore_newlines(t))
 			else:

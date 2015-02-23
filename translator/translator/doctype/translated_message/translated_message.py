@@ -6,6 +6,8 @@ import frappe
 from frappe import _
 from frappe.model.document import Document
 
+import re
+
 class TranslatedMessage(Document):
 	def autoname(self):
 		self.name = frappe.generate_hash()
@@ -21,5 +23,12 @@ class TranslatedMessage(Document):
 
 			self.verified = 0
 
+		source_msg = frappe.db.get_value("Source Message", self.source, "message")
+		if get_placeholders_count(source_msg) != get_placeholders_count(self.translated):
+			frappe.throw(_("Number of placehodlers (eg, {0}) do not match the source message"))
+
 def on_doctype_update():
 	frappe.db.add_index("Translated Message", ["language", "source(10)"])
+
+def get_placeholders_count(message):
+	return len(re.findall("{\d}", message))

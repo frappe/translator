@@ -86,11 +86,11 @@ scheduler_events = {
 # 	"daily": [
 # 		"translator.tasks.daily"
 # 	],
-# 	"hourly": [
-# 		"translator.tasks.hourly"
-# 	],
+	"hourly": [
+		"translator.tasks.hourly"
+	],
 	"weekly": [
-		"translator.helpers.weekly_updates"
+		"translator.data.write_csv_for_all_languages"
 	]
 # 	"monthly": [
 # 		"translator.tasks.monthly"

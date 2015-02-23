@@ -8,6 +8,14 @@ $(document).ready(function() {
 	});
 });
 
+function getNextTranslation($currentElement) {
+	var $next_node = $currentElement.closest(".row").next();
+	while (! $next_node.find(".translated[data-verified=0]").size()) {
+		$next_node = $next_node.next()
+	}
+	return $next_node.find('.translated')
+}
+
 function getParameterByName(name) {
     name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
     var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
@@ -37,6 +45,7 @@ frappe.ready(function() {
 			}
 		}
 	});
+
 });
 
 
@@ -50,7 +59,9 @@ var translator = {
 		}
 
 		if(cancel || val===$txt.attr('data-original')) {
+			var $next = getNextTranslation($txt)
 			$txt.parent().removeClass("active").html($txt.attr('data-original'));
+			$next.trigger('click')
 			return;
 		}
 
@@ -63,10 +74,13 @@ var translator = {
 			method: "translator.helpers.update",
 			args: {
 				message: $txt.parents(".row:first").attr("data-message-id"),
+				source: $txt.parents(".row:first").attr("data-source-message-id"),
+				language: window.lang,
 				translated: val
 			},
 			callback: function(data) {
 				if(!data.exc) {
+					getNextTranslation($txt).trigger('click')
 					$txt.parent().removeClass("active").html(val);
 				}
 			}
@@ -97,9 +111,9 @@ var translator = {
 				.attr('data-original', content)
 				.focus(),
 			$p = $('<p class="text-right" style="margin-top: 5px;"></p>').appendTo($me),
-			$cancel = $('<button class="btn btn-default btn-small">Cancel</button>')
+			$cancel = $('<button class="btn btn-default btn-small">Next</button>')
 				.appendTo($p)
-				.on("click", function() {
+				.on("click", function(e) {
 					translator.remove(true);
 				});
 			$update = $('<button class="btn btn-primary btn-small">Update</button>')
