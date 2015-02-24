@@ -56,7 +56,18 @@ frappe.ready(function() {
 
 
 var translator = {
-	remove: function(cancel) {
+	next: function($next) {
+		var $txt = $(".edit-value")
+		if (!$next) {
+			$next = getNextTranslation($txt)
+		}
+		$next.trigger('click')
+	},
+	remove: function() {
+		var $txt = $(".edit-value")
+		$txt.parent().removeClass("active").html($txt.attr('data-original'));
+	},
+	update: function(callback) {
 		var $txt = $(".edit-value"),
 			val = $txt.val();
 
@@ -64,11 +75,8 @@ var translator = {
 			return;
 		}
 
-		if(cancel || val===$txt.attr('data-original')) {
-			var $next = getNextTranslation($txt)
-			$txt.parent().removeClass("active").html($txt.attr('data-original'));
-			$next.trigger('click')
-			return;
+		if(val===$txt.attr('data-original')) {
+			translator.next()
 		}
 
 		if(!val) {
@@ -88,11 +96,10 @@ var translator = {
 				if(!data.exc) {
 					$next = getNextTranslation($txt)
 					$txt.parent().removeClass("active").html(val);
-					$next.trigger('click')
+					translator.next($next)
 				}
 			}
 		});
-
 	},
 	activate: function($div) {
 		if(getCookie("sid")==="Guest") {
@@ -121,13 +128,15 @@ var translator = {
 			$cancel = $('<button class="btn btn-default btn-small">Next</button>')
 				.appendTo($p)
 				.on("click", function(e) {
-					translator.remove(true);
+					$next = getNextTranslation($txt)
+					translator.next()
+					translator.next($next)
 				});
 			$update = $('<button class="btn btn-primary btn-small">Update</button>')
 				.appendTo($p)
 				.css({"margin-left": "5px"})
 				.on("click", function() {
-					translator.remove();
+					translator.update();
 				}),
 
 			// report
