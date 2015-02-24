@@ -8,12 +8,18 @@ $(document).ready(function() {
 	});
 });
 
-function getNextTranslation($currentElement) {
-	var $next_node = $currentElement.closest(".row").next();
-	while (! $next_node.find(".translated[data-verified=0]").size()) {
-		$next_node = $next_node.next()
+function getNextRow($row) {
+	$row = $row.next()
+	if ($row.find("button.btn-verify[data-verified=0]").size() > 0) {
+		console.log($row.find("button.btn-verify[data-verified=0]").size())
+		return $row
 	}
-	return $next_node.find('.translated')
+	return getNextRow($row)
+}
+
+function getNextTranslation($currentElement) {
+	$row = getNextRow($currentElement.closest('.row'))
+	return $row.find('.translated')
 }
 
 function getParameterByName(name) {
@@ -80,8 +86,9 @@ var translator = {
 			},
 			callback: function(data) {
 				if(!data.exc) {
-					getNextTranslation($txt).trigger('click')
+					$next = getNextTranslation($txt)
 					$txt.parent().removeClass("active").html(val);
+					$next.trigger('click')
 				}
 			}
 		});
