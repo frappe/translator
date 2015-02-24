@@ -8,58 +8,32 @@ $(document).ready(function() {
 	});
 });
 
-function getNextRow($row) {
+function get_next_row($row) {
 	$row = $row.next()
 	if ($row.find("button.btn-verify[data-verified=0]").size() > 0) {
 		console.log($row.find("button.btn-verify[data-verified=0]").size())
 		return $row
 	}
-	return getNextRow($row)
+	return get_next_row($row)
 }
 
-function getNextTranslation($currentElement) {
-	$row = getNextRow($currentElement.closest('.row'))
+function get_next_translation($currentElement) {
+	$row = get_next_row($currentElement.closest('.row'))
 	return $row.find('.translated')
 }
 
-function getParameterByName(name) {
+function get_parameter_by_name(name) {
     name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
     var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
         results = regex.exec(location.search);
     return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
 }
 
-frappe.ready(function() {
-	if(location.pathname=="/translator/view") {
-		$(".page-header h2").html("Translate " + window.language_name);
-		document.title = "Translate " + window.language_name;
-		$("[data-char='"+(get_url_arg("c") || "*")+"']").addClass("active");
-	}
-
-	$(".message-ts").each(function() {
-		var ts = $(this).attr("data-timestamp");
-		$(this).html("Last Updated: "
-		 + (comment_when(ts) || ts));
-	});
-
-	$("input#search-box").keyup(function(event){
-		if(event.keyCode == 13){
-			search_param = $(this).val()
-			lang = getParameterByName('lang')
-			if (search_param && lang) {
-				window.location = "/translator/view?lang="+lang+"&search="+search_param
-			}
-		}
-	});
-
-});
-
-
 var translator = {
 	next: function($next) {
 		var $txt = $(".edit-value")
 		if (!$next) {
-			$next = getNextTranslation($txt)
+			$next = get_next_translation($txt)
 		}
 		$next.trigger('click')
 	},
@@ -94,7 +68,7 @@ var translator = {
 			},
 			callback: function(data) {
 				if(!data.exc) {
-					$next = getNextTranslation($txt)
+					$next = get_next_translation($txt)
 					$txt.parent().removeClass("active").html(val);
 					translator.next($next)
 				}
@@ -128,7 +102,7 @@ var translator = {
 			$cancel = $('<button class="btn btn-default btn-small">Next</button>')
 				.appendTo($p)
 				.on("click", function(e) {
-					$next = getNextTranslation($txt)
+					$next = get_next_translation($txt)
 					translator.next()
 					translator.next($next)
 				});

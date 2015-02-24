@@ -7,6 +7,28 @@
 window.language_name = "{{ lang.language_name }}";
 window.user_karma = {{ karma }};
 window.lang = "{{ frappe.form_dict.lang }}";
+
+frappe.ready(function() {
+	$(".page-header h2").html("Translate " + window.language_name);
+	document.title = "Translate " + window.language_name;
+	$("[data-char='"+(get_url_arg("c") || "*")+"']").addClass("active");
+
+	$(".message-ts").each(function() {
+		var ts = $(this).attr("data-timestamp");
+		$(this).html("Last Updated: "
+		 + (comment_when(ts) || ts));
+	});
+
+	$("input#search-box").keyup(function(event){
+		if(event.keyCode == 13){
+			search_param = $(this).val()
+			lang = get_parameter_by_name('lang')
+			if (search_param && lang) {
+				window.location = "/translator/view?lang="+lang+"&search="+search_param
+			}
+		}
+	});
+})
 </script>
 
 <div class="reset">
