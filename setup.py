@@ -7,7 +7,7 @@ setup(
     name='translator',
     version=version,
     description='Translation Portal for Frappe Apps',
-    author='Web Notes Technologies',
+    author='Frappe Technologies',
     author_email='info@frappe.io',
     packages=find_packages(),
     zip_safe=False,

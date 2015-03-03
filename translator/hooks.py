@@ -1,6 +1,6 @@
 app_name = "translator"
 app_title = "Translator"
-app_publisher = "Web Notes Technologies"
+app_publisher = "Frappe Technologies"
 app_description = "Translation Portal for Frappe Apps"
 app_icon = "icon-comment"
 app_color = "green"
