@@ -1,5 +1,7 @@
 <!-- jinja -->
 <!-- no-sidebar -->
+<!-- no-header -->
+<!-- no-breadcrumbs -->
 {% set lang = frappe.get_doc("Language", frappe.form_dict.lang) %}
 {% set karma = frappe.db.get_value("User", frappe.user, "karma") or 0 %}
 
@@ -31,7 +33,7 @@ frappe.ready(function() {
 })
 </script>
 
-<div class="reset">
+<div style="margin-top: 20px;">
 	<input type="text" id="search-box" class="form-control" placeholder="Search for...">
 </div>
 

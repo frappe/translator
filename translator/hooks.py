@@ -108,4 +108,8 @@ scheduler_events = {
 # override_whitelisted_methods = {
 # 	"frappe.desk.doctype.event.event.get_events": "translator.event.get_events"
 # }
+website_context = {
+ "nav_brand": "ERPNext Translator",
+ "nav_links": []
+}
 
