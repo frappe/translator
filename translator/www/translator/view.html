@@ -70,7 +70,7 @@ frappe.ready(function() {
 	data-message-id="{{ message.translated_name or '' }}" data-source-message-id="{{ message.source_name or '' }}">
 	<div class="col-sm-5">
 		<div>
-			{{ message.message }}
+			{{ message.message | safe }}
 			<i title="Badly formed message"
 				class="icon-flag text-warning {{ '' if message.flagged else 'hide' }}"></i>
 		</div>
