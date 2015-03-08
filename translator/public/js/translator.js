@@ -94,7 +94,7 @@ var translator = {
 		translator.remove();
 		var content = $div.text().trim(),
 			$me = $div.empty().addClass("active"),
-			$txt = $('<textarea class="edit-value form-control">' + content + '</textarea>')
+			$txt = $('<textarea class="edit-value form-control" style="height: 80px;">' + content + '</textarea>')
 				.appendTo($me)
 				.attr('data-original', content)
 				.focus(),

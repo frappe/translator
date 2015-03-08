@@ -1,0 +1,7 @@
+.single-message {
+	padding: 10px 0;
+}
+
+.single-message:hover {
+	background-color: #fafbfc;
+}

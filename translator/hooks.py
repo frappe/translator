@@ -12,6 +12,14 @@ clear_cache = "translator.translator.doctype.language.language.clear_cache"
 
 fixtures = ["Custom Field"]
 
+website_context = {
+	"brand_html": "ERPNext Translator",
+	"top_bar_items": [
+		{"label": "Hall of Fame", "url": "/translator/hall-of-fame", "right": 1},
+		{"label": "Help", "url": "/help", "right": 1}
+	]
+}
+
 # Includes in <head>
 # ------------------
 
@@ -108,8 +116,4 @@ scheduler_events = {
 # override_whitelisted_methods = {
 # 	"frappe.desk.doctype.event.event.get_events": "translator.event.get_events"
 # }
-website_context = {
- "nav_brand": "ERPNext Translator",
- "nav_links": []
-}
 

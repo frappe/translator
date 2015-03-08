@@ -13,7 +13,6 @@ window.lang = "{{ frappe.form_dict.lang }}";
 frappe.ready(function() {
 	$(".page-header h2").html("Translate " + window.language_name);
 	document.title = "Translate " + window.language_name;
-	$("[data-char='"+(get_url_arg("c") || "*")+"']").addClass("active");
 
 	$(".message-ts").each(function() {
 		var ts = $(this).attr("data-timestamp");
@@ -21,52 +20,94 @@ frappe.ready(function() {
 		 + (comment_when(ts) || ts));
 	});
 
-	$("input#search-box").keyup(function(event){
-		if(event.keyCode == 13){
-			search_param = $(this).val()
-			lang = get_parameter_by_name('lang')
-			if (search_param && lang) {
-				window.location = "/translator/view?lang="+lang+"&search="+search_param
-			}
+    $(".btn-search").on("click", function() {
+		search_param = $("input#search-box").val();
+		lang = get_parameter_by_name('lang');
+		if (search_param && lang) {
+			window.location = "/translator/view?lang="+lang+"&search="+search_param;
 		}
+    });
+
+	$("input#search-box").on("keyup", function(event){
+		if(event.keyCode == 13){
+            $(".btn-search").trigger("click");
+        }
 	});
+
+    $(".select-letter").val(get_url_arg("c") || "").on("change", function() {
+        var c = $(this).val();
+		window.location = "/translator/view?lang="+lang+"&c="+c;
+    })
 })
 </script>
 
-<div style="margin-top: 20px;">
-	<input type="text" id="search-box" class="form-control" placeholder="Search for...">
-</div>
-
-<ul class="pagination">
-{% for c in "*ABCDEFGHIJKLMNOPQRSTUVWXYZ" %}
- 	<li data-char="{{ c }}">
-		<a href="/translator/view?c={{ c }}&lang={{ frappe.form_dict.lang }}">{{ c }}</a>
-	</li>
-{% endfor %}
-</ul>
-
-
-
 {% if frappe.user == "Guest" %}
-<div class="alert alert-info">
-	You must <a href="/login">login</a> to edit or verify  translations
-</div>
-{% else %}
-<div class="alert alert-info">
-	Please edit or verify translations. You have karma {{ karma }}!
-</div>
-<ol>
-	<li>Click on the message to edit. </li>
-	<li>For help, comments, <a href="https://github.com/frappe/translator/issues" target="_blank">please use GitHub Issues</a>. </li>
-	<li>You get a karma point every time someone upvotes your edit. </li>
-</ol>
-<hr>
+<p class="text-muted">
+	You must <a href="/login">login</a> to edit or verify translations
+</p>
 {% endif %}
+
+
+
+<div class="row">
+    <div class="col-sm-8">
+        {% if frappe.form_dict.search %}
+        <h1>{{ lang.language_name }}: Filtered by
+                <span class="text-muted">{{ frappe.form_dict.search }}</span></h1>
+        {% else %}
+        <h1>{{ lang.language_name }}: Starting with Letter
+                <span class="text-muted">{{ frappe.form_dict.c or '*' }}</span></h1>
+        {% endif %}
+    </div>
+    <div class="col-sm-4">
+        <div class="input-group" style="margin-top: 25px;">
+            <input type="text" class="form-control" id="search-box" placeholder="Search for...">
+            <span class="input-group-btn">
+                <button class="btn btn-default btn-search" type="button">Search</button>
+            </span>
+        </div>
+    </div>
+</div>
+<br>
+
+
+
+<div class="row">
+    <div class="col-sm-5">
+        <span>Jump To Letter: </span>
+        <select class="form-control select-letter" id="jump-to" placeholder="Jump to letter"
+            style="width: 60px; margin-left: 10px; display: inline-block;">
+            {% for c in "*ABCDEFGHIJKLMNOPQRSTUVWXYZ" %}
+             	<option value="{{ c }}">{{ c }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="col-sm-5">
+    </div>
+    <div class="col-sm-2 text-right">
+        {% if frappe.user != "Guest" %}
+        Karma: {{ karma }}
+        {% endif %}
+    </div>
+</div>
+<br><br>
+
+<div class="row">
+    <div class="col-sm-5">
+        <b>Original</b>
+    </div>
+    <div class="col-sm-5">
+        <b>Translated</b>
+    </div>
+    <div class="col-sm-2 text-right">
+    </div>
+</div>
+<br>
+
 
 {% for message in messages %}
 {% if "<" not in message.message %}
-<div class="row" style="margin-bottom: 7px; padding-bottom: 7px;
-	border-bottom: 1px solid #f2f2f2;"
+<div class="row single-message"
 	data-message-id="{{ message.translated_name or '' }}" data-source-message-id="{{ message.source_name or '' }}">
 	<div class="col-sm-5">
 		<div>
@@ -86,10 +127,13 @@ frappe.ready(function() {
 		data-verified="{{ message.verified or 0 }}" style="min-height: 20px; cursor: pointer;">
 		{{ message.translated or '' }}
 	</div>
-	<div class="col-sm-2">
+	<div class="col-sm-2 text-right">
+		{% if message.translated_name and message.modified_by != "Administrator" %}
+		<i class="icon-ok" title="Edited"></i>
+		{% endif %}
 		{% if frappe.user != "Guest" %}
 		<button
-			class="btn btn-small btn-verify
+			class="btn btn-xs btn-verify
 				btn-{{ "success" if message.verified else "danger" }}"
 			data-verified="{{ message.verified or 0 }}"
 			>Verify ({{ message.verified or 0 }})</button>
@@ -98,9 +142,6 @@ frappe.ready(function() {
 			class="label
 				label-{{ "success" if message.verified else "danger" }}"
 			>Verfied ({{ message.verified or 0 }})</span>
-		{% endif %}
-		{% if message.translated_name and message.modified_by != "Administrator" %}
-		<i class="icon-ok" title="Edited"></i>
 		{% endif %}
 	</div>
 </div>

@@ -1,0 +1,17 @@
+<h1>Hall of Fame</h1>
+
+<!-- no-sidebar -->
+
+<p class="text-muted">A big thanks to our top liguists</p>
+<br>
+<div class="row">
+    <div class="col-xs-2"><b>Edited</b></div>
+    <div class="col-xs-10"><b>Name</b></div>
+</div>
+
+{% for d in users %}
+<div class="row">
+    <div class="col-xs-2">{{ d.translated }}</div>
+    <div class="col-xs-10">{{ d.fullname }}</div>
+</div>
+{% endfor %}
