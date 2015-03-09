@@ -19,6 +19,7 @@
         position: relative; display: block;
         overflow: hidden;
         outline: none !important;
+		cursor: pointer; /* edited */
     }
         .irs-line-left, .irs-line-mid, .irs-line-right {
             position: absolute; display: block;
@@ -37,6 +38,7 @@
     .irs-bar {
         position: absolute; display: block;
         left: 0; width: 0;
+		cursor: pointer; /* edited */
     }
         .irs-bar-edge {
             position: absolute; display: block;
@@ -50,8 +52,9 @@
 
     .irs-slider {
         position: absolute; display: block;
-        cursor: default;
+        cursor: ew-resize; /* edited */
         z-index: 1;
+
     }
         .irs-slider.single {
 

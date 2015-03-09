@@ -10,8 +10,7 @@ $(document).ready(function() {
 
 function get_next_row($row) {
 	$row = $row.next()
-	if ($row.find("button.btn-verify[data-verified=0]").size() > 0) {
-		console.log($row.find("button.btn-verify[data-verified=0]").size())
+	if ($row.find("a.btn-verify[data-verified=0]").size() > 0) {
 		return $row
 	}
 	return get_next_row($row)
@@ -118,9 +117,9 @@ var translator = {
 			$check = $('<div class="checkbox">\
 				<label class="text-muted"><input type="checkbox"> This message is badly framed in English.</label></div>')
 				.appendTo($p1)
-				.change(function() {
-					translator.report($(this).parents(".row:first"), $(this).prop("checked"));
-				});
+			$check.find("input").on("change", function() {
+				translator.report($(this).parents(".row:first"), $(this).prop("checked"));
+			});
 
 
 		if(window.lang=="ar") {
@@ -156,7 +155,7 @@ var translator = {
 			},
 			callback: function(data) {
 				if(!data.exc) {
-					$row.find(".icon-flag").toggleClass("hide", value);
+					$row.find(".icon-flag").toggleClass("hide");
 				}
 			}
 		});
