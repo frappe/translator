@@ -137,9 +137,9 @@ var translator = {
 			callback: function(data) {
 				if(!data.exc) {
 					var verified = (parseInt($btn.attr("data-verified")) + 1);
-					$btn.html("Verified ("+ verified +")");
+					$btn.html("Verified");
 					if(verified===1) {
-						$btn.removeClass("btn-danger").addClass("btn-success");
+						$btn.parent().find(".indicator").removeClass("red").addClass("green");
 					}
 					$btn.attr("data-verified", verified);
 				}

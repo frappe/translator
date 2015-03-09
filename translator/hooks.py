@@ -15,7 +15,7 @@ fixtures = ["Custom Field"]
 website_context = {
 	"brand_html": "ERPNext Translator",
 	"top_bar_items": [
-		{"label": "Hall of Fame", "url": "/translator/hall-of-fame", "right": 1},
+		{"label": "Hall of Fame", "url": "/hall-of-fame", "right": 1},
 		{"label": "Help", "url": "/help", "right": 1}
 	]
 }
@@ -28,8 +28,8 @@ website_context = {
 # app_include_js = "/assets/translator/js/translator.js"
 
 # include js, css files in header of web template
-# web_include_css = "/assets/translator/css/translator.css"
-web_include_js = "/assets/translator/js/translator.js"
+web_include_css = ["/assets/translator/css/ion-rangeslider/ion.rangeSlider.css", "/assets/translator/css/ion-rangeslider/ion.rangeSlider.skinFlat.css"]
+web_include_js = ["/assets/translator/js/translator.js", "/assets/translator/js/ion.rangeSlider.min.js"]
 
 # Home Pages
 # ----------

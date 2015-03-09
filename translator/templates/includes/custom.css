@@ -1,7 +1,16 @@
 .single-message {
-	padding: 10px 0;
+	padding: 10px 15px;
+	margin: 0px -30px;
 }
 
 .single-message:hover {
 	background-color: #fafbfc;
+}
+
+.translator-view {
+	padding: 15px 30px;
+}
+
+.slider-wrapper {
+	margin: 30px 0px;
 }

@@ -29,7 +29,7 @@
 			{{ lang.name }}
 		</td>
 		<td>
-			<a href="/translator/view?lang={{ lang.name }}">{{ lang.language_name }}</a>
+			<a href="/view?lang={{ lang.name }}">{{ lang.language_name }}</a>
 		</td>
 		<td>
 			{{ week.edited or 0 }} Edited
