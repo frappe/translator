@@ -1,0 +1,22 @@
+<div class="narrow">
+    <h1 class="page-title">Hall of Fame</h1>
+    <h3 class="page-sub-title">A big thanks to our top liguists</h3>
+
+    <!-- no-sidebar -->
+    <table class="table table-hover" style="max-width: 500px; margin: auto;">
+        <thead>
+            <tr>
+                <th>Edited</th>
+                <th>Name</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for d in users %}
+            <tr>
+                <td>{{ d.translated }}</td>
+                <td>{{ d.fullname }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>

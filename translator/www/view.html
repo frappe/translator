@@ -1,0 +1,141 @@
+<!-- jinja -->
+<!-- no-sidebar -->
+<!-- no-header -->
+<!-- no-breadcrumbs -->
+{% set lang = frappe.get_doc("Language", frappe.form_dict.lang) %}
+{% set karma = frappe.db.get_value("User", frappe.user, "karma") or 0 %}
+
+<script>
+window.language_name = "{{ lang.language_name }}";
+window.user_karma = {{ karma }};
+window.lang = "{{ frappe.form_dict.lang }}";
+
+frappe.ready(function() {
+	$(".page-header h2").html("Translate " + window.language_name);
+	document.title = "Translate " + window.language_name;
+
+	$(".message-ts").each(function() {
+		var ts = $(this).attr("data-timestamp");
+		$(this).html("Last Updated: "
+		 + (comment_when(ts) || ts));
+	});
+
+    $(".btn-search").on("click", function() {
+		search_param = $("input#search-box").val();
+		lang = get_parameter_by_name('lang');
+		if (search_param && lang) {
+			window.location = "/view?lang="+lang+"&search="+search_param;
+		}
+    });
+
+	$("input#search-box").on("keyup", function(event){
+		if(event.keyCode == 13){
+            $(".btn-search").trigger("click");
+        }
+	});
+
+    $(".select-letter").val(get_url_arg("c") || "")
+        .ionRangeSlider({
+            type: "single",
+            grid: true,
+            grid_num: 10,
+            values: "*ABCDEFGHIJKLMNOPQRSTUVWXYZ".split(""),
+            grid_snap: true,
+            onFinish: function() {
+                var c = $(".select-letter").val();
+        		var href = "/view?lang="+lang+"&c="+c;
+                frappe.load_via_ajax(href);
+            }
+        })
+        .toggle(true);
+})
+</script>
+
+{% if frappe.user == "Guest" %}
+<p class="text-muted">
+	You must <a href="/login">login</a> to edit or verify translations
+</p>
+{% endif %}
+
+
+
+<div class="row">
+    <div class="col-sm-8">
+        {% if frappe.form_dict.search %}
+        <h1>{{ lang.language_name }}: Filtered by
+                <span class="text-muted">{{ frappe.form_dict.search }}</span></h1>
+        {% else %}
+        <h1>{{ lang.language_name }}: Starting with Letter
+            <span class="border text-center inline-block"
+                style="border-color: inherit; padding: 5px 10px; min-width: 40px;">
+                {{ frappe.form_dict.c or '*' }}</span></h1>
+        {% endif %}
+    </div>
+    <div class="col-sm-4">
+        <div class="input-group" style="margin-top: 25px;">
+            <input type="text" class="form-control" id="search-box" placeholder="Search for...">
+            <span class="input-group-btn">
+                <button class="btn btn-default btn-search" type="button">Search</button>
+            </span>
+        </div>
+    </div>
+</div>
+<div class="slider-wrapper">
+    <input type="text" id="jump-to" name="jump-to" value="" class="select-letter"
+        style="display: none;"/>
+</div>
+<br>
+<div class="translator-view border">
+    <div class="row">
+        <div class="col-sm-5">
+            <b>Original</b>
+        </div>
+        <div class="col-sm-5">
+            <b>Translated</b>
+        </div>
+        <div class="col-sm-2 text-right">
+            {% if frappe.user != "Guest" %}
+            Karma: {{ karma }}
+            {% endif %}
+        </div>
+    </div>
+
+    <hr style="margin: 15px -30px;">
+
+    {% for message in messages %}
+    {% if "<" not in message.message %}
+    <div class="row single-message"
+    	data-message-id="{{ message.translated_name or '' }}"
+            data-source-message-id="{{ message.source_name or '' }}">
+    	<div class="col-sm-5">
+    		<div>
+    			{{ message.message | safe }}
+    			<i title="Badly formed message"
+    				class="icon-flag text-warning {{ '' if message.flagged else 'hide' }}"></i>
+    		</div>
+    		<div class="text-muted small">
+    			<span class="message-ts" data-timestamp="{{ message.modified }}">
+    				{{ message.modified }}
+    			</span>
+    			by {{ (message.first_name or "") + " " + (message.last_name or "") }}
+    		</div>
+    	</div>
+    	<div class="col-sm-5 translated
+    		{{ 'text-right' if frappe.form_dict.lang=='ar' else '' }}"
+    		data-verified="{{ message.verified or 0 }}" style="min-height: 20px; cursor: pointer;">
+    		{{ message.translated or '' }}
+    	</div>
+    	<div class="col-sm-2 text-right">
+    		{% if frappe.user != "Guest" %}
+            <a class="btn-verify btn btn-xs btn-white"
+                data-verified="{{ message.verified or 0 }}">
+                Verify</a>
+            <span class="indicator {{ "green" if message.verified else "red" }}"></span>
+    		{% else %}
+            <span class="indicator {{ "green" if message.verified else "red" }}">Verfied</span>
+    		{% endif %}
+    	</div>
+    </div>
+    {% endif %}
+    {% endfor %}
+</div>

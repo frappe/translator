@@ -1,0 +1,28 @@
+<!-- no-sidebar -->
+<br>
+<table class="table table-bordered">
+	<tr>
+		<th style="width: 20%">
+			Language Code
+		</th>
+		<th style="width: 40%">
+			File
+		</th>
+		<th>
+			Last Updated
+		</th>
+	</tr>
+{% for file in files%}
+	<tr>
+		<td>
+			{{ file.0 }}
+		</td>
+		<td>
+			<a href="{{ file.1 }}">{{file.2}}</a>
+		</td>
+		<td>
+			{{ file.3 }} GMT
+		</td>
+	</tr>
+{% endfor %}
+</table>
