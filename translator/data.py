@@ -7,6 +7,7 @@ import frappe, os
 from frappe.translate import read_csv_file, get_all_languages, write_translations_file, get_messages_for_app
 from translator.doctype.translated_message.translated_message import get_placeholders_count
 import frappe.utils
+import json
 from csv import writer
 
 
@@ -175,7 +176,7 @@ def write_untranslated_file(lang, path):
 			f.write((escape_newlines(m) + os.linesep).encode("utf-8"))
 
 def get_untranslated(lang):
-	return frappe.db.sql_list("""select source.message from `tabSource Message` source 
+	return frappe.db.sql("""select source.name, source.message from `tabSource Message` source 
 	left join `tabTranslated Message` translated on (source.name=translated.source and translated.language = %s) 
 	where translated.name is null and source.disabled != 1""", (lang, ))
 
@@ -195,3 +196,58 @@ def write_csv(app, lang, path):
 		for t in translations:
 			w.writerow([t[0].encode('utf-8') if t[0] else '', t[1].encode('utf-8'), t[2].encode('utf-8')])
 
+
+def export_untranslated_to_json(lang, path):
+	ret = {}
+	for name, message in get_untranslated(lang):
+		ret[name] = {
+			"message": message
+		}
+	with open(path, 'wb') as f:
+		json.dump(ret, f, indent=1)
+
+def import_json(lang, path):
+	with open(path, 'rb') as f:
+		messages = json.load(f)
+	for source, message in messages.iteritems():
+		if not frappe.db.get_value('Translated Message', {"source": source, "language": lang}):
+			t = frappe.new_doc('Translated Message')
+			t.language = lang
+			t.source= source
+			t.translated = message['message']
+			t.save()
+
+def copy_translations(from_lang, to_lang):
+	translations = frappe.db.sql("""select source, translated from `tabTranslated Message` where language=%s""", (from_lang, ))
+	for source, translated in translations:	
+		if not frappe.db.get_value('Translated Message', {"source": source, "language": to_lang}):
+			t = frappe.new_doc('Translated Message')
+			t.language = to_lang
+			t.source= source
+			t.translated = translated
+			t.save()
+
+def read_translation_csv_file(path):
+	import csv
+	with open(path, 'rb') as f:
+		reader = csv.reader(f)
+		return list(reader)
+
+def import_translations_from_csv(lang, path, modified_by='Administrator'):
+	from frappe.translate import read_csv_file
+	content = read_translation_csv_file(path)
+	for pos, source_message, translated in content:
+		# print source_message.encode('utf-8'), translated.encode('utf-8')
+		source = frappe.db.get_value("Source Message", {"message": source_message})
+		dest = frappe.db.get_value("Translated Message", {"source": source, "language": lang})
+		if dest:
+			d = frappe.get_doc('Translated Message', dest)
+			if d.modified_by != "Administrator" or d.translated != translated:
+				frappe.db.set_value("Translated Message", dest, "translated", translated, modified_by=modified_by)
+		else:
+
+			dest = frappe.new_doc("Translated Message")
+			dest.language = lang
+			dest.translated = translated
+			dest.source = source
+			dest.save()
