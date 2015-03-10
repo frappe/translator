@@ -132,7 +132,8 @@ frappe.ready(function() {
                 Verify</a>
             <span class="indicator {{ "green" if message.verified else "red" }}"></span>
     		{% else %}
-            <span class="indicator {{ "green" if message.verified else "red" }}">Verfied</span>
+            <span class="indicator {{ "green" if message.verified else "red" }}">
+                {{ "Verifed" if message.verified else "Unverified" }}</span>
     		{% endif %}
     	</div>
     </div>
