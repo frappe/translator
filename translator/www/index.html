@@ -21,7 +21,7 @@
 </div>
 <!-- end-hero -->
 
-<div class="lang-list">
+<div class="lang-list clearfix">
 	{% for lang in frappe.get_all("Language", fields=["*"], order_by = "name asc", limit_page_length=1000) %}
 	{% if lang.name != "en" %}
 	{% set info = get_info(lang.name) %}
@@ -43,4 +43,10 @@
     </div>
 	{% endif %}
 	{% endfor %}
+</div>
+
+<div class="text-center" style="margin-top: 60px;">
+    <a class="btn btn-default"
+		href="https://github.com/frappe/translator/issues/new?title=New+Language+-+Language+Name"
+		target="_blank">Request a new language</a>
 </div>
