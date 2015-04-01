@@ -60,5 +60,5 @@ def weekly_updates():
 	})
 
 	frappe.sendmail(translators, "info@frappe.io",
-		"Frappe Translation Updates", message, bulk=True, ref_doctype="User",
-		ref_docname="name", add_unsubscribe_link=True)
+		"Frappe Translation Updates", message, bulk=True, reference_doctype="User",
+		reference_name="name")
