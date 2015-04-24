@@ -4,24 +4,25 @@
 <!-- no-breadcrumbs -->
 <!-- title: ERPNext Translator -->
 
-<!-- start-hero -->
-<div class="page-hero">
-    <div class="container">
-        <div class="text-center">
-            <img src="/assets/frappe_theme/img/developers-erp-framework.svg" style="width: 250px;">
-        </div>
-        <h1 class="page-title">
-            Help Translate ERPNext and Other Frappe Apps
-        </h1>
-
-        <h3 class="page-sub-title">
-            Select a Language to Start
-        </h3>
+<div class="row hero" style="padding-bottom: 90px;">
+    <div class="col-sm-12">
+        <img class="erp-hero" src="/assets/frappe_theme/img/translator.svg" style="width: 200px; margin-bottom: -30px;">
+    </div>
+    <div class="col-sm-12 hero-content">
+        <h1>ERPNext Translator</h1>
+        <p>Help translate ERPNext and other Frappé apps</p>
+        <a class="x-large blue button" href="#languages">Select a Language to Start</a>
+        <p class="description">
+			<a class="no-decoration"
+				href="https://github.com/frappe/translator/issues/new?title=New+Language+-+YOUR+LANGUAGE+NAME"
+				target="_blank">
+				or request a new language
+			</a>
+		</p>
     </div>
 </div>
-<!-- end-hero -->
 
-<div class="lang-list clearfix">
+<div class="lang-list clearfix" id="languages" style="padding-top: 40px;">
 	{% for lang in frappe.get_all("Language", fields=["*"], order_by = "name asc", limit_page_length=1000) %}
 	{% if lang.name != "en" %}
 	{% set info = get_info(lang.name) %}
@@ -45,8 +46,8 @@
 	{% endfor %}
 </div>
 
-<div class="text-center" style="margin-top: 60px;">
+<!-- <div style="margin: 20px 15px 35px;">
     <a class="btn btn-default"
 		href="https://github.com/frappe/translator/issues/new?title=New+Language+-+Language+Name"
 		target="_blank">Request a new language</a>
-</div>
+</div> -->
