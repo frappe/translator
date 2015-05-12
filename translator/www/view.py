@@ -18,10 +18,14 @@ def get_context(context):
 
 	if frappe.form_dict.search:
 		condition = "(source.message like %s or translated.translated like %s)"
-		condition_values = ['%' + frappe.form_dict.search + '%', '%' + frappe.form_dict.search + '%']
+		condition_values = ['%' + frappe.db.escape(frappe.form_dict.search) + '%', '%' + frappe.db.escape(frappe.form_dict.search) + '%']
 
 	else:
-		c = frappe.form_dict.c or "*"
+		if frappe.form_dict.c:
+			c = frappe.db.escape(frappe.form_dict.c)
+		else:
+			c = "*"
+
 		if c == "*":
 			condition = "source.message REGEXP '^[^a-zA-Z]'"
 			condition_values = None
