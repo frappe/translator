@@ -286,6 +286,8 @@ def import_translations_from_csv(lang, path, modified_by='Administrator', if_old
 
 
 def get_translation_from_google(lang, message):
+	if lang == "cz":
+		lang = "cs"
 	s = frappe.utils.get_request_session()
 	resp = s.get("https://www.googleapis.com/language/translate/v2", params={
 		"key": frappe.conf.google_api_key,
