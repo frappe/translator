@@ -74,7 +74,7 @@ def _translate_untranslated(context, lang):
 
 @click.command('translate-untranslated-all')
 @pass_context
-def _translate_untranslated_all(context, lang):
+def _translate_untranslated_all(context):
 	for site in context.sites:
 		try:
 			frappe.init(site=site)
