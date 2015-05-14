@@ -309,6 +309,8 @@ def translate_untranslated_from_google(lang):
 			t.source = source
 			t.translated = get_translation_from_google(lang, message)
 			try:
+	if lang == "en":
+		return
 				t.save()
 			except frappe.exceptions.ValidationError:
 				continue
