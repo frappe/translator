@@ -10,6 +10,7 @@ import frappe.utils
 import json
 from csv import writer
 import csv
+import frappe.exceptions
 
 
 def import_languages():
@@ -301,13 +302,23 @@ def get_translation_from_google(lang, message):
 
 def translate_untranslated_from_google(lang):
 	count = 0
-	for source, message in get_untranslated(lang)[:10]:
+	for source, message in get_untranslated(lang):
 		if not frappe.db.get_value('Translated Message', {"source": source, "language": lang}):
 			t = frappe.new_doc('Translated Message')
 			t.language = lang
 			t.source = source
 			t.translated = get_translation_from_google(lang, message)
-			t.save()
+			try:
+				t.save()
+			except frappe.exceptions.ValidationError:
+				continue
 			count += 1
 			frappe.db.commit()
-	print count, 'imported'
+			print source
+	print lang, count, 'imported'
+
+
+def get_languages_txt():
+	return '\n'.join([
+		'\t'.join([lang, name]) for lang, name in
+		frappe.db.sql("select name, language_name from tabLanguage where name != 'en'")])
