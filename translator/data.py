@@ -300,7 +300,17 @@ def get_translation_from_google(lang, message):
 	return resp.json()["data"]["translations"][0]["translatedText"]
 
 
+def get_lang_name(lang):
+	s = frappe.utils.get_request_session()
+	resp = s.get("https://www.googleapis.com/language/translate/v2/languages", params={
+		"key": frappe.conf.google_api_key,
+	})
+	return resp.json()
+
+
 def translate_untranslated_from_google(lang):
+	if lang == "en":
+		return
 	count = 0
 	for source, message in get_untranslated(lang):
 		if not frappe.db.get_value('Translated Message', {"source": source, "language": lang}):
@@ -309,8 +319,6 @@ def translate_untranslated_from_google(lang):
 			t.source = source
 			t.translated = get_translation_from_google(lang, message)
 			try:
-	if lang == "en":
-		return
 				t.save()
 			except frappe.exceptions.ValidationError:
 				continue
