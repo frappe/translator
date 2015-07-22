@@ -17,7 +17,8 @@ website_context = {
 	"top_bar_items": [
 		{"label": "Hall of Fame", "url": "/hall-of-fame", "right": 1},
 		{"label": "Help", "url": "/help", "right": 1}
-	]
+	],
+	"favicon": "/assets/frappe_theme/img/favicon.ico",
 }
 
 # Includes in <head>
