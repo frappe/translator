@@ -6,6 +6,7 @@ from frappe.commands import pass_context
 from translator.data import import_source_messages, export_untranslated_to_json, import_translations_from_csv, translate_untranslated_from_google
 from frappe.translate import get_bench_dir
 import frappe.utils.data
+import requests.exceptions
 import click
 import os
 
@@ -80,8 +81,13 @@ def _translate_untranslated_all(context):
 			frappe.init(site=site)
 			frappe.connect()
 			for lang in frappe.db.sql_list("select name from tabLanguage"):
-				translate_untranslated_from_google(lang)
-			frappe.db.commit()
+				try:
+					translate_untranslated_from_google(lang)
+				except requests.exceptions.HTTPError:
+					"skipping {0}".format(lang)
+					continue
+				finally:
+					frappe.db.commit()
 		finally:
 			frappe.destroy()
 
