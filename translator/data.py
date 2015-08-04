@@ -132,7 +132,7 @@ def import_translated_from_text_files(untranslated_dir, translated_dir):
 				.replace("| | | |", "\\n")
 				.replace("|||", "\n")
 				.replace("| | |", "\n"))
-	
+
 	for lang in frappe.db.sql_list("select name from tabLanguage"):
 		if lang == 'en':
 			continue
@@ -165,22 +165,22 @@ def import_translated_from_text_files(untranslated_dir, translated_dir):
 def write_untranslated_csvs(path):
 	for lang in frappe.db.sql_list("select name from tabLanguage"):
 		write_untranslated_file(lang, os.path.join(path, lang+'.txt'))
-		
+
 
 def write_untranslated_file(lang, path):
 	def escape_newlines(s):
 		return (s.replace("\\\n", "|||||")
 				.replace("\\n", "||||")
 				.replace("\n", "|||"))
-	
+
 	with open(path, "w") as f:
 		for m in get_untranslated(lang):
 			# replace \n with ||| so that internal linebreaks don't get split
 			f.write((escape_newlines(m) + os.linesep).encode("utf-8"))
 
 def get_untranslated(lang):
-	return frappe.db.sql("""select source.name, source.message from `tabSource Message` source 
-	left join `tabTranslated Message` translated on (source.name=translated.source and translated.language = %s) 
+	return frappe.db.sql("""select source.name, source.message from `tabSource Message` source
+	left join `tabTranslated Message` translated on (source.name=translated.source and translated.language = %s)
 	where translated.name is null and source.disabled != 1""", (lang, ))
 
 def write_csv_for_all_languages():
@@ -188,11 +188,12 @@ def write_csv_for_all_languages():
 	apps = frappe.db.sql_list("select name from `tabTranslator App`")
 	for lang in langs:
 		for app in apps:
+			print "Writing for {0}-{1}".format(app, lang)
 			write_csv(app, lang, frappe.utils.get_files_path("{0}-{1}.csv".format(app, lang)))
 
 def write_csv(app, lang, path):
-	translations = frappe.db.sql("""select source.position, source.message, translated.translated from `tabSource Message` source 
-	left join `tabTranslated Message` translated on (source.name=translated.source and translated.language = %s) 
+	translations = frappe.db.sql("""select source.position, source.message, translated.translated from `tabSource Message` source
+	left join `tabTranslated Message` translated on (source.name=translated.source and translated.language = %s)
 	where translated.name is not null and source.disabled != 1 and source.app = %s""", (lang, app))
 	with open(path, 'w') as msgfile:
 		w = writer(msgfile, lineterminator='\n')
@@ -248,7 +249,6 @@ def unicode_csv_reader(utf8_data, dialect=csv.excel, **kwargs):
 
 
 def import_translations_from_csv(lang, path, modified_by='Administrator', if_older_than=None):
-	from frappe.translate import read_csv_file
 	content = read_translation_csv_file(path)
 	if len(content[0]) == 2:
 		content = [c for c in content if len(c) == 2]
@@ -264,7 +264,7 @@ def import_translations_from_csv(lang, path, modified_by='Administrator', if_old
 			continue
 
 		source = frappe.get_doc('Source Message', source_name)
-		
+
 		if source.disabled:
 			continue
 		dest = frappe.db.get_value("Translated Message", {"source": source_name, "language": lang})
