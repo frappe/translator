@@ -1,11 +1,11 @@
 from __future__ import unicode_literals
 import frappe
 
-def get_info(lang, this_week = False):
+def get_info(lang, this_month = False):
 	def _get():
 		condition = ""
-		if this_week:
-			condition = " and modified > DATE_SUB(NOW(), INTERVAL 1 WEEK)"
+		if this_month:
+			condition = " and modified > DATE_SUB(NOW(), INTERVAL 1 MONTH)"
 
 		return {
 			"total": frappe.db.sql("""select count(*) from `tabSource Message`
@@ -17,7 +17,7 @@ def get_info(lang, this_week = False):
 					lang)[0][0]
 		}
 
-	if this_week:
+	if this_month:
 		return _get()
 	else:
 		return frappe.cache().get_value("lang-data:" + lang, _get)
@@ -50,15 +50,16 @@ def report(message, value):
 	message.flagged = value
 	message.save(ignore_permissions=1)
 
-def weekly_updates():
+def monthly_updates():
 	translators = frappe.db.sql_list("""select distinct modified_by from
 		`tabTranslated Message`""")
-	translators.append("info@frappe.io")
 
 	message = frappe.get_template("/templates/emails/translator_update.md").render({
 		"frappe": frappe
 	})
 
-	frappe.sendmail(translators, "info@frappe.io",
-		"Frappe Translation Updates", message, bulk=True, reference_doctype="User",
-		reference_name="name")
+	# refer unsubscribe against the administrator
+	# document for test
+	frappe.sendmail(translators, "ERPNext Translator <hello@erpnext.com>",
+		"Montly Update", message, bulk=True, reference_doctype="User",
+		reference_name="Administrator")
