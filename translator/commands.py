@@ -112,4 +112,5 @@ commands = [
 	_import_translations_from_csv,
 	_translate_untranslated,
 	_translate_untranslated_all,
+	_copy_translations
 ]
