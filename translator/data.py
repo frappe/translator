@@ -12,7 +12,6 @@ from csv import writer
 import csv
 import frappe.exceptions
 
-
 def import_languages():
 	with open(frappe.get_app_path("frappe", "data", "languages.txt"), "r") as f:
 		for l in unicode(f.read(), "utf-8").splitlines():
@@ -235,7 +234,10 @@ def copy_translations(from_lang, to_lang):
 			t.language = to_lang
 			t.source = source
 			t.translated = translated
-			t.save()
+			try:
+				t.save()
+			except frappe.ValidationError:
+				pass
 
 def read_translation_csv_file(path):
 	with open(path, 'rb') as f:
