@@ -6,8 +6,19 @@ Translation Portal for Frappe Apps
 
 1. Add a new **Language** via desk
 2. `bench use translate.erpnext.com`
-3. `bench translate get-untranslated [language_code]`
-4. Update missing translations (new messages) `bench translator translate-untranslated-all`
+3. `bench translator translate-untranslated [language_code]`
+
+### Update latest translations from apps
+
+    bench translator import-source-messages
+
+### Update missing translations
+
+    bench translator translate-unstranslated-all
+
+### Copy translations from one language to another
+
+    bench translator copy-language [from] [to]
 
 ### Export
 
@@ -17,5 +28,5 @@ Translation Portal for Frappe Apps
 
 **On local bench:**
 
-    bench download-translations`
+    bench download-translations
 

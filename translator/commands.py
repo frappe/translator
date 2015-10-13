@@ -3,7 +3,8 @@
 
 from __future__ import unicode_literals, absolute_import
 from frappe.commands import pass_context
-from translator.data import import_source_messages, export_untranslated_to_json, import_translations_from_csv, translate_untranslated_from_google
+from translator.data import (import_source_messages, export_untranslated_to_json,
+	import_translations_from_csv, translate_untranslated_from_google, copy_translations)
 from frappe.translate import get_bench_dir
 import frappe.utils.data
 import requests.exceptions
@@ -68,6 +69,20 @@ def _translate_untranslated(context, lang):
 			frappe.init(site=site)
 			frappe.connect()
 			translate_untranslated_from_google(lang)
+			frappe.db.commit()
+		finally:
+			frappe.destroy()
+
+@click.command('copy-translations')
+@click.argument('from_lang')
+@click.argument('to_lang')
+@pass_context
+def _copy_translations(context, from_lang, to_lang):
+	for site in context.sites:
+		try:
+			frappe.init(site=site)
+			frappe.connect()
+			copy_translations(from_lang, to_lang)
 			frappe.db.commit()
 		finally:
 			frappe.destroy()
