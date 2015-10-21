@@ -14,7 +14,7 @@ Translation Portal for Frappe Apps
 
 ### Update missing translations
 
-    bench translator translate-unstranslated-all
+    bench translator translate-untranslated-all
 
 ### Copy translations from one language to another
 
