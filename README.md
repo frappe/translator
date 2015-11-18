@@ -8,6 +8,8 @@ Translation Portal for Frappe Apps
 2. `bench use translate.erpnext.com`
 3. `bench translator translate-untranslated [language_code]`
 
+> Use the Wikipedia page [List of ISO 639-1 codes](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) to look for the language code
+
 ### Update latest translations from apps
 
     bench translator import-source-messages
