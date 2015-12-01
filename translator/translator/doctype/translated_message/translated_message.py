@@ -4,6 +4,7 @@
 from __future__ import unicode_literals
 import frappe
 from frappe import _
+from frappe.utils import strip
 from frappe.model.document import Document
 
 import re
@@ -11,7 +12,7 @@ import re
 class TranslatedMessage(Document):
 	def autoname(self):
 		self.name = frappe.generate_hash()
-	
+
 	def before_insert(self):
 		if frappe.db.count("Translated Message", {"source": self.source, "language":self.language}):
 			raise frappe.ValidationError("Translated Message for this source message already exists")
@@ -26,6 +27,9 @@ class TranslatedMessage(Document):
 		source_msg = frappe.db.get_value("Source Message", self.source, "message")
 		if get_placeholders_count(source_msg) != get_placeholders_count(self.translated):
 			frappe.throw(_("Number of placehodlers (eg, {0}) do not match the source message"))
+
+		# strip whitespace and whitespace like characters
+		self.translated = strip(self.translated)
 
 def on_doctype_update():
 	frappe.db.add_index("Translated Message", ["language", "source(10)"])

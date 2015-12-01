@@ -7,6 +7,7 @@ import frappe, os
 from frappe.translate import read_csv_file, get_all_languages, write_translations_file, get_messages_for_app
 from translator.doctype.translated_message.translated_message import get_placeholders_count
 import frappe.utils
+from frappe.utils import strip
 import json
 from csv import writer
 import csv
@@ -197,7 +198,7 @@ def write_csv(app, lang, path):
 	with open(path, 'w') as msgfile:
 		w = writer(msgfile, lineterminator='\n')
 		for t in translations:
-			w.writerow([t[0].encode('utf-8') if t[0] else '', t[1].encode('utf-8'), t[2].encode('utf-8')])
+			w.writerow([t[0].encode('utf-8') if t[0] else '', t[1].encode('utf-8'), strip(t[2] or '').encode('utf-8')])
 
 
 def export_untranslated_to_json(lang, path):
