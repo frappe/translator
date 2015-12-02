@@ -9,11 +9,13 @@ $(document).ready(function() {
 });
 
 function get_next_row($row) {
-	$row = $row.next()
-	if ($row.find("a.btn-verify[data-verified=0]").size() > 0) {
-		return $row
+	for(var i=0; i<400; i++) {
+		$row = $row.next();
+		if ($row.find("a.btn-verify[data-verified=0]").size() > 0) {
+			return $row
+		}
 	}
-	return get_next_row($row)
+	return $row;
 }
 
 function get_next_translation($currentElement) {
