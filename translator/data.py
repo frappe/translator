@@ -96,6 +96,7 @@ def import_translations_from_file(lang, fname, editor):
 			message.save()
 
 def import_source_messages():
+	"""Import messagse from apps listed in **Translator App** as **Source Message**"""
 	frappe.db.sql("update `tabSource Message` set disabled=1")
 	for app in frappe.db.sql_list("select name from `tabTranslator App`"):
 		app_version = frappe.get_hooks(app_name='frappe')['app_version'][0]
@@ -107,6 +108,7 @@ def import_source_messages():
 				if source_message["position"] != message[0] or source_message["app_version"] != app_version:
 					d.app_version = app_version
 					d.position = message[0]
+					d.app = app
 				d.disabled = 0
 			else:
 				d = frappe.new_doc("Source Message")
@@ -192,9 +194,14 @@ def write_csv_for_all_languages():
 			write_csv(app, lang, frappe.utils.get_files_path("{0}-{1}.csv".format(app, lang)))
 
 def write_csv(app, lang, path):
-	translations = frappe.db.sql("""select source.position, source.message, translated.translated from `tabSource Message` source
-	left join `tabTranslated Message` translated on (source.name=translated.source and translated.language = %s)
-	where translated.name is not null and source.disabled != 1 and source.app = %s""", (lang, app))
+	translations = frappe.db.sql("""select
+		source.position, source.message, translated.translated
+	from `tabSource Message` source
+		left join `tabTranslated Message` translated
+			on (source.name=translated.source and translated.language = %s)
+	where
+		translated.name is not null
+		and source.disabled != 1 and source.app = %s""", (lang, app))
 	with open(path, 'w') as msgfile:
 		w = writer(msgfile, lineterminator='\n')
 		for t in translations:
