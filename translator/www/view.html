@@ -43,8 +43,7 @@ frappe.ready(function() {
             grid_snap: true,
             onFinish: function() {
                 var c = $(".select-letter").val();
-        		var href = "/view?lang="+lang+"&c="+c;
-                frappe.load_via_ajax(href);
+        		window.location.href = "/view?lang="+lang+"&c="+c;
             }
         })
         .toggle(true);
