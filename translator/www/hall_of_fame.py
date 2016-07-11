@@ -3,6 +3,7 @@ import frappe
 from frappe.utils import get_fullname
 
 def get_context(context):
+	context.no_cache=True
 	data = frappe.db.sql("""select count(*) as translated, modified_by
 		from `tabTranslated Message`
 		where modified_by != "Administrator"

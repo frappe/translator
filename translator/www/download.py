@@ -17,7 +17,7 @@ def get_files():
 				continue
 			dt=os.path.getmtime(file_path)
 			ret.append((lang,
-						"/files/"+ file_name, 
+						"/files/"+ file_name,
 						file_name,
 						datetime.datetime.utcfromtimestamp(dt).strftime('%Y-%m-%d %H:%M')))
 	return ret

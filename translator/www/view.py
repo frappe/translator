@@ -1,6 +1,7 @@
 import frappe
 
 def get_context(context):
+	context.no_cache = True
 	query = """select
 		source.name as source_name, source.message,
 		translated.name as translated_name, translated.translated, translated.verified, source.flagged,
