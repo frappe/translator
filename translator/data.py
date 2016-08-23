@@ -309,18 +309,27 @@ def get_translation_from_google(lang, message):
 	resp.raise_for_status()
 	return resp.json()["data"]["translations"][0]["translatedText"]
 
-
 def get_lang_name(lang):
 	s = frappe.utils.get_request_session()
 	resp = s.get("https://www.googleapis.com/language/translate/v2/languages", params={
 		"key": frappe.conf.google_api_key,
 	})
-	return resp.json()
 
+	languages = resp.json()['data']['languages']
+	for l in languages:
+		if l['language'] == lang:
+			return l['name']
+
+	return None
 
 def translate_untranslated_from_google(lang):
 	if lang == "en":
 		return
+
+	if not get_lang_name(lang):
+		print '{0} not supported by Google Translate'
+		return
+
 	count = 0
 	for source, message in get_untranslated(lang):
 		if not frappe.db.get_value('Translated Message', {"source": source, "language": lang}):
