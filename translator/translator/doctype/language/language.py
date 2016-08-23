@@ -8,6 +8,7 @@ from translator.data import get_lang_name
 
 class Language(Document):
 	def validate(self):
+		return
 		name_by_google = get_lang_name(self.language_code)
 		if name_by_google:
 			self.language_name = name_by_google

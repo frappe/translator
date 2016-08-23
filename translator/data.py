@@ -317,6 +317,7 @@ def get_lang_name(lang):
 	s = frappe.utils.get_request_session()
 	resp = s.get("https://www.googleapis.com/language/translate/v2/languages", params={
 		"key": frappe.conf.google_api_key,
+		"lang": "en"
 	})
 
 	languages = resp.json()['data']['languages']
