@@ -8,7 +8,7 @@ app_email = "info@frappe.io"
 app_url = "https://frappe.io"
 app_version = "0.0.1"
 
-clear_cache = "translator.translator.doctype.language.language.clear_cache"
+clear_cache = "translator.helpers.clear_cache"
 
 fixtures = ["Custom Field"]
 

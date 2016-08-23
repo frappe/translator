@@ -63,3 +63,7 @@ def monthly_updates():
 	frappe.sendmail(translators, "ERPNext Translator <hello@erpnext.com>",
 		"Montly Update", message, bulk=True, reference_doctype="User",
 		reference_name="Administrator")
+
+def clear_cache():
+	for lang in frappe.db.sql_list("select name from tabLanguage"):
+		frappe.cache().delete_value("lang-data:" + lang)

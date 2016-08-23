@@ -194,7 +194,27 @@ def write_csv_for_all_languages():
 			write_csv(app, lang, frappe.utils.get_files_path("{0}-{1}.csv".format(app, lang)))
 
 def write_csv(app, lang, path):
-	translations = frappe.db.sql("""select
+	translations = get_translations_for_export(app, lang)
+
+	parent = None
+	parent_dict = {}
+	if '-' in lang:
+		# get translation from parent
+		# for example es and es-GT
+		parent = lang.split('-')[0]
+		parent_dict = {}
+		for t in get_translations_for_export(app, parent):
+			parent_dict[t[1]] = t[2]
+
+	with open(path, 'w') as msgfile:
+		w = writer(msgfile, lineterminator='\n')
+		for t in translations:
+			# only write if translation is different from parent
+			if (not parent) or (t[2] != parent_dict.get(t[1])):
+				w.writerow([t[0].encode('utf-8') if t[0] else '', t[1].encode('utf-8'), strip(t[2] or '').encode('utf-8')])
+
+def get_translations_for_export(app, lang):
+	return frappe.db.sql("""select
 		source.position, source.message, translated.translated
 	from `tabSource Message` source
 		left join `tabTranslated Message` translated
@@ -202,11 +222,6 @@ def write_csv(app, lang, path):
 	where
 		translated.name is not null
 		and source.disabled != 1 and source.app = %s""", (lang, app))
-	with open(path, 'w') as msgfile:
-		w = writer(msgfile, lineterminator='\n')
-		for t in translations:
-			w.writerow([t[0].encode('utf-8') if t[0] else '', t[1].encode('utf-8'), strip(t[2] or '').encode('utf-8')])
-
 
 def export_untranslated_to_json(lang, path):
 	ret = {}

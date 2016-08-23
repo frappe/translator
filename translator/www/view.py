@@ -4,8 +4,11 @@ def get_context(context):
 	context.no_cache = True
 	query = """select
 		source.name as source_name, source.message,
-		translated.name as translated_name, translated.translated, translated.verified, source.flagged,
-		translated.modified, translated.modified_by, user.first_name, user.last_name
+		translated.name as translated_name,
+		translated.translated,
+		translated.verified, source.flagged,
+		translated.modified, translated.modified_by,
+		user.first_name, user.last_name
 	from `tabSource Message` source
 		left join `tabTranslated Message` translated on
 			(source.name=translated.source and translated.language = %s)
