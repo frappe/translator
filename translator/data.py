@@ -235,8 +235,12 @@ def import_json(lang, path):
 
 
 def copy_translations(from_lang, to_lang):
+	from frappe.utils import update_progress_bar
+
 	translations = frappe.db.sql("""select source, translated from `tabTranslated Message` where language=%s""", (from_lang, ))
-	for source, translated in translations:
+	l = len(translations)
+	for i, d in enumerate(translations):
+		source, translated = d
 		if not frappe.db.get_value('Translated Message', {"source": source, "language": to_lang}):
 			t = frappe.new_doc('Translated Message')
 			t.language = to_lang
@@ -246,6 +250,8 @@ def copy_translations(from_lang, to_lang):
 				t.save()
 			except frappe.ValidationError:
 				pass
+
+		update_progress_bar("Copying {0} to {1}".format(from_lang, to_lang), i, l)
 
 def read_translation_csv_file(path):
 	with open(path, 'rb') as f:
@@ -327,7 +333,7 @@ def translate_untranslated_from_google(lang):
 		return
 
 	if not get_lang_name(lang):
-		print '{0} not supported by Google Translate'
+		print '{0} not supported by Google Translate'.format(lang)
 		return
 
 	count = 0
