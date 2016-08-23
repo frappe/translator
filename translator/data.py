@@ -7,7 +7,7 @@ import frappe, os
 from frappe.translate import read_csv_file, get_all_languages, write_translations_file, get_messages_for_app
 from translator.doctype.translated_message.translated_message import get_placeholders_count
 import frappe.utils
-from frappe.utils import strip
+from frappe.utils import strip, update_progress_bar
 import json
 from csv import writer
 import csv
@@ -235,8 +235,6 @@ def import_json(lang, path):
 
 
 def copy_translations(from_lang, to_lang):
-	from frappe.utils import update_progress_bar
-
 	translations = frappe.db.sql("""select source, translated from `tabTranslated Message` where language=%s""", (from_lang, ))
 	l = len(translations)
 	for i, d in enumerate(translations):
@@ -337,7 +335,11 @@ def translate_untranslated_from_google(lang):
 		return
 
 	count = 0
-	for source, message in get_untranslated(lang):
+	untranslated = get_untranslated(lang)
+	l = len(untranslated)
+
+	for i, d in enumerate(untranslated):
+		source, message = d
 		if not frappe.db.get_value('Translated Message', {"source": source, "language": lang}):
 			t = frappe.new_doc('Translated Message')
 			t.language = lang
@@ -349,9 +351,10 @@ def translate_untranslated_from_google(lang):
 				continue
 			count += 1
 			frappe.db.commit()
-			print source
-	print lang, count, 'imported'
 
+		update_progress_bar("Tranlating {0}".format(lang), i, l)
+
+	print lang, count, 'imported'
 
 def get_languages_txt():
 	return '\n'.join([
