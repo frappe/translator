@@ -353,7 +353,7 @@ def translate_untranslated_from_google(lang):
 			count += 1
 			frappe.db.commit()
 
-		update_progress_bar("Tranlating {0}".format(lang), i, l)
+		update_progress_bar("Translating {0}".format(lang), i, l)
 
 	print lang, count, 'imported'
 
