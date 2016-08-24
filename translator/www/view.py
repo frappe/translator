@@ -2,6 +2,28 @@ import frappe
 
 def get_context(context):
 	context.no_cache = True
+	lang = frappe.form_dict.lang
+
+	# make dict of parent
+	parent, parent_dict = None, {}
+	if '-' in lang:
+		parent = lang.split('-')[0]
+		for t in get_messages(lang):
+			parent_dict[t.message] = t.traslated
+
+	context.messages = get_messages(lang)
+
+	if parent:
+		for m in context.messages:
+			if not m.translated:
+				m.translated = parent_dict.get(m.message)
+
+	context.parents = [
+		{"title": "Community", "name":"community"},
+		{"title": "Languages", "name":"translator"}
+	]
+
+def get_messages(lang):
 	query = """select
 		source.name as source_name, source.message,
 		translated.name as translated_name,
@@ -18,7 +40,6 @@ def get_context(context):
 		and source.disabled !=1
 	order by translated.verified, source.message"""
 
-	lang = frappe.form_dict.lang
 
 	if frappe.form_dict.search:
 		condition = "(source.message like %s or translated.translated like %s)"
@@ -40,10 +61,4 @@ def get_context(context):
 
 	cond_tuple = tuple([lang] + condition_values) if condition_values else (lang,)
 
-	context.messages = frappe.db.sql(query.format(condition=condition), cond_tuple, as_dict=True)
-
-	context.parents = [
-		{"title": "Community", "name":"community"},
-		{"title": "Languages", "name":"translator"}
-	]
-
+	return frappe.db.sql(query.format(condition=condition), cond_tuple, as_dict=True)
