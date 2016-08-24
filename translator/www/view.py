@@ -9,14 +9,15 @@ def get_context(context):
 	if '-' in lang:
 		parent = lang.split('-')[0]
 		for t in get_messages(lang):
-			parent_dict[t.message] = t.traslated
+			parent_dict[t.source_name] = t
 
 	context.messages = get_messages(lang)
 
 	if parent:
 		for m in context.messages:
 			if not m.translated:
-				m.translated = parent_dict.get(m.message)
+				# replace the record
+				m.update(parent_dict.get(m.source_name))
 
 	context.parents = [
 		{"title": "Community", "name":"community"},
