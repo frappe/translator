@@ -31,18 +31,20 @@ def verify(message):
 
 @frappe.whitelist()
 def update(message, source, translated, language):
+	updated = False
 	if message:
 		message = frappe.get_doc("Translated Message", message)
-		message.translated = translated
-		message.save(ignore_permissions=1)
-	elif source:
+		if message.language == language:
+			message.translated = translated
+			message.save(ignore_permissions=1)
+			updated = True
+
+	if not updated:
 		message = frappe.new_doc("Translated Message")
 		message.translated = translated
 		message.language = language
 		message.source = source
 		message.save(ignore_permissions=1)
-	else:
-		raise frappe.ValidationError("Message not found")
 
 @frappe.whitelist()
 def report(message, value):
