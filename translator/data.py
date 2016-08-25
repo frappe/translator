@@ -346,6 +346,9 @@ def translate_untranslated_from_google(lang):
 	if lang == "en":
 		return
 
+	if lang=='zh-cn': lang = 'zh'
+	if lang=='zh-tw': lang = 'zh-TW'
+
 	if not get_lang_name(lang):
 		print '{0} not supported by Google Translate'.format(lang)
 		return
