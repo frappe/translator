@@ -20,3 +20,6 @@
 	padding-bottom: 15px;
 }
 
+.rtl {
+  direction: rtl;
+}
