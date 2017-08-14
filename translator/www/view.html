@@ -120,7 +120,7 @@ frappe.ready(function() {
     		</div>
     	</div>
     	<div class="col-sm-5 translated
-    		{{ 'text-right' if frappe.form_dict.lang=='ar' else '' }}"
+    		{{ 'text-right rtl' if frappe.form_dict.lang=='ar' else '' }}"
     		data-verified="{{ message.verified or 0 }}" style="min-height: 20px; cursor: pointer;">
     		{{ message.translated or '' | e }}
     	</div>
