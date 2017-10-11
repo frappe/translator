@@ -69,3 +69,7 @@ def monthly_updates():
 def clear_cache():
 	for lang in frappe.db.sql_list("select name from tabLanguage"):
 		frappe.cache().delete_value("lang-data:" + lang)
+
+def get_home_page(user):
+	""" website user should be redirected to /index after login"""
+	return "/index"

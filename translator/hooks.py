@@ -106,6 +106,8 @@ scheduler_events = {
 	]
 }
 
+get_website_user_home_page = "translator.helpers.get_home_page"
+
 # Testing
 # -------
 
