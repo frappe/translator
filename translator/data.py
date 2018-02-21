@@ -19,7 +19,7 @@ def import_languages():
 			if l:
 				code, name = l.strip().split(None, 1)
 				if not frappe.db.exists("Language", code):
-					print "inserting " + code
+					print("inserting " + code)
 					frappe.get_doc({
 						"doctype":"Language",
 						"language_code": code,
@@ -36,7 +36,7 @@ def import_translations():
 			for lang in frappe.db.sql_list("select name from tabLanguage"):
 				path = os.path.join(translations_folder, lang + ".csv")
 				if os.path.exists(path):
-					print "Evaluating {0}...".format(lang)
+					print("Evaluating {0}...".format(lang))
 					data = read_csv_file(path)
 					for m in data:
 						if not frappe.db.get_value("Translated Message",
@@ -50,14 +50,14 @@ def import_translations():
 							}).insert()
 							frappe.db.commit()
 				else:
-					print path + " does not exist"
+					print(path + " does not exist")
 
 
 def export_translations():
 	# ssh -p 9999 frappe@frappe.io "cd /home/frappe/frappe-bench/apps/frappe && git diff" | patch -p1
 	for lang in get_all_languages():
 		if lang!="en":
-			print "exporting " + lang
+			print("exporting " + lang)
 			edited = dict(frappe.db.sql("""select source, translated
 				from `tabTranslated Message` where language=%s""", lang))
 			for app in frappe.get_all_apps(True):
@@ -84,15 +84,15 @@ def import_translations_from_file(lang, fname, editor):
 			try:
 				message.save()
 				frappe.db.commit()
-				print src[1] + " updated"
+				print(src[1] + " updated")
 			except frappe.ValidationError:
-				print src[1] + " ignored"
+				print(src[1] + " ignored")
 		else:
 			message = frappe.new_doc("Translated Message")
 			message.source = m[0]
 			message.translated = m[1]
 			message.language = lang
-			print "saving", m[0]
+			print("saving", m[0])
 			message.save()
 
 def import_source_messages():
@@ -148,7 +148,7 @@ def import_translated_from_text_files(untranslated_dir, translated_dir):
 				scache[s] = source
 			dest = frappe.db.get_value("Translated Message", {"source": source, "language": lang})
 			if not source:
-				print 'Cannot find source message for', s
+				print('Cannot find source message for', s)
 				continue
 
 			if not get_placeholders_count(s) == get_placeholders_count(t):
@@ -162,7 +162,7 @@ def import_translated_from_text_files(untranslated_dir, translated_dir):
 				d.translated = restore_newlines(t)
 				d.source = source
 				d.save()
-		print 'done for', lang
+		print('done for', lang)
 
 def write_untranslated_csvs(path):
 	for lang in frappe.db.sql_list("select name from tabLanguage"):
@@ -190,7 +190,7 @@ def write_csv_for_all_languages():
 	apps = frappe.db.sql_list("select name from `tabTranslator App`")
 	for lang in langs:
 		for app in apps:
-			print "Writing for {0}-{1}".format(app, lang)
+			print("Writing for {0}-{1}".format(app, lang))
 			write_csv(app, lang, frappe.utils.get_files_path("{0}-{1}.csv".format(app, lang)))
 
 def write_csv(app, lang, path):
@@ -246,7 +246,7 @@ def import_json(lang, path):
 			t.translated = message['message']
 			t.save()
 			count += 1
-	print count, 'imported'
+	print(count, 'imported')
 
 
 def copy_translations(from_lang, to_lang):
@@ -283,7 +283,7 @@ def import_translations_from_csv(lang, path, modified_by='Administrator', if_old
 		content = [c for c in content if len(c) == 2]
 		content = [('', c[0], c[1]) for c in content]
 	count = 0
-	print 'importing', len(content), 'translations'
+	print('importing', len(content), 'translations')
 	for pos, source_message, translated in content:
 		# print source_message.encode('utf-8'), translated.encode('utf-8')
 		# try:
@@ -312,7 +312,7 @@ def import_translations_from_csv(lang, path, modified_by='Administrator', if_old
 			dest.source = source.name
 			dest.save()
 			count += 1
-	print 'updated', count
+	print('updated', count)
 
 
 def get_translation_from_google(lang, message):
@@ -350,7 +350,7 @@ def translate_untranslated_from_google(lang):
 	if lang=='zh-tw': lang = 'zh-TW'
 
 	if not get_lang_name(lang):
-		print '{0} not supported by Google Translate'.format(lang)
+		print('{0} not supported by Google Translate'.format(lang))
 		return
 
 	count = 0
@@ -373,7 +373,7 @@ def translate_untranslated_from_google(lang):
 
 		update_progress_bar("Translating {0}".format(lang), i, l)
 
-	print lang, count, 'imported'
+	print(lang, count, 'imported')
 
 def get_languages_txt():
 	return '\n'.join([

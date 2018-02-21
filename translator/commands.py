@@ -99,7 +99,7 @@ def _translate_untranslated_all(context):
 				try:
 					translate_untranslated_from_google(lang)
 				except requests.exceptions.HTTPError:
-					print "skipping {0}".format(lang)
+					print("skipping {0}".format(lang))
 					continue
 				finally:
 					frappe.db.commit()

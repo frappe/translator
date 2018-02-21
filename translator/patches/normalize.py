@@ -34,7 +34,7 @@ def execute():
 			frappe.db.set_value("Translated Message", name, "source", d.name, modified_by=modified_by, modified=modified)
 		count -= 1
 		click.clear()
-		print count, 'remaining'
+		print(count, 'remaining')
 
 	frappe.db.commit()
 

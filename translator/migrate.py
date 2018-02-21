@@ -3,7 +3,7 @@ import frappe
 from frappe.frappeclient import FrappeClient
 
 def migrate():
-	print "connecting..."
+	print("connecting...")
 	remote = FrappeClient("https://frappe.io", "Administrator", frappe.conf.frappe_admin_password)
 	remote.migrate_doctype("User", exclude=["Guest", "Administrator"], preprocess=remove_undesired_roles)
 	# remote.migrate_doctype("Language")
