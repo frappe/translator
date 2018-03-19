@@ -1,11 +1,11 @@
 # Copyright (c) 2015, Frappe Technologies Pvt. Ltd. and Contributors
 # MIT License. See license.txt
 
-from __future__ import unicode_literals
+from __future__ import unicode_literals, absolute_import
 import frappe, os
 
 from frappe.translate import read_csv_file, get_all_languages, write_translations_file, get_messages_for_app
-from translator.doctype.translated_message.translated_message import get_placeholders_count
+from translator.translator.doctype.translated_message.translated_message import get_placeholders_count
 import frappe.utils
 from frappe.utils import strip, update_progress_bar
 import json
