@@ -34,7 +34,7 @@ frappe.ready(function() {
         }
 	});
 
-    $(".select-letter").val(get_url_arg("c") || "")
+    $(".select-letter").val(frappe.utils.get_url_arg("c") || "")
         .ionRangeSlider({
             type: "single",
             grid: true,
