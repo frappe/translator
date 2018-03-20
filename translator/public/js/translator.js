@@ -77,7 +77,7 @@ var translator = {
 		});
 	},
 	activate: function($div) {
-		if(getCookie("sid")==="Guest") {
+		if(frappe.get_cookie("sid")==="Guest") {
 			frappe.msgprint("Please <a href='/login'>login</a> to edit / verify");
 			return;
 		}
