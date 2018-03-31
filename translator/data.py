@@ -12,6 +12,7 @@ import json
 from csv import writer
 import csv
 import frappe.exceptions
+from six import iteritems
 
 def import_languages():
 	with open(frappe.get_app_path("frappe", "data", "languages.txt"), "r") as f:
@@ -69,7 +70,7 @@ def export_translations():
 					for key in current:
 						current[key] = edited.get(key) or current[key]
 
-					write_translations_file(app, lang, current, sorted(current.keys()))
+					write_translations_file(app, lang, current, sorted(list(current)))
 
 def import_translations_from_file(lang, fname, editor):
 	from frappe.translate import read_csv_file
@@ -238,7 +239,7 @@ def import_json(lang, path):
 	count = 0
 	with open(path, 'rb') as f:
 		messages = json.load(f)
-	for source, message in messages.iteritems():
+	for source, message in iteritems(messages):
 		if not frappe.db.get_value('Translated Message', {"source": source, "language": lang}):
 			t = frappe.new_doc('Translated Message')
 			t.language = lang
