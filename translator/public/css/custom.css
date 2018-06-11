@@ -1,6 +1,10 @@
 .navbar-icon {
 	width: 30px;
-    margin-right: 10px;
+	margin-right: 10px;
+}
+
+.navbar-brand.ellipsis {
+	max-width: 300px;
 }
 
 .single-message {
