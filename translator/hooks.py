@@ -13,12 +13,12 @@ clear_cache = "translator.helpers.clear_cache"
 fixtures = ["Custom Field"]
 
 website_context = {
-	"brand_html": "<img class='navbar-icon' src='/assets/frappe_theme/img/erp-icon.svg' />ERPNext Translator",
+	"brand_html": "<img class='navbar-icon' src='/assets/translator/img/erp-icon.svg' />ERPNext Translator",
 	"top_bar_items": [
 		{"label": "Hall of Fame", "url": "/hall-of-fame", "right": 1},
 		{"label": "Help", "url": "/help", "right": 1}
 	],
-	"favicon": "/assets/frappe_theme/img/favicon.ico",
+	"favicon": "/assets/translator/img/favicon.ico",
 }
 
 # Includes in <head>
