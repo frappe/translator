@@ -8,6 +8,7 @@ from frappe.translate import read_csv_file, get_all_languages, write_translation
 from translator.translator.doctype.translated_message.translated_message import get_placeholders_count
 import frappe.utils
 from frappe.utils import strip, update_progress_bar
+from frappe import safe_decode
 import json
 from csv import writer
 import csv
@@ -270,14 +271,14 @@ def copy_translations(from_lang, to_lang):
 		update_progress_bar("Copying {0} to {1}".format(from_lang, to_lang), i, l)
 
 def read_translation_csv_file(path):
-	with open(path, 'rb') as f:
+	with open(path, 'rt') as f:
 		reader = unicode_csv_reader(f)
 		return list(reader)
 
 def unicode_csv_reader(utf8_data, dialect=csv.excel, **kwargs):
 	csv_reader = csv.reader(utf8_data, dialect=dialect, **kwargs)
 	for row in csv_reader:
-		yield [unicode(cell, 'utf-8') for cell in row]
+		yield [safe_decode(cell, 'utf-8') for cell in row]
 
 
 def import_translations_from_csv(lang, path, modified_by='Administrator', if_older_than=None):
