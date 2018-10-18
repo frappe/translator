@@ -46,11 +46,11 @@ def get_messages(lang):
 
 	if frappe.form_dict.search:
 		condition = "(source.message like %s or translated.translated like %s)"
-		condition_values = ['%' + frappe.db.escape(frappe.form_dict.search) + '%', '%' + frappe.db.escape(frappe.form_dict.search) + '%']
+		condition_values = ['%' + frappe.form_dict.search + '%', '%' + frappe.form_dict.search + '%']
 
 	else:
 		if frappe.form_dict.c:
-			c = frappe.db.escape(frappe.form_dict.c)
+			c = frappe.form_dict.c
 		else:
 			c = "*"
 
