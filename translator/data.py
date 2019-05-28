@@ -103,6 +103,7 @@ def import_source_messages():
 	for app in frappe.db.sql_list("select name from `tabTranslator App`"):
 		app_version = frappe.get_hooks(app_name='frappe')['app_version'][0]
 		messages = get_messages_for_app(app)
+
 		for message in messages:
 			source_message = frappe.db.get_value("Source Message", {"message": message[1]}, ["name", "message", "position", "app_version"], as_dict=True)
 			if source_message:
@@ -193,7 +194,8 @@ def write_csv_for_all_languages():
 	for lang in langs:
 		for app in apps:
 			print("Writing for {0}-{1}".format(app, lang))
-			write_csv(app, lang, frappe.utils.get_files_path("{0}-{1}.csv".format(app, lang)))
+			path = os.path.join(frappe.get_app_path(app, "translations", lang + ".csv"))
+			write_csv(app, lang, path)
 
 def write_csv(app, lang, path):
 	translations = get_translations_for_export(app, lang)
