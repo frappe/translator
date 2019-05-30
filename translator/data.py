@@ -216,7 +216,7 @@ def write_csv(app, lang, path):
 			# only write if translation is different from parent
 			if (not parent) or (t[2] != parent_dict.get(t[1])):
 
-				w.writerow([t[1], strip(t[2] or '')])
+				w.writerow([t[0] if t[0] else '', t[1], strip(t[2] or '')])
 				# w.writerow([t[0].encode('utf-8') if t[0] else '', t[1].encode('utf-8'), strip(t[2] or '').encode('utf-8')])
 
 def get_translations_for_export(app, lang):
