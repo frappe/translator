@@ -1,0 +1,90 @@
+{
+ "creation": "2019-05-30 13:27:37.197662",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "verified",
+  "section_break_2",
+  "language",
+  "contributor",
+  "column_break_5",
+  "posting_date",
+  "section_break_7",
+  "source_string",
+  "column_break_9",
+  "translated_string"
+ ],
+ "fields": [
+  {
+   "default": "0",
+   "fieldname": "verified",
+   "fieldtype": "Check",
+   "label": "Verified"
+  },
+  {
+   "fieldname": "section_break_2",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "language",
+   "fieldtype": "Link",
+   "label": "Language",
+   "options": "Language"
+  },
+  {
+   "fieldname": "contributor",
+   "fieldtype": "Data",
+   "label": "Contributor"
+  },
+  {
+   "fieldname": "column_break_5",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "posting_date",
+   "fieldtype": "Date",
+   "label": "Posting date"
+  },
+  {
+   "fieldname": "section_break_7",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "source_string",
+   "fieldtype": "Code",
+   "label": "Source String"
+  },
+  {
+   "fieldname": "column_break_9",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "translated_string",
+   "fieldtype": "Code",
+   "label": "Translated String"
+  }
+ ],
+ "modified": "2019-05-30 13:27:37.197662",
+ "modified_by": "Administrator",
+ "module": "Translator",
+ "name": "Contributed Translation",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "quick_entry": 1,
+ "sort_field": "modified",
+ "sort_order": "ASC",
+ "track_changes": 1
+}
