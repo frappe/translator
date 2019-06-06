@@ -213,6 +213,13 @@ def write_csv(app, lang, path):
 	with open(path, 'w') as msgfile:
 		w = writer(msgfile, lineterminator='\n')
 		for t in translations:
+			# check contributions
+			translated_string = frappe.db.get_value("Contributed Translation",
+				{'reference_docname': t[2], 'language': lang, 'verfied': 1}, 'translated_string')
+
+			if translated_string:
+				t[2] = translated_string
+
 			# only write if translation is different from parent
 			if (not parent) or (t[2] != parent_dict.get(t[1])):
 
@@ -221,7 +228,7 @@ def write_csv(app, lang, path):
 
 def get_translations_for_export(app, lang):
 	return frappe.db.sql("""select
-		source.position, source.message, translated.translated
+		source.position, source.message, translated.translated, source.name
 	from `tabSource Message` source
 		left join `tabTranslated Message` translated
 			on (source.name=translated.source and translated.language = %s)
@@ -385,3 +392,31 @@ def get_languages_txt():
 	return '\n'.join([
 		'\t'.join([lang, name]) for lang, name in
 		frappe.db.sql("select name, language_name from tabLanguage where name != 'en'")])
+
+def update_contributions(source_message, translated_message, app, version, language):
+	new_doc = frappe.new_doc({
+		"doctype": "Contributed Translation",
+		"source_string": source_message,
+		"app_name": app,
+		"version": version,
+		"language": language,
+		"translated_string": translated_message
+	})
+
+	source_message = frappe.db.get_value("Source Message", {"message": source_message},
+		'name', as_dict=True)
+
+	if source_message:
+		new_doc.reference_doctype = "Source Message"
+		new_doc.reference_docname = source_message.name
+
+	else:
+		translated_message = frappe.db.get_value("Translated Message", {"translated": translated_message},
+			['name', 'source'], as_dict=True)
+
+		if translated_message:
+			new_doc.reference_doctype = "Source Message"
+			new_doc.reference_docname = translated_message.source
+
+	if new_doc.reference_doctype and new_doc.reference_docname:
+		new_doc.save(ignore_pemissions=True)

@@ -4,7 +4,8 @@
 from __future__ import unicode_literals, absolute_import
 from frappe.commands import pass_context
 from translator.data import (import_source_messages, export_untranslated_to_json,
-	import_translations_from_csv, translate_untranslated_from_google, copy_translations)
+	import_translations_from_csv, translate_untranslated_from_google, copy_translations,
+	update_contributions)
 from frappe.translate import get_bench_dir
 import frappe.utils.data
 import requests.exceptions
@@ -106,11 +107,28 @@ def _translate_untranslated_all(context):
 		finally:
 			frappe.destroy()
 
+@click.command('update-contributions')
+@click.argument('source_message')
+@click.argument('translated_message')
+@click.argument('app')
+@click.argument('version')
+@pass_context
+def _update_contributions(context, source_message, translated_message, app, version, language):
+	for site in context.sites:
+		try:
+			frappe.init(site=site)
+			frappe.connect()
+			update_contributions(source_message, translated_message, app, version, language)
+			frappe.db.commit()
+		finally:
+			frappe.destroy()
+
 commands = [
 	_import_source_messages,
 	_export_untranslated_to_json,
 	_import_translations_from_csv,
 	_translate_untranslated,
 	_translate_untranslated_all,
-	_copy_translations
+	_copy_translations,
+	_update_contributions
 ]
