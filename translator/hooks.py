@@ -104,7 +104,7 @@ scheduler_events = {
 # 	],
 	"hourly": [
 		"translator.data.write_csv_for_all_languages",
-		"translator.translator.doctype.contributed_translation.contributed_translation.spush_contributions_to_respected_versions"
+		"translator.translator.doctype.contributed_translation.contributed_translation.push_contributions_to_respected_versions"
 	],
 	# "weekly": [
 	# 	"translator.helpers.weekly_updates"
