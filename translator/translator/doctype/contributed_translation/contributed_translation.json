@@ -3,24 +3,24 @@
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
-  "verified",
+  "status",
   "section_break_2",
   "language",
   "contributor",
   "column_break_5",
   "posting_date",
   "section_break_7",
+  "app_name",
   "source_string",
   "column_break_9",
-  "translated_string"
+  "app_version",
+  "translated_string",
+  "reference_section",
+  "pushed_to_respective_bench",
+  "reference_doctype",
+  "reference_docname"
  ],
  "fields": [
-  {
-   "default": "0",
-   "fieldname": "verified",
-   "fieldtype": "Check",
-   "label": "Verified"
-  },
   {
    "fieldname": "section_break_2",
    "fieldtype": "Section Break"
@@ -51,7 +51,7 @@
   },
   {
    "fieldname": "source_string",
-   "fieldtype": "Code",
+   "fieldtype": "Small Text",
    "label": "Source String"
   },
   {
@@ -60,11 +60,52 @@
   },
   {
    "fieldname": "translated_string",
-   "fieldtype": "Code",
+   "fieldtype": "Small Text",
    "label": "Translated String"
+  },
+  {
+   "default": "Contributed",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "Contributed\nVerified\nPR sent"
+  },
+  {
+   "fieldname": "app_name",
+   "fieldtype": "Data",
+   "label": "App Name"
+  },
+  {
+   "fieldname": "app_version",
+   "fieldtype": "Data",
+   "label": "App Version"
+  },
+  {
+   "fieldname": "reference_section",
+   "fieldtype": "Section Break",
+   "label": "Reference"
+  },
+  {
+   "default": "0",
+   "fieldname": "pushed_to_respective_bench",
+   "fieldtype": "Check",
+   "label": "Pushed To Respective Bench",
+   "read_only": 1
+  },
+  {
+   "fieldname": "reference_doctype",
+   "fieldtype": "Link",
+   "label": "Reference Doctype",
+   "options": "DocType"
+  },
+  {
+   "fieldname": "reference_docname",
+   "fieldtype": "Dynamic Link",
+   "label": "Reference Docname",
+   "options": "reference_doctype"
   }
  ],
- "modified": "2019-05-30 13:27:37.197662",
+ "modified": "2019-06-18 17:09:14.282914",
  "modified_by": "Administrator",
  "module": "Translator",
  "name": "Contributed Translation",
