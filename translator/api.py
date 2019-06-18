@@ -25,6 +25,12 @@ def add_translation(data):
 @frappe.whitelist(allow_guest=True)
 def translation_status(data):
 	data = json.loads(data)
-	return {
-		"status": frappe.get_value("Contributed Translation", data.get("doc_name"), "status")
-	}
+	status = frappe.db.get_value("Contributed Translation", data.get("doc_name"), "status")
+	if status:
+		return {
+			"status": status
+		}
+	else:
+		return {
+			"message": "Contributed Translation has been deleted"
+		}
