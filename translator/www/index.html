@@ -4,50 +4,129 @@
 <!-- no-breadcrumbs -->
 <!-- title: ERPNext Translator -->
 
-<div class="row hero text-center" style="padding-bottom: 90px;">
-    <div class="col-sm-12">
-        <img class="erp-hero" src="/assets/translator/img/translator.svg" style="width: 200px; margin-top: 30px;">
-    </div>
-    <div class="col-sm-12">
-        <h1 style='margin-top: 2rem'>ERPNext Translator</h1>
-        <p class='lead'>Help translate ERPNext and other Frappe apps</p>
-        <a class="btn btn-primary" href="#languages">Select a Language to Start</a>
-        <p class="description">
-			<a class="no-decoration"
-				href="https://github.com/frappe/translator/issues/new?title=New+Language+-+YOUR+LANGUAGE+NAME"
-				target="_blank">
-				or request a new language
-			</a>
-		</p>
-    </div>
-</div>
+<section class="section-padding text-center">
+	<div class='container'>
+		<div class="row hero text-center pb-5 pt-3">
+				<div class="col-sm-12">
 
-<div class="lang-list clearfix" id="languages" style="padding-top: 40px;">
-	{% for lang in frappe.get_all("Language", fields=["*"], order_by = "name asc", limit_page_length=1000) %}
-	{% if lang.name != "en" %}
-	{% set info = get_info(lang.name) %}
-	{% set percent = info.verified * 100 / (info.total + 1) %}
-    <div class="col-sm-4" style="height: 120px;">
-        <a class="grey no-decoration" href="/view?lang={{ lang.name }}">
-    	<div class="lang">
-    		<h2>{{ lang.language_name }} ({{ lang.name }})</h2>
-    		<div class="progress" style="height: 2px;">
-    			<div class="progress-bar" role="progressbar" aria-valuenow="60"
-    				aria-valuemin="0" aria-valuemax="100" style="width: {{ percent }}%;">
-    				<span class="sr-only">{{ percent }}% Verified</span>
-    			</div>
-    		</div>
-    		<p class="small text-muted" style="margin-top: -20px"
-    			>{{ info.edited or 0 }} messages edited. {{ info.verified }} verified of {{ info.total }}</p>
-    	</div>
-        </a>
-    </div>
-	{% endif %}
-	{% endfor %}
-</div>
+						<h1>ERPNext Translator</h1>
+						<div class='lead'>Help translate ERPNext and other Frappe apps</div>
 
-<!-- <div style="margin: 20px 15px 35px;">
-    <a class="btn btn-default"
-		href="https://github.com/frappe/translator/issues/new?title=New+Language+-+Language+Name"
-		target="_blank">Request a new language</a>
-</div> -->
+						<div class="pb-5">
+						<a class="no-decoration text-muted"
+							href="https://github.com/frappe/translator/issues/new?title=New+Language+-+YOUR+LANGUAGE+NAME"
+							target="_blank">
+							or request a new language
+						</a>
+						</div>
+
+						<div class="pb-5">
+								<a class="btn btn-primary"
+								href="https://frappe.io/docs/user/en/guides/basics/contribute_translations"
+								target="_blank">How to contribute</a>
+						</div>
+
+						<div class="col-sm-5 mx-auto mb-3 mt-2">
+							<select class="form-control language-select">
+								<option disabled selected>Select language</option>
+								{% for lang in frappe.get_all("Language", fields=["language_code", "language_name"]) %}
+								<option value="{{ lang.language_code }}" {% if lang.language_code == frappe.form_dict.lang %}selected{% endif %}>{{ lang.language_name }}</option>
+								{% endfor %}
+							</select>
+						</div>
+
+						<div class="col-sm-5 mx-auto">
+							{% set all_statuses = [] %}
+							<select class="form-control status-select">
+								<option disabled selected>Select status</option>
+								{% set ct_meta = frappe.get_meta("Contributed Translation") %}
+								{% for field in ct_meta.fields %}
+									{% if field.label=="Status" %}
+										{% set all_status = field.options %}
+										{{ all_statuses.extend(all_status.split("\n")) }}
+									{% endif %}
+								{% endfor %}
+								{% if all_statuses %}
+									{% for status in all_statuses %}
+									<option value="{{ status }}" {% if status == frappe.form_dict.status %}selected{% endif %}>{{ status }}</option>
+									{% endfor %}
+								{% endif %}
+							</select>
+						</div>
+
+						<div class="mt-2">
+							<a class="no-decoration text-muted" href="/">Clear Filters</a>
+						</div>
+
+						<script>
+							frappe.ready(() => {
+								$('.language-select, .status-select').on('change', (e) => {
+									let lang = $('.language-select').val();
+									let status = $('.status-select').val();
+									let query_params = new URLSearchParams();
+									query_params.append('lang', lang);
+									query_params.append('status', status);
+									window.location.href = `?${query_params.toString()}`;
+								});
+							});
+						</script>
+
+				</div>
+		</div>
+
+		<div>
+			<div class="pb-2">
+				<h3>Contributed Translations</h3>
+				<a class="no-decoration text-muted" href="https://frappe.io/about#contact">Contact us to become a verifier</a>
+			</div>
+
+			<div class='text-muted mb-3'>Displaying last 1000 contributed translations</div>
+			<table class="table table-hover text-left" style="margin: auto; border: 1px solid #d1d8dd;">
+				<thead>
+					<tr>
+						<th scope="col">Language</th>
+						<th scope="col">Source String</th>
+						<th scope="col">Translated String</th>
+						<th scope="col">Status</th>
+					</tr>
+				</thead>
+
+				<tbody>
+					{% if frappe.form_dict.lang and frappe.form_dict.status %}
+						{% if (not frappe.form_dict.lang=="null") and (not frappe.form_dict.status=="null") %}
+							{% set query_filters = {"language": frappe.form_dict.lang, "status":frappe.form_dict.status} %}
+						{% elif (not frappe.form_dict.lang=="null") and (frappe.form_dict.status=="null") %}
+							{% set query_filters = {"language": frappe.form_dict.lang} %}
+						{% elif (frappe.form_dict.lang=="null") and (not frappe.form_dict.status=="null") %}
+							{% set query_filters = {"status":frappe.form_dict.status} %}
+						{% elif (frappe.form_dict.lang=="null") and (frappe.form_dict.status=="null") %}
+							{% set query_filters = {} %}
+						{% endif %}
+					{% else %}
+						{% set query_filters = {} %}
+					{% endif %}
+
+					{% set contributed_translations = frappe.get_all("Contributed Translation", filters=query_filters, fields=["*"], limit_page_length=1000) %}
+					{% if contributed_translations %}
+						{% for contributed_translation in contributed_translations %}
+						<tr>
+							<td>{{ contributed_translation.language }}</td>
+							<td>{{ contributed_translation.source_string }}</td>
+							<td>{{ contributed_translation.translated_string }}</td>
+							<td>
+								  <span class="indicator {{ "green" if contributed_translation.status=="PR sent" else "orange"
+																							if contributed_translation.status=="Verified" else "red" }}"></span>
+								{{ contributed_translation.status }}
+							</td>
+						</tr>
+						{% endfor %}
+					{% else %}
+					<tr>
+						<td colspan="5" style="text-align: center">No contributions for this language</td>
+					{% endif %}
+				</tbody>
+
+			</table>
+		</div>
+	</div>
+</section>

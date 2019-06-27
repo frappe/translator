@@ -13,7 +13,9 @@ clear_cache = "translator.helpers.clear_cache"
 fixtures = ["Custom Field"]
 
 website_context = {
-	"brand_html": "<img class='navbar-icon' src='/assets/translator/img/erp-icon.svg' />ERPNext Translator",
+	'logo_image_url': '/assets/translator/img/erp-icon.svg',
+	'brand_html': 'ERPNext Translator',
+	'brand_name': 'ERPNext Translator',
 	"top_bar_items": [
 		{"label": "Hall of Fame", "url": "/hall-of-fame", "right": 1},
 		{"label": "Help", "url": "/help", "right": 1}
