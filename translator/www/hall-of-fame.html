@@ -1,22 +1,26 @@
-<div class="narrow">
-    <h1 class="page-title">Hall of Fame</h1>
-    <h3 class="page-sub-title">A big thanks to our top linguists</h3>
+<section class="section-padding text-center">
+	<div class='container'>
+    <div class="narrow">
+        <h1 class="page-title">Hall of Fame</h1>
+        <h3 class="page-sub-title">A big thanks to our top linguists</h3>
 
-    <!-- no-sidebar -->
-    <table class="table table-hover" style="max-width: 500px; margin: auto;">
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th class="text-right">Edited</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for d in users %}
-            <tr>
-                <td>{{ d.fullname }}</td>
-                <td class="text-right">{{ d.translated }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-</div>
+        <!-- no-sidebar -->
+        <table class="table table-hover text-left" style="margin: auto; border: 1px solid #d1d8dd;">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th class="text-right">Edited</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for d in users %}
+                <tr>
+                    <td>{{ d.fullname }}</td>
+                    <td class="text-right">{{ d.translated }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+  </div>
+</section>
