@@ -4,12 +4,11 @@
 <!-- no-breadcrumbs -->
 <!-- title: ERPNext Translator -->
 {% extends "frappe_theme/templates/base.html" %}
-{% block title %}Open Source Cloud ERP Software - ERPNext{% endblock %}
+{% block title %}ERPNext Translation Portal{% endblock %}
 
 {% block head_include %}
-	<meta name="description" content="ERPNext is the world's top 100% open source ERP software. ERPNext supports manufacturing, distribution, retail, trading, services, education, non profits and healthcare" />
-	<meta name="keywords" content="ERP Software, Cloud ERP, Open Source ERP, Accounting Software, Online ERP, Online Accounting, ERP for small business" />
-	<meta name="google-site-verification" content="euiq62LnIrUF6eLvL7wZEnVxhdfkfzuIMnSYRf4JzGk" />
+	<meta name="description" content="ERPNext translation portal allows users around the world to contribute translations for ERPNext and other Frappe apps" />
+	<meta name="keywords" content="ERP Translation, ERPNext Translation, Frappe Translation, Frappe i18n" />
 	<style>
 		table {
 			margin: auto;
@@ -23,6 +22,12 @@
 			color:white;
 			background-color: #36414c
 		}
+		hero-button {
+			width: 170px;
+		}
+		.footer-message {
+			display: none;
+		}
 	</style>
 {% endblock %}
 
@@ -32,7 +37,7 @@
 		<h1>ERPNext Translator</h1>
 		<p class='lead'>Help translate ERPNext and other Frappe apps.
 		<p class="mt-4">
-			<a class="btn btn-primary btn-lg" style="width: 170px;" target="_blank" href="https://frappe.io/docs/user/en/guides/basics/contribute_translations">Contribute</a>
+			<a class="btn btn-primary btn-lg hero-button" target="_blank" href="https://frappe.io/docs/user/en/guides/basics/contribute_translations">Contribute</a>
 		</p>
 		<a class="mt-0 text-muted" href="https://github.com/frappe/translator/issues/new?title=New+Language+-+YOUR+LANGUAGE+NAME">Request a new language</a>
 		<div class='py-4'></div>
@@ -119,7 +124,6 @@
 			</table>
 	</div>
 </section>
-<style>.footer-message { display: none; }</style>
 {% endblock %}
 
 {% block script %}
