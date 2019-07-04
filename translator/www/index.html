@@ -32,7 +32,7 @@
 {% endblock %}
 
 {% block content %}
-<section class='top-section text-center'>
+<!-- <section class='top-section text-center'>
 	<div class='container'>
 		<h1>ERPNext Translator</h1>
 		<p class='lead'>Help translate ERPNext and other Frappe apps.
@@ -42,19 +42,23 @@
 		<a class="mt-0 text-muted" target="_blank" href="https://github.com/frappe/translator/issues/new?title=New+Language+-+YOUR+LANGUAGE+NAME">Request a new language</a>
 		<div class='py-4'></div>
 	</div>
-</section>
-<section id="contributed" class="section-bg">
-	<div class='py-5 container text-center'>
-		<h3 class='text-center'>Contributed Translations</h3>
-		<p class='lead'>Displaying last 100 contributed translations</p>
-		<a class="mt-0 text-muted" target="_blank" href="https://frappe.io/about#contact">Contact us to become a verifier</a>
+</section> -->
+<section class="top-section section">
+	<div class='container'>
+		<h1 class='text-center'>Contributed Translations</h1>
+		<p class='lead'>Help translate ERPNext and other Frappe apps.</p>
+		<div class="mt-2">
+			<a class="btn btn-secondary btn-md hero-button" target="_blank" href="https://frappe.io/about#contact">Become a Verifier</a>
+			<a class="btn btn-primary btn-md hero-button" target="_blank" href="https://frappe.io/docs/user/en/guides/basics/contribute_translations">Contribute</a>
+		</div>
+		<a class="mt-2 small text-muted" target="_blank" href="https://github.com/frappe/translator/issues/new?title=New+Language+-+YOUR+LANGUAGE+NAME">Request a new language</a>
 		<div class="mt-5">
 			<div class="row px-5 mx-auto">
 				<div class="col-md-6 col-sm-12 mb-3">
 					<select class="form-control language-select">
 						<option disabled hidden selected>Select language</option>
 						{% for lang in frappe.get_all("Language", fields=["language_code", "language_name"]) %}
-						<option value="{{ lang.language_code }}" {% if lang.language_code == frappe.form_dict.lang %}selected{% endif %}>{{ lang.language_name }}</option>
+						<option value="{{ lang.language_code }}" {% if lang.language_code == frappe.form_dict.language %}selected{% endif %}>{{ lang.language_name }}</option>
 						{% endfor %}
 					</select>
 				</div>
@@ -91,17 +95,7 @@
 				</thead>
 
 				<tbody>
-					{% if frappe.form_dict.lang and frappe.form_dict.status %}
-						{% set query_filters = {"language": frappe.form_dict.lang, "status":frappe.form_dict.status} %}
-					{% elif frappe.form_dict.lang and not frappe.form_dict.status %}
-						{% set query_filters = {"language": frappe.form_dict.lang} %}
-					{% elif not frappe.form_dict.lang and frappe.form_dict.status %}
-						{% set query_filters = {"status":frappe.form_dict.status} %}
-					{% else %}
-						{% set query_filters = {} %}
-					{% endif %}
-
-					{% set contributed_translations = frappe.get_all("Contributed Translation", filters=query_filters, fields=["*"], limit_page_length=100) %}
+					{% set contributed_translations = frappe.get_all("Contributed Translation", filters=frappe.form_dict, fields=["*"], limit_page_length=100) %}
 					{% if contributed_translations %}
 						{% for translation in contributed_translations %}
 						<tr>
@@ -132,9 +126,9 @@
 		let lang = $('.language-select').val();
 		let status = $('.status-select').val();
 		let query_params = new URLSearchParams();
-		if (lang) query_params.append('lang', lang);
+		if (lang) query_params.append('language', lang);
 		if (status) query_params.append('status', status);
-		window.location.href = `?${query_params.toString()}#contributed`;
+		document.location.replace(`?${query_params.toString()}`);
 	}
 	$('.language-select, .status-select').on('change', setFilter);
 </script>
