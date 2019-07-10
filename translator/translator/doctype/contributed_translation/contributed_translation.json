@@ -29,12 +29,14 @@
    "fieldname": "language",
    "fieldtype": "Link",
    "label": "Language",
-   "options": "Language"
+   "options": "Language",
+   "permlevel": 1
   },
   {
    "fieldname": "contributor",
    "fieldtype": "Data",
-   "label": "Contributor"
+   "label": "Contributor",
+   "permlevel": 1
   },
   {
    "fieldname": "column_break_5",
@@ -43,7 +45,8 @@
   {
    "fieldname": "posting_date",
    "fieldtype": "Date",
-   "label": "Posting date"
+   "label": "Posting date",
+   "permlevel": 1
   },
   {
    "fieldname": "section_break_7",
@@ -52,7 +55,8 @@
   {
    "fieldname": "source_string",
    "fieldtype": "Small Text",
-   "label": "Source String"
+   "label": "Source String",
+   "permlevel": 1
   },
   {
    "fieldname": "column_break_9",
@@ -61,7 +65,8 @@
   {
    "fieldname": "translated_string",
    "fieldtype": "Small Text",
-   "label": "Translated String"
+   "label": "Translated String",
+   "permlevel": 1
   },
   {
    "default": "Contributed",
@@ -73,39 +78,45 @@
   {
    "fieldname": "app_name",
    "fieldtype": "Data",
-   "label": "App Name"
+   "label": "App Name",
+   "permlevel": 1
   },
   {
    "fieldname": "app_version",
    "fieldtype": "Data",
-   "label": "App Version"
+   "label": "App Version",
+   "permlevel": 1
   },
   {
    "fieldname": "reference_section",
    "fieldtype": "Section Break",
-   "label": "Reference"
+   "label": "Reference",
+   "permlevel": 1
   },
   {
    "default": "0",
    "fieldname": "pushed_to_respective_bench",
    "fieldtype": "Check",
    "label": "Pushed To Respective Bench",
+   "permlevel": 1,
    "read_only": 1
   },
   {
    "fieldname": "reference_doctype",
    "fieldtype": "Link",
    "label": "Reference Doctype",
-   "options": "DocType"
+   "options": "DocType",
+   "permlevel": 1
   },
   {
    "fieldname": "reference_docname",
    "fieldtype": "Dynamic Link",
    "label": "Reference Docname",
-   "options": "reference_doctype"
+   "options": "reference_doctype",
+   "permlevel": 1
   }
  ],
- "modified": "2019-06-18 17:09:14.282914",
+ "modified": "2019-07-10 16:03:40.292871",
  "modified_by": "Administrator",
  "module": "Translator",
  "name": "Contributed Translation",
@@ -122,6 +133,32 @@
    "role": "System Manager",
    "share": 1,
    "write": 1
+  },
+  {
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "permlevel": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "delete": 1,
+   "export": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Verifier",
+   "write": 1
+  },
+  {
+   "delete": 1,
+   "permlevel": 1,
+   "read": 1,
+   "role": "Verifier"
   }
  ],
  "quick_entry": 1,
