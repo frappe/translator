@@ -28,6 +28,7 @@
   {
    "fieldname": "language",
    "fieldtype": "Link",
+   "in_list_view": 1,
    "label": "Language",
    "options": "Language",
    "permlevel": 1
@@ -55,6 +56,7 @@
   {
    "fieldname": "source_string",
    "fieldtype": "Small Text",
+   "in_list_view": 1,
    "label": "Source String",
    "permlevel": 1
   },
@@ -65,6 +67,7 @@
   {
    "fieldname": "translated_string",
    "fieldtype": "Small Text",
+   "in_list_view": 1,
    "label": "Translated String",
    "permlevel": 1
   },
@@ -72,6 +75,7 @@
    "default": "Contributed",
    "fieldname": "status",
    "fieldtype": "Select",
+   "in_list_view": 1,
    "label": "Status",
    "options": "Contributed\nVerified\nPR sent"
   },
@@ -116,7 +120,7 @@
    "permlevel": 1
   }
  ],
- "modified": "2019-07-10 16:03:40.292871",
+ "modified": "2019-08-16 15:16:40.233383",
  "modified_by": "Administrator",
  "module": "Translator",
  "name": "Contributed Translation",
