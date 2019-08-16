@@ -1,11 +1,15 @@
 from frappe import _
 
 def get_data():
-	return {
-		"Translator": {
-			"color": "green",
-			"icon": "icon-comment",
+	return [
+		{
+			"module_name": "Translation",
+			"category": "Modules",
+			"label": _("Verify Translations"),
+			"color": "#4c927e",
+			"reverse": 1,
+			"icon": "octicon octicon-tasklist",
 			"type": "module",
-			"label": _("Translator")
+			"description": "Verify Contributed Translations."
 		}
-	}
+	]
