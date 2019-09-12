@@ -96,7 +96,7 @@ web_include_js = [
 
 doc_events = {
 	"User": {
-		"on_update": "translator.utils.set_default_role"
+		"after_insert": "translator.utils.set_default_role"
 	}
 }
 
