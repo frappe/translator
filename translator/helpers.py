@@ -1,5 +1,8 @@
 from __future__ import unicode_literals
+
 import frappe
+from frappe.utils import validate_email_address
+
 
 def get_info(lang, this_month = False):
 	def _get():
@@ -53,8 +56,8 @@ def report(message, value):
 	message.save(ignore_permissions=1)
 
 def monthly_updates():
-	translators = frappe.db.sql_list("""select distinct modified_by from
-		`tabTranslated Message`""")
+	translators = frappe.db.sql_list("select DISTINCT(contributor) from `tabContributed Translation`")
+	translators = [email for email in translators if validate_email_address(email)]
 
 	message = frappe.get_template("/templates/emails/translator_update.md").render({
 		"frappe": frappe
@@ -62,9 +65,14 @@ def monthly_updates():
 
 	# refer unsubscribe against the administrator
 	# document for test
-	frappe.sendmail(translators, "ERPNext Translator <hello@erpnext.com>",
-		"Montly Update", message, bulk=True, reference_doctype="User",
-		reference_name="Administrator")
+	frappe.sendmail(
+		recipients=translators,
+		sender="ERPNext Translator <hello@erpnext.com>",
+		subject="Montly Update",
+		message=message,
+		reference_doctype="User",
+		reference_name="Administrator"
+	)
 
 def clear_cache():
 	for lang in frappe.db.sql_list("select name from tabLanguage"):

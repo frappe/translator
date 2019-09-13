@@ -4,7 +4,6 @@
 
 <p>Translation activity monthly update!</p>
 
-<p>Note: This has now become a monthly update and we have fixed the unsubscribe link, so if you don't want this update, remove yourself.</p>
 
 <table style="width: 100%" cellspacing="0px" border="0px">
 	<thead>
