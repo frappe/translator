@@ -6,6 +6,12 @@
 {% extends "frappe_theme/templates/base.html" %}
 {% block title %}ERPNext Translation Portal{% endblock %}
 
+
+{% block head %}
+	{{ super() }}
+	<meta name="google" content="notranslate">
+{% endblock %}
+
 {% block head_include %}
 	<meta name="description" content="ERPNext translation portal allows users around the world to contribute translations for ERPNext and other Frappe apps" />
 	<meta name="keywords" content="ERP Translation, ERPNext Translation, Frappe Translation, Frappe i18n" />
