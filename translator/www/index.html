@@ -90,7 +90,7 @@
 					{% if contributed_translations %}
 						{% for translation in contributed_translations %}
 						<tr>
-							<td>{{ translation.language }}</td>
+							<td>{{ language_labels[translation.language] }}</td>
 							<td>{{ translation.source_string }}</td>
 							<td>{{ translation.translated_string }}</td>
 							<td>
