@@ -10,7 +10,7 @@ def get_context(context):
 		'fieldname': 'status'
 	}, 'options').split('\n')
 
-	context.contributed_tanslations = frappe.get_all("Contributed Translation",
+	context.contributed_translations = frappe.get_all("Contributed Translation",
 		filters=frappe.form_dict, fields=["*"], limit_page_length=100)
 
 	context.no_cache = 1
