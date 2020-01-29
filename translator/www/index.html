@@ -38,17 +38,6 @@
 {% endblock %}
 
 {% block content %}
-<!-- <section class='top-section text-center'>
-	<div class='container'>
-		<h1>ERPNext Translator</h1>
-		<p class='lead'>Help translate ERPNext and other Frappe apps.
-		<p class="mt-4">
-			<a class="btn btn-primary btn-lg hero-button" target="_blank" href="https://frappe.io/docs/user/en/guides/basics/contribute_translations">Contribute</a>
-		</p>
-		<a class="mt-0 text-muted" target="_blank" href="https://github.com/frappe/translator/issues/new?title=New+Language+-+YOUR+LANGUAGE+NAME">Request a new language</a>
-		<div class='py-4'></div>
-	</div>
-</section> -->
 <section class="top-section section">
 	<div class='container'>
 		<h1 class='text-center'>Contribute Translations</h1>
@@ -57,34 +46,31 @@
 			<a class="btn btn-secondary btn-md hero-button" target="_blank" href="https://translate.erpnext.com/login#signup">Become a Verifier</a>
 			<a class="btn btn-primary btn-md hero-button" target="_blank" href="https://frappe.io/docs/user/en/guides/basics/contribute_translations">How to Contribute</a>
 		</div>
-		<a class="mt-2 small text-muted" target="_blank" href="https://github.com/frappe/translator/issues/new?title=New+Language+-+YOUR+LANGUAGE+NAME">Request a new language</a>
+		<a
+			class="mt-2 small text-muted"
+			target="_blank"
+			href="https://github.com/frappe/translator/issues/new?title=New+Language+-+YOUR+LANGUAGE+NAME">
+			Request a new language
+		</a>
 		<div class="mt-5">
 			<div class="row px-5 mx-auto">
 				<div class="col-md-6 col-sm-12 mb-3">
 					<select class="form-control language-select">
 						<option disabled hidden selected>Select language</option>
-						{% for lang in frappe.get_all("Language", fields=["language_code", "language_name"]) %}
-						<option value="{{ lang.language_code }}" {% if lang.language_code == frappe.form_dict.language %}selected{% endif %}>{{ lang.language_name }}</option>
+						{% for lang in languages %}
+						<option value="{{ lang.language_code }}" {% if lang.language_code == frappe.form_dict.language %}selected{% endif %}>
+							{{ lang.language_name }} ({{lang.language_code}})
+						</option>
 						{% endfor %}
 					</select>
 				</div>
 
 				<div class="col-md-6 col-sm-12">
-					{% set all_statuses = [] %}
 					<select class="form-control status-select">
 						<option disabled hidden selected>Select status</option>
-						{% set ct_meta = frappe.get_meta("Contributed Translation") %}
-						{% for field in ct_meta.fields %}
-							{% if field.label=="Status" %}
-								{% set all_status = field.options %}
-								{{ all_statuses.extend(all_status.split("\n")) }}
-							{% endif %}
-						{% endfor %}
-						{% if all_statuses %}
-							{% for status in all_statuses %}
+						{% for status in status_options %}
 							<option value="{{ status }}" {% if status == frappe.form_dict.status %}selected{% endif %}>{{ status }}</option>
-							{% endfor %}
-						{% endif %}
+						{% endfor %}
 					</select>
 				</div>
 			</div>
@@ -101,7 +87,6 @@
 				</thead>
 
 				<tbody>
-					{% set contributed_translations = frappe.get_all("Contributed Translation", filters=frappe.form_dict, fields=["*"], limit_page_length=100) %}
 					{% if contributed_translations %}
 						{% for translation in contributed_translations %}
 						<tr>
@@ -109,8 +94,8 @@
 							<td>{{ translation.source_string }}</td>
 							<td>{{ translation.translated_string }}</td>
 							<td>
-								  <span class="indicator {{ "green" if translation.status=="PR sent" else "orange"
-																							if translation.status=="Verified" else "red" }}"></span>
+								<span class="indicator {{ "green" if translation.status=="PR sent" else "orange"
+									if translation.status=="Verified" else "red" }}"></span>
 								{{ translation.status }}
 							</td>
 						</tr>
@@ -118,6 +103,7 @@
 					{% else %}
 					<tr>
 						<td colspan="5" class="text-center text-muted p-5">No contributions to show</td>
+					</tr>
 					{% endif %}
 				</tbody>
 
