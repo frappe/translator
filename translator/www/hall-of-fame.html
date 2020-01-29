@@ -9,14 +9,14 @@
             <thead>
                 <tr>
                     <th>Name</th>
-                    <th class="text-right">Edited</th>
+                    <th class="text-right">Contribution Count</th>
                 </tr>
             </thead>
             <tbody>
                 {% for d in users %}
                 <tr>
                     <td>{{ d.fullname }}</td>
-                    <td class="text-right">{{ d.translated }}</td>
+                    <td class="text-right">{{ d.contribution_count }}</td>
                 </tr>
                 {% endfor %}
             </tbody>

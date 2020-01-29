@@ -4,10 +4,13 @@ from frappe.utils import get_fullname
 
 def get_context(context):
 	context.no_cache=True
-	data = frappe.db.sql("""select count(*) as translated, modified_by
-		from `tabTranslated Message`
-		where modified_by != "Administrator"
-		group by modified_by order by translated desc limit 20""", as_dict=1)
+	data = frappe.db.sql("""SELECT count(*) AS contribution_count, modified_by
+		FROM `tabTranslated Message`
+		WHERE modified_by != "Administrator"
+		GROUP BY modified_by
+		ORDER BY translated
+		DESC LIMIT 50
+	""", as_dict=1)
 
 	for d in data:
 		d.fullname = get_fullname(d.modified_by)
