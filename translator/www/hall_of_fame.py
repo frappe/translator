@@ -8,7 +8,7 @@ def get_context(context):
 		FROM `tabTranslated Message`
 		WHERE modified_by != "Administrator"
 		GROUP BY modified_by
-		ORDER BY translated
+		ORDER BY contribution_count
 		DESC LIMIT 50
 	""", as_dict=1)
 
