@@ -15,87 +15,6 @@ import csv
 import frappe.exceptions
 from six import iteritems
 
-def import_languages():
-	with open(frappe.get_app_path("frappe", "data", "languages.txt"), "r") as f:
-		for l in unicode(f.read(), "utf-8").splitlines():
-			if l:
-				code, name = l.strip().split(None, 1)
-				if not frappe.db.exists("Language", code):
-					print("inserting " + code)
-					frappe.get_doc({
-						"doctype":"Language",
-						"language_code": code,
-						"language_name": name
-					}).insert()
-
-		frappe.db.commit()
-
-def import_translations():
-	apps_path = frappe.get_app_path("frappe", "..", "..")
-	for app in os.listdir(apps_path):
-		translations_folder = os.path.join(apps_path, app, app, "translations")
-		if os.path.exists(translations_folder):
-			for lang in frappe.db.sql_list("select name from tabLanguage"):
-				path = os.path.join(translations_folder, lang + ".csv")
-				if os.path.exists(path):
-					print("Evaluating {0}...".format(lang))
-					data = read_csv_file(path)
-					for m in data:
-						if not frappe.db.get_value("Translated Message",
-							{"language": lang, "source": m[0]}):
-							frappe.get_doc({
-								"doctype": "Translated Message",
-								"language": lang,
-								"source": m[0],
-								"translated": m[1],
-								"verfied": 0
-							}).insert()
-							frappe.db.commit()
-				else:
-					print(path + " does not exist")
-
-
-def export_translations():
-	# ssh -p 9999 frappe@frappe.io "cd /home/frappe/frappe-bench/apps/frappe && git diff" | patch -p1
-	for lang in get_all_languages():
-		if lang!="en":
-			print("exporting " + lang)
-			edited = dict(frappe.db.sql("""select source, translated
-				from `tabTranslated Message` where language=%s""", lang))
-			for app in frappe.get_all_apps(True):
-				path = os.path.join(frappe.get_app_path(app, "translations", lang + ".csv"))
-				if os.path.exists(path):
-					# only update existing strings
-					current = dict(read_csv_file(path))
-
-					for key in current:
-						current[key] = edited.get(key) or current[key]
-
-					write_translations_file(app, lang, current, sorted(list(current)))
-
-def import_translations_from_file(lang, fname, editor):
-	from frappe.translate import read_csv_file
-
-	frappe.local.session.user = editor
-
-	for m in read_csv_file(fname):
-		src = frappe.db.get_value("Translated Message", {"language": lang, "source": m[0]}, ["name", "source", "translated"])
-		if src and src[2] != m[1]:
-			message = frappe.get_doc("Translated Message", src[0])
-			message.translated = m[1]
-			try:
-				message.save()
-				frappe.db.commit()
-				print(src[1] + " updated")
-			except frappe.ValidationError:
-				print(src[1] + " ignored")
-		else:
-			message = frappe.new_doc("Translated Message")
-			message.source = m[0]
-			message.translated = m[1]
-			message.language = lang
-			print("saving", m[0])
-			message.save()
 
 def import_source_messages():
 	"""Import messagse from apps listed in **Translator App** as **Source Message**"""
@@ -120,68 +39,6 @@ def import_source_messages():
 				d.app = app
 				d.app_version = app_version
 			d.save()
-
-def import_translated_from_text_files(untranslated_dir, translated_dir):
-	def read_file(path):
-		with open(path) as f:
-			lines = [x.decode('utf-8-SIG').rstrip('\r\n') for x in f.readlines()]
-			lines = [x for x in lines if x]
-			return lines
-
-	def restore_newlines(s):
-		return (s.replace("||||||", "\n\n")
-				.replace("| | | | | |", "\n\n")
-				.replace("|||||", "\\\n")
-				.replace("| | | | |", "\\\n")
-				.replace("||||", "\\n")
-				.replace("| | | |", "\\n")
-				.replace("|||", "\n")
-				.replace("| | |", "\n"))
-
-	for lang in frappe.db.sql_list("select name from tabLanguage"):
-		if lang == 'en':
-			continue
-
-		scache ={}
-		for s, t in zip(read_file(os.path.join(untranslated_dir, lang+'.txt')), read_file(os.path.join(translated_dir, lang+'.txt'))):
-			if scache.get(s):
-				source = scache[s]
-			else:
-				source = frappe.db.get_value("Source Message", {"message": restore_newlines(s)})
-				scache[s] = source
-			dest = frappe.db.get_value("Translated Message", {"source": source, "language": lang})
-			if not source:
-				print('Cannot find source message for', s)
-				continue
-
-			if not get_placeholders_count(s) == get_placeholders_count(t):
-				continue
-
-			if dest:
-				frappe.db.set_value("Translated Message", dest, "translated", restore_newlines(t))
-			else:
-				d = frappe.new_doc("Translated Message")
-				d.language = lang
-				d.translated = restore_newlines(t)
-				d.source = source
-				d.save()
-		print('done for', lang)
-
-def write_untranslated_csvs(path):
-	for lang in frappe.db.sql_list("select name from tabLanguage"):
-		write_untranslated_file(lang, os.path.join(path, lang+'.txt'))
-
-
-def write_untranslated_file(lang, path):
-	def escape_newlines(s):
-		return (s.replace("\\\n", "|||||")
-				.replace("\\n", "||||")
-				.replace("\n", "|||"))
-
-	with open(path, "w") as f:
-		for m in get_untranslated(lang):
-			# replace \n with ||| so that internal linebreaks don't get split
-			f.write((escape_newlines(m) + os.linesep).encode("utf-8"))
 
 def get_untranslated(lang):
 	return frappe.db.sql("""select source.name, source.message from `tabSource Message` source
@@ -237,22 +94,6 @@ def export_untranslated_to_json(lang, path):
 		}
 	with open(path, 'wb') as f:
 		json.dump(ret, f, indent=1)
-
-
-def import_json(lang, path):
-	"Imports translations from JSON. Only the new ones!"
-	count = 0
-	with open(path, 'rb') as f:
-		messages = json.load(f)
-	for source, message in iteritems(messages):
-		if not frappe.db.get_value('Translated Message', {"source": source, "language": lang}):
-			t = frappe.new_doc('Translated Message')
-			t.language = lang
-			t.source = source
-			t.translated = message['message']
-			t.save()
-			count += 1
-	print(count, 'imported')
 
 
 def copy_translations(from_lang, to_lang):
@@ -334,20 +175,6 @@ def get_translation_from_google(lang, message):
 	resp.raise_for_status()
 	return resp.json()["data"]["translations"][0]["translatedText"]
 
-def get_lang_name(lang):
-	s = frappe.utils.get_request_session()
-	resp = s.get("https://www.googleapis.com/language/translate/v2/languages", params={
-		"key": frappe.conf.google_api_key,
-		"target": "en"
-	})
-
-	languages = resp.json()['data']['languages']
-	for l in languages:
-		if l['language'] == lang:
-			return l['name']
-
-	return None
-
 def translate_untranslated_from_google(lang):
 	if lang == "en":
 		return
@@ -381,7 +208,17 @@ def translate_untranslated_from_google(lang):
 
 	print(lang, count, 'imported')
 
-def get_languages_txt():
-	return '\n'.join([
-		'\t'.join([lang, name]) for lang, name in
-		frappe.db.sql("select name, language_name from tabLanguage where name != 'en'")])
+
+def get_lang_name(lang):
+	s = frappe.utils.get_request_session()
+	resp = s.get("https://www.googleapis.com/language/translate/v2/languages", params={
+		"key": frappe.conf.google_api_key,
+		"target": "en"
+	})
+
+	languages = resp.json()['data']['languages']
+	for l in languages:
+		if l['language'] == lang:
+			return l['name']
+
+	return None
