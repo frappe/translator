@@ -34,3 +34,37 @@ def translation_status(data):
 		return {
 			"message": "Contributed Translation has been deleted"
 		}
+
+@frappe.whitelist(allow_guest=True)
+def add_translations(data):
+	try:
+		data = frappe._dict(json.loads(data))
+
+		translation_map = data.translation_map
+
+		for source_text, translation_dict in translation_map.items():
+			translation_dict = frappe._dict(translation_dict)
+			existing_doc_name = frappe.db.exists('Contributed Translation', {
+				'source_name': source_text,
+				'context': translation_dict.context,
+				'contributor_email': data.contributor_email
+			})
+			if existing_doc_name:
+				frappe.set_value('Contributed Translation', existing_doc_name, 'target_name', translation_dict.translated_text)
+			else:
+				doc = frappe.get_doc({
+					'doctype': 'Contributed Translation',
+					'source_string': source_text,
+					'translated_string': translation_dict.translated_text,
+					'context': translation_dict.context,
+					'contributor_email': data.contributor_email,
+					'contributor_name': data.contributor_name,
+					'language': data.language
+				})
+				doc.insert(ignore_permissions = True)
+	except Exception as e:
+		print(e)
+
+	return {
+		"message": "Added to contribution list"
+	}

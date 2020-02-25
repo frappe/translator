@@ -1,4 +1,5 @@
 {
+ "actions": [],
  "creation": "2019-05-30 13:27:37.197662",
  "doctype": "DocType",
  "engine": "InnoDB",
@@ -6,9 +7,9 @@
   "status",
   "section_break_2",
   "language",
-  "contributor",
+  "contributor_name",
   "column_break_5",
-  "posting_date",
+  "contributor_email",
   "section_break_7",
   "app_name",
   "source_string",
@@ -18,7 +19,8 @@
   "reference_section",
   "pushed_to_respective_bench",
   "reference_doctype",
-  "reference_docname"
+  "reference_docname",
+  "context"
  ],
  "fields": [
   {
@@ -34,20 +36,8 @@
    "permlevel": 1
   },
   {
-   "fieldname": "contributor",
-   "fieldtype": "Data",
-   "label": "Contributor",
-   "permlevel": 1
-  },
-  {
    "fieldname": "column_break_5",
    "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "posting_date",
-   "fieldtype": "Date",
-   "label": "Posting date",
-   "permlevel": 1
   },
   {
    "fieldname": "section_break_7",
@@ -77,7 +67,7 @@
    "fieldtype": "Select",
    "in_list_view": 1,
    "label": "Status",
-   "options": "Contributed\nVerified\nPR sent"
+   "options": "Contributed\nVerified\nRejected\nPR sent"
   },
   {
    "fieldname": "app_name",
@@ -118,9 +108,29 @@
    "label": "Reference Docname",
    "options": "reference_doctype",
    "permlevel": 1
+  },
+  {
+   "fieldname": "contributor_email",
+   "fieldtype": "Data",
+   "label": "Contributor Email",
+   "read_only": 1
+  },
+  {
+   "fieldname": "contributor_name",
+   "fieldtype": "Data",
+   "label": "Contributor Name",
+   "permlevel": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "context",
+   "fieldtype": "Data",
+   "label": "Context"
   }
  ],
- "modified": "2019-08-16 15:16:40.233383",
+ "in_create": 1,
+ "links": [],
+ "modified": "2020-02-02 09:41:51.184298",
  "modified_by": "Administrator",
  "module": "Translator",
  "name": "Contributed Translation",
@@ -165,7 +175,7 @@
    "role": "Verifier"
   }
  ],
- "quick_entry": 1,
+ "read_only": 1,
  "sort_field": "modified",
  "sort_order": "ASC",
  "track_changes": 1
