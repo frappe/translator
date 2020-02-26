@@ -17,14 +17,20 @@ from six import iteritems
 
 
 def import_source_messages():
-	"""Import messagse from apps listed in **Translator App** as **Source Message**"""
+	"""Import messages from apps listed in **Translator App** as **Source Message**"""
 	frappe.db.sql("update `tabSource Message` set disabled=1")
 	for app in frappe.db.sql_list("select name from `tabTranslator App`"):
 		app_version = frappe.get_hooks(app_name='frappe')['app_version'][0]
 		messages = get_messages_for_app(app)
 
 		for message in messages:
-			source_message = frappe.db.get_value("Source Message", {"message": message[1]}, ["name", "message", "position", "app_version"], as_dict=True)
+			context = ''
+			if len(message) > 2:
+				context = message[2]
+			source_message = frappe.db.get_value("Source Message", {
+				"message": message[1],
+				"context": context,
+			}, ["name", "message", "position", "app_version", "context"], as_dict=True)
 			if source_message:
 				d = frappe.get_doc("Source Message", source_message['name'])
 				if source_message["position"] != message[0] or source_message["app_version"] != app_version:

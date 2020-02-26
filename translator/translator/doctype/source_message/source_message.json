@@ -1,10 +1,12 @@
 {
+ "actions": [],
  "creation": "2015-02-20 18:51:19.081495",
  "doctype": "DocType",
  "document_type": "Setup",
  "engine": "InnoDB",
  "field_order": [
   "message",
+  "context",
   "position",
   "app",
   "app_version",
@@ -45,9 +47,15 @@
    "fieldname": "disabled",
    "fieldtype": "Check",
    "label": "Disabled"
+  },
+  {
+   "fieldname": "context",
+   "fieldtype": "Data",
+   "label": "Context"
   }
  ],
- "modified": "2019-05-22 13:05:09.811399",
+ "links": [],
+ "modified": "2020-02-26 08:35:09.528210",
  "modified_by": "Administrator",
  "module": "Translator",
  "name": "Source Message",
