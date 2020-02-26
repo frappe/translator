@@ -68,7 +68,7 @@ def monthly_updates():
 	frappe.sendmail(
 		recipients=translators,
 		sender="ERPNext Translator <hello@erpnext.com>",
-		subject="Montly Update",
+		subject="Monthly Update",
 		message=message,
 		reference_doctype="User",
 		reference_name="Administrator"

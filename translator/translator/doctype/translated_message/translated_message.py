@@ -26,7 +26,7 @@ class TranslatedMessage(Document):
 
 		source_msg = frappe.db.get_value("Source Message", self.source, "message")
 		if get_placeholders_count(source_msg) != get_placeholders_count(self.translated):
-			frappe.throw(_("Number of placehodlers (eg, {0}) do not match the source message"))
+			frappe.throw(_("Number of placeholders (eg, {0}) do not match the source message"))
 
 		# strip whitespace and whitespace like characters
 		self.translated = strip(self.translated)
