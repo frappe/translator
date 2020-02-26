@@ -51,24 +51,25 @@
   {
    "fieldname": "context",
    "fieldtype": "Data",
+   "in_list_view": 1,
    "label": "Context"
   }
  ],
+ "in_create": 1,
  "links": [],
- "modified": "2020-02-26 08:35:09.528210",
+ "modified": "2020-02-26 08:41:17.595320",
  "modified_by": "Administrator",
  "module": "Translator",
  "name": "Source Message",
  "owner": "Administrator",
  "permissions": [
   {
-   "create": 1,
-   "delete": 1,
    "read": 1,
-   "role": "System Manager",
-   "write": 1
+   "role": "System Manager"
   }
  ],
+ "read_only": 1,
  "sort_field": "modified",
- "sort_order": "DESC"
+ "sort_order": "DESC",
+ "title_field": "message"
 }
