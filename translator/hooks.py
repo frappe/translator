@@ -33,12 +33,6 @@ website_context = {
 # include js, css files in header of web template
 web_include_css = [
 	"/assets/translator/css/custom.css",
-	"/assets/translator/css/ion-rangeslider/ion.rangeSlider.css",
-	"/assets/translator/css/ion-rangeslider/ion.rangeSlider.skinFlat.css"
-]
-web_include_js = [
-	"/assets/translator/js/translator.js",
-	"/assets/translator/js/ion.rangeSlider.min.js"
 ]
 
 # Home Pages
