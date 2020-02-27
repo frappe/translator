@@ -37,13 +37,14 @@ def import_source_messages():
 					d.app_version = app_version
 					d.position = message[0]
 					d.app = app
-				d.disabled = 0
 			else:
 				d = frappe.new_doc("Source Message")
 				d.position = message[0]
 				d.message = message[1]
 				d.app = app
+				d.context = context
 				d.app_version = app_version
+			d.disabled = 0
 			d.save()
 
 def get_untranslated(lang):
@@ -83,11 +84,12 @@ def write_csv(app, lang, path):
 				# w.writerow([t[0].encode('utf-8') if t[0] else '', t[1].encode('utf-8'), strip(t[2] or '').encode('utf-8')])
 
 def get_translations_for_export(app, lang):
+	# should return all translated text
 	return frappe.db.sql("""select
 		source.position, source.message, translated.translated
 	from `tabSource Message` source
 		left join `tabTranslated Message` translated
-			on (source.name=translated.source and translated.language = %s)
+			on (source.name=translated.source and translated.language = %s and source.context=translated.context)
 	where
 		translated.name is not null
 		and source.disabled != 1 and source.app = %s""", (lang, app))
