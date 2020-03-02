@@ -15,11 +15,10 @@ import csv
 import frappe.exceptions
 from six import iteritems
 
-
 def import_source_messages():
 	"""Import messages from apps listed in **Translator App** as **Source Message**"""
 	frappe.db.sql("UPDATE `tabSource Message` SET `disabled`=1")
-	for app in frappe.db.sql_list("select name from `tabTranslator App`"):
+	for app in get_apps_to_be_translated():
 		app_version = frappe.get_hooks(app_name='frappe')['app_version'][0]
 		messages = get_messages_for_app(app)
 		# messages structure
@@ -53,22 +52,10 @@ def import_source_messages():
 				d.app_version = app_version
 			d.save()
 
-def get_untranslated(lang):
-	return frappe.db.sql("""
-		SELECT
-			source.name,
-			source.message
-		FROM `tabSource Message` source
-			LEFT JOIN `tabTranslated Message` translated
-				ON (source.name=translated.source AND translated.language = %s)
-		WHERE translated.name IS NULL AND source.disabled != 1
-	""", (lang, ))
-
 def write_csv_for_all_languages():
 	langs = frappe.db.sql_list("select name from tabLanguage")
-	apps = frappe.db.sql_list("select name from `tabTranslator App`")
 	for lang in langs:
-		for app in apps:
+		for app in get_apps_to_be_translated():
 			print("Writing for {0}-{1}".format(app, lang))
 			path = os.path.join(frappe.get_app_path(app, "translations", lang + ".csv"))
 			write_csv(app, lang, path)
@@ -84,26 +71,26 @@ def write_csv(app, lang, path):
 		parent = lang.split('-')[0]
 		parent_dict = {}
 		for t in get_translations_for_export(app, parent):
-			parent_dict[t[1]] = t[2]
+			parent_dict[t.source_text] = t.translated_text
 
 	with open(path, 'w') as msgfile:
 		w = writer(msgfile, lineterminator='\n')
 		for t in translations:
 			# only write if translation is different from parent
-			if (not parent) or (t[2] != parent_dict.get(t[1])):
-				if t[2]:
-					print(t[2])
-				w.writerow([t[0] if t[0] else '', t[1], strip(t[2] or '')])
-				# w.writerow([t[0].encode('utf-8') if t[0] else '', t[1].encode('utf-8'), strip(t[2] or '').encode('utf-8')])
+			if (not parent) or (t.translated_text != parent_dict.get(t.source_text)):
+				position = t.position or ''
+				translated_text = strip(t.source_text or '')
+				w.writerow([position, t.source_text, translated_text])
 
-def get_translations_for_export(app, lang):
+def get_translations_for_export(app, lang, only_untranslated_sources=False):
 	# should return all translated text
 	return frappe.db.sql("""
 		SELECT
-			source.position,
-			source.message,
+			source.name AS source_name,
+			source.position AS position,
+			source.message AS source_text,
 			COALESCE(contributed.translated_string, translated.translated) AS translated_text,
-			contributed.context
+			contributed.context AS context
 		FROM `tabSource Message` source
 			LEFT JOIN `tabTranslated Message` translated
 				ON (source.name=translated.source AND translated.language = %(language)s)
@@ -118,10 +105,12 @@ def get_translations_for_export(app, lang):
 			source.disabled != 1 AND source.app = %(app)s
 		GROUP BY
 			source.message, source.context
-		HAVING translated_text IS NOT NULL
+		HAVING `translated_text` {} NULL
 		ORDER BY
 			translated_text DESC
-	""", dict(language=lang, app=app))
+	""".format(
+			'IS' if only_untranslated_sources else 'IS NOT'
+		), dict(language=lang, app=app), as_dict=1)
 
 def export_untranslated_to_json(lang, path):
 	ret = {}
@@ -258,3 +247,14 @@ def get_lang_name(lang):
 			return l['name']
 
 	return None
+
+def get_untranslated(lang):
+	source_messages = []
+	for app in get_apps_to_be_translated():
+		source_messages += get_translations_for_export(app, lang, True)
+
+	untranslated_sources = [(s.source_name, s.source_text) for s in source_messages]
+	return untranslated_sources
+
+def get_apps_to_be_translated():
+	return [d.name for d in frappe.db.get_all('Translator App')]
