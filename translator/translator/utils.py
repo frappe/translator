@@ -13,7 +13,7 @@ def get_strings_for_translation(language, start=0, page_length=1000, search_text
 
 	messages = []
 	translated_message_dict = load_lang(lang=language)
-	user_translation_dict = get_user_translations(language)
+	contributed_translations = get_contributed_translations(language)
 
 	app_messages = frappe.cache().hget('app_messages', language) or []
 	if not app_messages:
@@ -33,22 +33,23 @@ def get_strings_for_translation(language, start=0, page_length=1000, search_text
 			line = message[3]
 
 		doctype = path_or_doctype.rsplit('DocType: ')[1] if path_or_doctype.startswith('DocType:') else None
-		user_translated_text = user_translation_dict.get(source_text)
-		translated_text = translated_message_dict.get(source_text)
 
-		id = source_text
+		source_key = source_text
 		if context:
-			source_text = source_text.rsplit(':' + context)[0]
+			source_key += ':' + context
+
+		translated_text = translated_message_dict.get(source_key)
 
 		messages.append(frappe._dict({
-			'id': id,
+			'id': source_text,
 			'source_text': source_text,
-			'translated_text': user_translated_text or translated_text or '',
-			'user_translated': bool(user_translated_text),
+			'translated_text': translated_text or '',
+			'user_translated': bool(False),
 			'context': context,
 			'line': line,
 			'path': path_or_doctype if not doctype else None,
-			'doctype': doctype
+			'doctype': doctype,
+			'contributions': contributed_translations.get(source_text) or []
 		}))
 
 	frappe.clear_messages()
@@ -59,3 +60,27 @@ def get_strings_for_translation(language, start=0, page_length=1000, search_text
 	messages = sorted(messages, key=lambda x: x.translated_text, reverse=False)
 
 	return messages[start:start + page_length]
+
+def get_contributed_translations(language):
+	cached_records = frappe.cache().hget('contributed_translations', language)
+	if cached_records:
+		return cached_records
+
+	doc_list = frappe.get_all('Contributed Translation',
+		fields=['source_string', 'translated_string', 'status', 'creation',
+			'language', 'contributor_email', 'contributor_name', 'modified_by'],
+		filters={
+			'language': language,
+			'status': ['!=', 'Rejected'],
+		}, order_by='verified')
+
+	doc_map = {}
+	for doc in doc_list:
+		if doc_map.get(doc.source_string):
+			doc_map[doc.source_string].append(doc)
+		else:
+			doc_map[doc.source_string] = [doc]
+
+	frappe.cache().hset('contributed_translations', language, doc_map)
+
+	return doc_map
