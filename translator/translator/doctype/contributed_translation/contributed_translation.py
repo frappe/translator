@@ -5,6 +5,10 @@
 from __future__ import unicode_literals
 # import frappe
 from frappe.model.document import Document
+import frappe
 
 class ContributedTranslation(Document):
-	pass
+	def on_update(self):
+		frappe.cache().hdel('contributed_translations', self.language)
+		if self.status == 'Verified':
+			self.verified = 1
