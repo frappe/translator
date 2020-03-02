@@ -79,8 +79,9 @@ def write_csv(app, lang, path):
 			# only write if translation is different from parent
 			if (not parent) or (t.translated_text != parent_dict.get(t.source_text)):
 				position = t.position or ''
-				translated_text = strip(t.source_text or '')
-				w.writerow([position, t.source_text, translated_text])
+				translated_text = strip(t.translated_text or '')
+				context = strip(t.context or '')
+				w.writerow([position, t.source_text, translated_text, context])
 
 def get_translations_for_export(app, lang, only_untranslated_sources=False):
 	# should return all translated text
