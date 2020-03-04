@@ -152,15 +152,25 @@ def unicode_csv_reader(utf8_data, dialect=csv.excel, **kwargs):
 
 
 def import_translations_from_csv(lang, path, modified_by='Administrator', if_older_than=None):
-	content = read_translation_csv_file(path)
-	if len(content[0]) == 2:
-		content = [c for c in content if len(c) == 2]
-		content = [('', c[0], c[1]) for c in content]
-	count = 0
-	print('importing', len(content), 'translations')
-	for pos, source_message, translated in content:
+	translations = read_translation_csv_file(path)
 
-		source_name = frappe.db.get_value("Source Message", {"message": source_message})
+	normalized_tranlations = []
+	for translation in translations:
+		if len(translation) == 2:
+			normalized_tranlations.append(('', *translation, ''))
+		elif len(translation) == 3:
+			normalized_tranlations.append((*translation, ''))
+		elif len(translation) == 4:
+			normalized_tranlations.append(translation)
+
+	count = 0
+	print('importing', len(normalized_tranlations), 'translations')
+	for pos, source_message, translated, context in normalized_tranlations:
+
+		source_name = frappe.db.get_value("Source Message", {
+			"message": source_message,
+			"context": context
+		})
 
 		if not source_name:
 			continue
@@ -169,7 +179,12 @@ def import_translations_from_csv(lang, path, modified_by='Administrator', if_old
 
 		if source.disabled:
 			continue
-		dest = frappe.db.get_value("Translated Message", {"source": source_name, "language": lang})
+
+		dest = frappe.db.get_value("Translated Message", {
+			"source": source_name,
+			"language": lang
+		})
+
 		if dest:
 			d = frappe.get_doc('Translated Message', dest)
 			if if_older_than and d.modified > if_older_than:
