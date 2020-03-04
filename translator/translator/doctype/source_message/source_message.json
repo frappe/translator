@@ -57,7 +57,7 @@
  ],
  "in_create": 1,
  "links": [],
- "modified": "2020-02-26 08:41:17.595320",
+ "modified": "2020-03-04 10:21:50.557565",
  "modified_by": "Administrator",
  "module": "Translator",
  "name": "Source Message",
@@ -68,7 +68,6 @@
    "role": "System Manager"
   }
  ],
- "read_only": 1,
  "sort_field": "modified",
  "sort_order": "DESC",
  "title_field": "message"
