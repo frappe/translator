@@ -11,6 +11,7 @@ from frappe.utils import strip, update_progress_bar
 from frappe import safe_decode
 import json
 from csv import writer
+from git import Repo
 import csv
 import frappe.exceptions
 from six import iteritems
@@ -83,6 +84,56 @@ def write_csv(app, lang, path):
 				context = strip(t.context or '')
 				w.writerow([position, t.source_text, translated_text, context])
 
+
+def write_translations_and_commit():
+	langs = frappe.db.sql_list("select name from tabLanguage")
+	for app in get_apps_to_be_translated():
+		for lang in ['ar']:
+			print("Writing for {0}-{1}".format(app, lang))
+			path = os.path.join(frappe.get_app_path(app, "translations", lang + ".csv"))
+
+			google_translations = []
+			user_translations = []
+
+			translations = get_translations_for_export(app, lang)
+
+			for translation in translations:
+				if translation.translated_by_google:
+					google_translations.append(translation)
+				else:
+					user_translations.append(translation)
+
+			parent = None
+			parent_dict = {}
+			if '-' in lang:
+				# get translation from parent
+				# for example es and es-GT
+				parent = lang.split('-')[0]
+				parent_dict = { t.source_text: t.translated_text for t in get_translations_for_export(app, parent) }
+
+			with open(path, 'w') as msgfile:
+				w = writer(msgfile, lineterminator='\n')
+				for t in google_translations:
+					# only write if translation is different from parent
+					if not parent or (t.translated_text != parent_dict.get(t.source_text)):
+						position = t.position or ''
+						translated_text = strip(t.translated_text or '')
+						context = strip(t.context or '')
+						w.writerow([position, t.source_text.replace('\n', '\\n'), translated_text.replace('\n', '\\n'), context])
+			make_a_commit(app, 'chore: Update translation')
+
+			# commit per user translation
+			for t in user_translations:
+				if not parent or (t.translated_text != parent_dict.get(t.source_text)):
+					position = t.position or ''
+					translated_text = strip(t.translated_text or '')
+					context = strip(t.context or '')
+					with open(path, 'a') as msgfile:
+						w = writer(msgfile, lineterminator='\n')
+						w.writerow([position, t.source_text.replace('\n', '\\n'), translated_text.replace('\n', '\\n'), context])
+					make_a_commit(app, 'chore: Update translation', t.contributor_name or t.modified_by, t.contributor_email or 'Verifier')
+
+
 def get_translations_for_export(app, lang, only_untranslated_sources=False):
 	# should return all translated text
 	return frappe.db.sql("""
@@ -91,7 +142,11 @@ def get_translations_for_export(app, lang, only_untranslated_sources=False):
 			source.position AS position,
 			source.message AS source_text,
 			COALESCE(contributed.translated_string, translated.translated) AS translated_text,
-			contributed.context AS context
+			CASE WHEN contributed.translated_string IS NULL THEN 1 ELSE 0 END AS translated_by_google,
+			contributed.context AS context,
+			contributed.contributor_name,
+			contributed.contributor_email,
+			contributed.modified_by
 		FROM `tabSource Message` source
 			LEFT JOIN `tabTranslated Message` translated
 				ON (source.name=translated.source AND translated.language = %(language)s)
@@ -274,3 +329,12 @@ def get_untranslated(lang):
 
 def get_apps_to_be_translated():
 	return [d.name for d in frappe.db.get_all('Translator App')]
+
+def make_a_commit(app, commit_msg, co_author_email=None, co_author_name=None):
+	repo_path = os.path.join('/Users/sps/benches/develop-py3', 'apps', app)
+	repo = Repo(repo_path)
+	if co_author_email and co_author_name:
+		commit_msg += "\n\nCo-authored-by: {} <{}>".format(co_author_name, co_author_email)
+
+	repo.git.add('--all')
+	return repo.index.commit(commit_msg)
