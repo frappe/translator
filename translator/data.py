@@ -108,7 +108,7 @@ def get_translations_for_export(app, lang, only_untranslated_sources=False):
 			source.message, source.context
 		HAVING `translated_text` {} NULL
 		ORDER BY
-			translated_text DESC
+			source.creation
 	""".format(
 			'IS' if only_untranslated_sources else 'IS NOT'
 		), dict(language=lang, app=app), as_dict=1)
