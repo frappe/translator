@@ -107,8 +107,7 @@
   {
    "fieldname": "contributor_email",
    "fieldtype": "Data",
-   "label": "Contributor Email",
-   "read_only": 1
+   "label": "Contributor Email"
   },
   {
    "fieldname": "contributor_name",
@@ -126,7 +125,7 @@
  ],
  "in_create": 1,
  "links": [],
- "modified": "2020-02-27 10:34:44.617532",
+ "modified": "2020-03-04 20:36:40.829761",
  "modified_by": "Administrator",
  "module": "Translator",
  "name": "Contributed Translation",
