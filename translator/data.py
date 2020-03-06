@@ -20,6 +20,8 @@ def import_source_messages():
 	"""Import messages from apps listed in **Translator App** as **Source Message**"""
 	frappe.db.sql("UPDATE `tabSource Message` SET `disabled`=1")
 	for app in get_apps_to_be_translated():
+		# for new line
+		print()
 		app_version = frappe.get_hooks(app_name='frappe')['app_version'][0]
 		messages = get_messages_for_app(app)
 		# messages structure
@@ -30,11 +32,15 @@ def import_source_messages():
 			if len(message) > 2 and message[2]:
 				context = message[2]
 
-			source_message = frappe.db.get_all('Source Message', {
-				'message': message[1],
-				'context': context,
-				'app': app,
-			}, ['name', 'message', 'position', 'app_version', 'context'], limit=1)
+			# used SQL so as to make message comparision case sensitive
+			source_message = frappe.db.sql("""
+				SELECT `name`, `message`, `position`, `app_version`, `context`
+				FROM `tabSource Message`
+				WHERE `position` = %s
+					AND `message` = BINARY %s
+					AND coalesce(`tabSource Message`.context, '') = %s
+					AND `tabSource Message`.app = %s
+			""", (message[0], message[1], context, app), as_dict=1)
 
 			source_message = source_message[0] if source_message else None
 			if source_message:
@@ -82,7 +88,7 @@ def write_csv(app, lang, path):
 				position = t.position or ''
 				translated_text = strip(t.translated_text or '')
 				context = strip(t.context or '')
-				w.writerow([position, t.source_text, translated_text, context])
+				w.writerow([t.source_text.replace('\n', '\\n'), translated_text.replace('\n', '\\n'), context])
 
 
 def write_translations_and_commit():
@@ -137,33 +143,33 @@ def write_translations_and_commit():
 def get_translations_for_export(app, lang, only_untranslated_sources=False):
 	# should return all translated text
 	return frappe.db.sql("""
-		SELECT
-			source.name AS source_name,
-			source.position AS position,
-			source.message AS source_text,
-			COALESCE(contributed.translated_string, translated.translated) AS translated_text,
-			CASE WHEN contributed.translated_string IS NULL THEN 1 ELSE 0 END AS translated_by_google,
-			contributed.context AS context,
-			contributed.contributor_name,
-			contributed.contributor_email,
-			contributed.modified_by
-		FROM `tabSource Message` source
-			LEFT JOIN `tabTranslated Message` translated
-				ON (source.name=translated.source AND translated.language = %(language)s)
-			LEFT JOIN `tabContributed Translation` contributed
-				ON (
-					source.message=contributed.source_string
-					AND contributed.language = %(language)s
-					AND contributed.status = 'Verified'
-					AND ((contributed.context IS NULL and contributed.context IS NULL) OR contributed.context=source.context)
-				)
-		WHERE
-			source.disabled != 1 AND source.app = %(app)s
-		GROUP BY
-			source.message, source.context
-		HAVING `translated_text` {} NULL
-		ORDER BY
-			source.creation
+		SELECT * FROM (
+			SELECT
+				source.name AS source_name,
+				source.position AS position,
+				source.message AS source_text,
+				source.context AS context,
+				translated.translated AS translated_text,
+				CASE WHEN translated.translation_type = 'Google Translated' THEN 1 ELSE 0 END AS translated_by_google,
+				translated.contributor_name,
+				translated.contributor_email,
+				translated.modified_by,
+				source.creation
+			FROM `tabSource Message` source
+				LEFT JOIN `tabTranslated Message` AS translated
+					ON (
+						source.name=translated.source
+						AND translated.language = %(language)s
+						AND (translated.contribution_status='Verified' OR translated.translation_type = 'Google Translated')
+					)
+			WHERE
+				source.disabled != 1 AND source.app = %(app)s
+			HAVING `translated_text` {} NULL
+			ORDER BY
+				translated_by_google
+		) as res
+		GROUP BY res.source_name
+		ORDER BY res.creation
 	""".format(
 			'IS' if only_untranslated_sources else 'IS NOT'
 		), dict(language=lang, app=app), as_dict=1)
