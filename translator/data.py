@@ -294,7 +294,12 @@ def translate_untranslated_from_google(lang):
 
 	for i, d in enumerate(untranslated):
 		source, message = d
-		if not frappe.db.get_value('Translated Message', {"source": source, "language": lang}):
+		translation_exists = frappe.db.get_all('Translated Message', {
+			"source": source,
+			"language": lang,
+			"contribution_status": ['in', ['Verified', '']]
+		}, limit=1)
+		if not translation_exists:
 			t = frappe.new_doc('Translated Message')
 			t.language = lang
 			t.source = source
