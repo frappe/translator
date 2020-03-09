@@ -7,8 +7,9 @@ def get_data():
 			"label": _("Translations"),
 			"items": [
 				{
+					"label": "Verify Translation Contributions",
 					"type": "doctype",
-					"name": "Contributed Translation"
+					"name": "Translated Message"
 				}
 			]
 		}
