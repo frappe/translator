@@ -1,17 +1,17 @@
-frappe.listview_settings['Contributed Translation'] = {
+frappe.listview_settings['Translated Message'] = {
 	hide_name_column: true,
+	add_fields: ['translation_type', 'contribution_status'],
 	onload: function() {
 		if (!frappe.route_options) {
 			frappe.route_options = {
-				"status": "Contributed",
-				"language": "hi"
+				"translation_type": "Contribution",
 			};
 		}
 	},
 
 	button: {
 		show: function(doc) {
-			return doc.status === 'Contributed';
+			return doc.contribution_status === 'Pending';
 		},
 		get_label: function() {
 			return __('Verify');
@@ -20,9 +20,9 @@ frappe.listview_settings['Contributed Translation'] = {
 			return __('Verify Contributed Translation')
 		},
 		action: function(doc) {
-			frappe.db.set_value('Contributed Translation', doc.name, 'status', 'Verified', () => {
+			frappe.db.set_value('Translated Message', doc.name, 'contribution_status', 'Verified', () => {
 				frappe.show_alert({
-					message: __('{0} has been verified.', [(doc.translated_string).bold()]),
+					message: __('{0} has been verified.', [(doc.translated).bold()]),
 					indicator: 'green'
 				})
 				cur_list.refresh()

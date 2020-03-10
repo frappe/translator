@@ -31,7 +31,6 @@
   {
    "fieldname": "source",
    "fieldtype": "Link",
-   "in_list_view": 1,
    "label": "Source",
    "options": "Source Message",
    "read_only": 1,
@@ -86,13 +85,14 @@
    "fetch_from": "source.message",
    "fieldname": "source_message",
    "fieldtype": "Small Text",
+   "in_list_view": 1,
    "label": "Source Message",
    "read_only": 1
   }
  ],
  "icon": "icon-comment",
  "links": [],
- "modified": "2020-03-09 21:50:22.780616",
+ "modified": "2020-03-10 08:48:50.749875",
  "modified_by": "Administrator",
  "module": "Translator",
  "name": "Translated Message",
