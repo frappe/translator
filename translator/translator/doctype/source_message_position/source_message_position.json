@@ -1,0 +1,50 @@
+{
+ "actions": [],
+ "creation": "2020-03-10 12:39:30.150545",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "position",
+  "line_no",
+  "app",
+  "app_version"
+ ],
+ "fields": [
+  {
+   "fieldname": "position",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Position"
+  },
+  {
+   "fieldname": "line_no",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Line No"
+  },
+  {
+   "fieldname": "app",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "App"
+  },
+  {
+   "fieldname": "app_version",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "App Version"
+  }
+ ],
+ "istable": 1,
+ "links": [],
+ "modified": "2020-03-10 12:39:54.572794",
+ "modified_by": "Administrator",
+ "module": "Translator",
+ "name": "Source Message Position",
+ "owner": "Administrator",
+ "permissions": [],
+ "quick_entry": 1,
+ "sort_field": "modified",
+ "sort_order": "DESC"
+}

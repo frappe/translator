@@ -11,7 +11,8 @@ class SourceMessage(Document):
 		self.name = frappe.generate_hash()
 
 	def after_insert(self):
-		frappe.enqueue_doc(self.doctype, self.name, 'create_google_translations')
+		pass
+		# frappe.enqueue_doc(self.doctype, self.name, 'create_google_translations')
 
 	def create_google_translations(self):
 		langs = frappe.db.sql_list("select name from tabLanguage")

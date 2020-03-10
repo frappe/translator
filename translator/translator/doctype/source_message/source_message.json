@@ -6,16 +6,10 @@
  "engine": "InnoDB",
  "field_order": [
   "disabled",
-  "section_break_2",
+  "section_break",
   "message",
-  "column_break_3",
   "context",
-  "position",
-  "line_no",
-  "section_break_6",
-  "app",
-  "column_break_9",
-  "app_version"
+  "positions"
  ],
  "fields": [
   {
@@ -25,27 +19,12 @@
    "label": "Message"
   },
   {
-   "fieldname": "position",
-   "fieldtype": "Data",
-   "label": "Position"
-  },
-  {
-   "fieldname": "app",
-   "fieldtype": "Link",
-   "label": "App",
-   "options": "Translator App"
-  },
-  {
-   "fieldname": "app_version",
-   "fieldtype": "Data",
-   "label": "App Version"
-  },
-  {
    "default": "0",
    "fieldname": "disabled",
    "fieldtype": "Check",
    "label": "Disabled",
-   "read_only": 1
+   "read_only": 1,
+   "search_index": 1
   },
   {
    "fieldname": "context",
@@ -54,38 +33,28 @@
    "label": "Context"
   },
   {
-   "fieldname": "column_break_3",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "section_break_6",
+   "fieldname": "section_break",
    "fieldtype": "Section Break"
   },
   {
-   "fieldname": "section_break_2",
-   "fieldtype": "Section Break"
-  },
-  {
-   "fieldname": "column_break_9",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "line_no",
-   "fieldtype": "Int",
-   "label": "Line No"
+   "fieldname": "positions",
+   "fieldtype": "Table",
+   "label": "Positions",
+   "options": "Source Message Position"
   }
  ],
- "in_create": 1,
  "links": [],
- "modified": "2020-03-05 15:14:57.500446",
+ "modified": "2020-03-10 12:41:04.762706",
  "modified_by": "Administrator",
  "module": "Translator",
  "name": "Source Message",
  "owner": "Administrator",
  "permissions": [
   {
+   "create": 1,
    "read": 1,
-   "role": "System Manager"
+   "role": "System Manager",
+   "write": 1
   }
  ],
  "sort_field": "modified",
