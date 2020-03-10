@@ -1,10 +1,10 @@
 frappe.listview_settings['Translated Message'] = {
 	hide_name_column: true,
-	add_fields: ['translation_type', 'contribution_status'],
+	add_fields: ['translation_source', 'contribution_status'],
 	onload: function() {
 		if (!frappe.route_options) {
 			frappe.route_options = {
-				"translation_type": "Contribution",
+				"translation_source": "Community Contribution",
 			};
 		}
 	},

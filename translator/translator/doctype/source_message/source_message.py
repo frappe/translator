@@ -24,7 +24,7 @@ class SourceMessage(Document):
 
 def create_translation(lang, source_dict):
 	t = frappe.new_doc('Translated Message')
-	t.translation_type = 'Google Translated'
+	t.translation_source = 'Google Translated'
 	t.language = lang
 	t.source = source_dict.name
 	try:

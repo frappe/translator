@@ -11,7 +11,7 @@
   "translated",
   "column_break_5",
   "source",
-  "translation_type",
+  "translation_source",
   "contribution_status",
   "section_break_6",
   "contributor_name",
@@ -44,18 +44,11 @@
    "label": "Translated"
   },
   {
-   "fieldname": "translation_type",
-   "fieldtype": "Select",
-   "label": "Translation Type",
-   "options": "Google Translated\nContribution",
-   "search_index": 1
-  },
-  {
    "fieldname": "section_break_6",
    "fieldtype": "Section Break"
   },
   {
-   "depends_on": "eval:doc.translation_type==='Contribution'",
+   "depends_on": "eval:doc.translation_source==='Contribution'",
    "fieldname": "contribution_status",
    "fieldtype": "Select",
    "in_standard_filter": 1,
@@ -88,11 +81,20 @@
    "in_list_view": 1,
    "label": "Source Message",
    "read_only": 1
+  },
+  {
+   "default": "Google Translated",
+   "fieldname": "translation_source",
+   "fieldtype": "Select",
+   "in_standard_filter": 1,
+   "label": "Translation Source",
+   "options": "Google Translated\nCommunity Contribution\nCSV",
+   "search_index": 1
   }
  ],
  "icon": "icon-comment",
  "links": [],
- "modified": "2020-03-10 08:48:50.749875",
+ "modified": "2020-03-10 19:55:30.816745",
  "modified_by": "Administrator",
  "module": "Translator",
  "name": "Translated Message",

@@ -10,7 +10,7 @@ def add_translations(translation_map, contributor_name, contributor_email, langu
 		translation_dict = frappe._dict(translation_dict)
 		existing_doc_name = frappe.db.exists('Translated Message', {
 			'source': source_id,
-			'translation_type': 'Contribution',
+			'translation_source': 'Community Contribution',
 			'context': translation_dict.context,
 			'contributor_email': contributor_email
 		})
@@ -20,7 +20,7 @@ def add_translations(translation_map, contributor_name, contributor_email, langu
 			doc = frappe.get_doc({
 				'doctype': 'Translated Message',
 				'source': source_id,
-				'translation_type': 'Contribution',
+				'translation_source': 'Community Contribution',
 				'contribution_status': 'Pending',
 				'translated': translation_dict.translated_text,
 				'context': translation_dict.context,
@@ -41,7 +41,7 @@ def get_strings_for_translation(language, start=0, page_length=100, search_text=
 				source.context AS context,
 				translated.translated AS translated_text,
 				CASE WHEN translated.translated IS NOT NULL THEN 1 ELSE 0 END AS translated,
-				CASE WHEN translated.translation_type = 'Google Translated' THEN 1 ELSE 0 END AS translated_by_google,
+				CASE WHEN translated.translation_source = 'Google Translated' THEN 1 ELSE 0 END AS translated_by_google,
 				translated.contributor_name,
 				translated.contributor_email,
 				translated.modified_by,
@@ -51,7 +51,7 @@ def get_strings_for_translation(language, start=0, page_length=100, search_text=
 					ON (
 						source.name=translated.source
 						AND translated.language = %(language)s
-						AND (translated.contribution_status='Verified' OR translated.translation_type = 'Google Translated')
+						AND (translated.contribution_status='Verified' OR translated.translation_source = 'Google Translated')
 					)
 			WHERE
 				source.disabled != 1 && (source.message like %(search_text)s or translated.translated like %(search_text)s)
@@ -67,7 +67,7 @@ def get_strings_for_translation(language, start=0, page_length=100, search_text=
 @frappe.whitelist(allow_guest=True)
 def get_contributions(source, language=''):
 	return frappe.get_all('Translated Message', filters={
-		'translation_type': 'Contribution',
+		'translation_source': 'Community Contribution',
 		'source': source,
 		'language': language
 	}, fields=['translated', 'contributor_email', 'contributor_name', 'creation', 'contribution_status', 'modified_by'])

@@ -168,7 +168,7 @@ def get_translations_for_export(app, lang, only_untranslated_sources=False):
 				source.message AS source_text,
 				source.context AS context,
 				translated.translated AS translated_text,
-				CASE WHEN translated.translation_type = 'Google Translated' THEN 1 ELSE 0 END AS translated_by_google,
+				CASE WHEN translated.translation_source = 'Google Translated' THEN 1 ELSE 0 END AS translated_by_google,
 				translated.contributor_name,
 				translated.contributor_email,
 				translated.modified_by,
@@ -178,7 +178,7 @@ def get_translations_for_export(app, lang, only_untranslated_sources=False):
 					ON (
 						source.name=translated.source
 						AND translated.language = %(language)s
-						AND (translated.contribution_status='Verified' OR translated.translation_type = 'Google Translated')
+						AND (translated.contribution_status='Verified' OR translated.translation_source != 'Community Contribution')
 					)
 				LEFT JOIN `tabSource Message Position` AS position
 					ON (
@@ -324,7 +324,7 @@ def translate_untranslated_from_google(lang):
 		}, limit=1)
 		if not translation_exists:
 			t = frappe.new_doc('Translated Message')
-			t.translation_type = 'Google Translated'
+			t.translation_source = 'Google Translated'
 			t.language = lang
 			t.source = source
 			t.translated = get_translation_from_google(lang, message)
