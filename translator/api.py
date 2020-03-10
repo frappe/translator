@@ -32,88 +32,42 @@ def add_translations(translation_map, contributor_name, contributor_email, langu
 
 
 @frappe.whitelist(allow_guest=True)
-def get_strings_for_translation(language, start=0, page_length=1000, search_text=''):
+def get_strings_for_translation(language, start=0, page_length=100, search_text=''):
+	return frappe.db.sql("""
+		SELECT * FROM (
+			SELECT
+				DISTINCT source.name AS id,
+				source.message AS source_text,
+				source.context AS context,
+				translated.translated AS translated_text,
+				CASE WHEN translated.translated IS NOT NULL THEN 1 ELSE 0 END AS translated,
+				CASE WHEN translated.translation_type = 'Google Translated' THEN 1 ELSE 0 END AS translated_by_google,
+				translated.contributor_name,
+				translated.contributor_email,
+				translated.modified_by,
+				source.creation
+			FROM `tabSource Message` source
+				LEFT JOIN `tabTranslated Message` AS translated
+					ON (
+						source.name=translated.source
+						AND translated.language = %(language)s
+						AND (translated.contribution_status='Verified' OR translated.translation_type = 'Google Translated')
+					)
+			WHERE
+				source.disabled != 1 && (source.message like %(search_text)s or translated.translated like %(search_text)s)
+			ORDER BY
+				translated_by_google
+		) as res
+		GROUP BY res.id
+		ORDER BY  res.translated, res.translated_by_google, res.creation
+		LIMIT %(page_length)s
+		OFFSET %(start)s
+	""", dict(language=language, search_text='%' + search_text + '%', page_length=cint(page_length), start=cint(start)), as_dict=1)
 
-	start = cint(start)
-	page_length = cint(page_length)
-
-	apps = [d.name for d in frappe.get_all('Translator App')]
-
-	messages = []
-	translated_message_dict = load_lang(lang=language)
-	contributed_translations = get_contributed_translations(language)
-
-	app_messages = frappe.cache().get_value('app_messages') or []
-	if not app_messages:
-		# getting as_list to save cache space
-		app_messages = frappe.get_all('Source Message',
-			fields=['position', 'message', 'context', 'line_no', 'name'],
-			filters={
-				'app': ['in', apps],
-			}, as_list=1)
-
-		frappe.cache().set_value('app_messages', app_messages)
-
-	for message in app_messages:
-		path_or_doctype = message[0] or ''
-		source_text = message[1]
-		line = None
-		context = None
-
-		if len(message) > 2:
-			context = message[2]
-			line = message[3]
-
-		doctype = path_or_doctype.rsplit('DocType: ')[1] if path_or_doctype.startswith('DocType:') else None
-
-		source_key = source_text
-		if context:
-			source_key += ':' + context
-
-		translated_text = translated_message_dict.get(source_key)
-
-		messages.append(frappe._dict({
-			'id': message[4],
-			'source_text': source_text,
-			'translated_text': translated_text or '',
-			'user_translated': bool(False),
-			'context': context,
-			'line': line,
-			'path': path_or_doctype if not doctype else None,
-			'doctype': doctype,
-			'contributions': contributed_translations.get(source_text) or []
-		}))
-
-	frappe.clear_messages()
-
-	if search_text:
-		messages = [message for message in messages if search_text in message.source_text]
-
-	messages = sorted(messages, key=lambda x: x.translated_text, reverse=False)
-
-	return messages[start:start + page_length]
-
-def get_contributed_translations(language):
-	cached_records = frappe.cache().hget('contributed_translations', language)
-	if cached_records:
-		return cached_records
-
-	doc_list = frappe.get_all('Translated Message',
-		fields=['source', 'translated', 'contribution_status', 'creation',
-			'language', 'contributor_email', 'contributor_name', 'modified_by'],
-		filters={
-			'language': language,
-			'contribution_status': ['!=', 'Rejected'],
-			'translation_type': 'Contribution',
-		})
-
-	doc_map = {}
-	for doc in doc_list:
-		if doc_map.get(doc.source_string):
-			doc_map[doc.source_string].append(doc)
-		else:
-			doc_map[doc.source_string] = [doc]
-
-	frappe.cache().hset('contributed_translations', language, doc_map)
-
-	return doc_map
+@frappe.whitelist(allow_guest=True)
+def get_contributions(source, language=''):
+	return frappe.get_all('Translated Message', filters={
+		'translation_type': 'Contribution',
+		'source': source,
+		'language': language
+	}, fields=['translated', 'contributor_email', 'contributor_name', 'creation', 'contribution_status', 'modified_by'])
