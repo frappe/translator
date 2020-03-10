@@ -5,7 +5,6 @@ from __future__ import unicode_literals, absolute_import
 import frappe, os
 
 from frappe.translate import read_csv_file, get_all_languages, write_translations_file, get_messages_for_app
-from translator.translator.doctype.translated_message.translated_message import get_placeholders_count
 import frappe.utils
 from frappe.utils import strip, update_progress_bar
 from frappe.core.utils import find
@@ -325,6 +324,7 @@ def translate_untranslated_from_google(lang):
 		}, limit=1)
 		if not translation_exists:
 			t = frappe.new_doc('Translated Message')
+			t.translation_type = 'Google Translated'
 			t.language = lang
 			t.source = source
 			t.translated = get_translation_from_google(lang, message)
