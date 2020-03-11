@@ -51,7 +51,7 @@ def get_strings_for_translation(language, start=0, page_length=100, search_text=
 					ON (
 						source.name=translated.source
 						AND translated.language = %(language)s
-						AND (translated.contribution_status='Verified' OR translated.translation_source = 'Google Translated')
+						AND (translated.contribution_status='Verified' OR translated.translation_source != 'Community Contribution')
 					)
 			WHERE
 				source.disabled != 1 && (source.message like %(search_text)s or translated.translated like %(search_text)s)
@@ -65,9 +65,16 @@ def get_strings_for_translation(language, start=0, page_length=100, search_text=
 	""", dict(language=language, search_text='%' + search_text + '%', page_length=cint(page_length), start=cint(start)), as_dict=1)
 
 @frappe.whitelist(allow_guest=True)
-def get_contributions(source, language=''):
-	return frappe.get_all('Translated Message', filters={
+def get_source_additional_info(source, language=''):
+	data = {}
+	data['contributions'] = frappe.get_all('Translated Message', filters={
 		'translation_source': 'Community Contribution',
 		'source': source,
 		'language': language
 	}, fields=['translated', 'contributor_email', 'contributor_name', 'creation', 'contribution_status', 'modified_by'])
+
+	data['positions'] = frappe.get_all('Source Message Position', filters={
+		'parent': source,
+	}, fields=['position as path', 'line_no', 'app', 'app_version'])
+
+	return data
