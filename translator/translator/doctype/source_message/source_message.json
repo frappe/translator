@@ -15,6 +15,7 @@
   {
    "fieldname": "message",
    "fieldtype": "Small Text",
+   "ignore_xss_filter": 1,
    "in_list_view": 1,
    "label": "Message"
   },
@@ -44,7 +45,7 @@
   }
  ],
  "links": [],
- "modified": "2020-03-10 12:41:04.762706",
+ "modified": "2020-03-11 14:13:06.729978",
  "modified_by": "Administrator",
  "module": "Translator",
  "name": "Source Message",
@@ -52,7 +53,9 @@
  "permissions": [
   {
    "create": 1,
+   "delete": 1,
    "read": 1,
+   "report": 1,
    "role": "System Manager",
    "write": 1
   }

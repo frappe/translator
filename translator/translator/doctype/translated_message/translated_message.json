@@ -48,7 +48,7 @@
    "fieldtype": "Section Break"
   },
   {
-   "depends_on": "eval:doc.translation_source==='Contribution'",
+   "depends_on": "eval:doc.translation_source==='Community Contribution'",
    "fieldname": "contribution_status",
    "fieldtype": "Select",
    "in_standard_filter": 1,
@@ -94,7 +94,7 @@
  ],
  "icon": "icon-comment",
  "links": [],
- "modified": "2020-03-10 19:55:30.816745",
+ "modified": "2020-03-11 14:08:48.547870",
  "modified_by": "Administrator",
  "module": "Translator",
  "name": "Translated Message",
