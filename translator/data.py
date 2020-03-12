@@ -40,7 +40,7 @@ def import_source_messages():
 			d.message = message
 			d.context = context
 		d.set('positions', positions)
-		d.save()
+		d.save(ignore_version=True, ignore_permissions=True)
 		update_progress_bar("Importing messages", i, l)
 
 def get_postions_to_save(old_positions, new_positions):
@@ -58,7 +58,7 @@ def get_postions_to_save(old_positions, new_positions):
 def get_formatted_messages():
 	message_map = frappe._dict({})
 	for app in get_apps_to_be_translated():
-		messages = get_messages_for_app(app)
+		messages = get_messages_for_app(app, False)
 		# messages structure
 		# [(position, source_text_1, context, line_no), (position, source_text_2)]
 		for message_data in messages:
@@ -266,7 +266,8 @@ def import_translations_from_csv(lang, path, modified_by='Administrator', if_old
 
 		dest = frappe.db.get_value("Translated Message", {
 			"source": source_name,
-			"language": lang
+			"language": lang,
+			"translated": translated
 		})
 
 		if dest:
@@ -373,3 +374,56 @@ def make_a_commit(app, commit_msg, co_author_email=None, co_author_name=None):
 
 	repo.git.add('--all')
 	return repo.index.commit(commit_msg)
+
+def import_new_translations_from_csv(lang, app):
+	path = os.path.join(frappe.get_app_path(app, "translations", lang + ".csv"))
+	translations = []
+	try:
+		translations = read_translation_csv_file(path)
+	except:
+		return
+
+	normalized_tranlations = []
+	for translation in translations:
+		if len(translation) == 2:
+			normalized_tranlations.append(('', *translation, ''))
+		elif len(translation) == 3:
+			normalized_tranlations.append((*translation, ''))
+		elif len(translation) == 4:
+			normalized_tranlations.append(translation)
+
+	count = 0
+	l = len(normalized_tranlations)
+	print('importing', len(normalized_tranlations), 'translations')
+	for i, (path, source_message, translated, context) in enumerate(normalized_tranlations):
+		source = frappe.db.get_all("Source Message", {
+			"message": source_message,
+			"context": context or '',
+			"disabled": 0
+		}, limit=1)
+
+		if not source:
+			continue
+
+		source_name = source[0].name
+
+		translation_exists = frappe.db.get_all("Translated Message", {
+			"source": source_name,
+			"language": lang,
+			"translated": translated
+		}, limit=1)
+
+		if translation_exists:
+			pass
+		else:
+			dest = frappe.new_doc("Translated Message")
+			dest.language = lang
+			dest.translated = translated
+			dest.source = source_name
+			dest.translation_source = 'CSV'
+			dest.save(ignore_version=True, ignore_permissions=True)
+			frappe.db.commit()
+			count += 1
+		update_progress_bar(f"Importing messages for lang {lang} of {app}", i, l)
+
+	print(f'{count} updated for {lang}')
