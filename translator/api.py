@@ -6,6 +6,7 @@ from frappe.translate import load_lang, get_user_translations, get_messages_for_
 @frappe.whitelist(allow_guest=True)
 def add_translations(translation_map, contributor_name, contributor_email, language):
 	translation_map = json.loads(translation_map)
+	name_map = frappe._dict({})
 	for source_id, translation_dict in translation_map.items():
 		translation_dict = frappe._dict(translation_dict)
 		existing_doc_name = frappe.db.exists('Translated Message', {
@@ -15,7 +16,8 @@ def add_translations(translation_map, contributor_name, contributor_email, langu
 			'contributor_email': contributor_email
 		})
 		if existing_doc_name:
-			frappe.set_value('Contributed Translation', existing_doc_name, 'target_name', translation_dict.translated_text)
+			name_map[translation_dict.name] = existing_doc_name
+			frappe.set_value('Translated Message', existing_doc_name, 'translated', translation_dict.translated_text)
 		else:
 			doc = frappe.get_doc({
 				'doctype': 'Translated Message',
@@ -29,6 +31,9 @@ def add_translations(translation_map, contributor_name, contributor_email, langu
 				'language': language
 			})
 			doc.insert(ignore_permissions=True)
+			name_map[translation_dict.name] = doc.name
+
+	return name_map
 
 
 @frappe.whitelist(allow_guest=True)
@@ -71,7 +76,7 @@ def get_source_additional_info(source, language=''):
 		'translation_source': 'Community Contribution',
 		'source': source,
 		'language': language
-	}, fields=['translated', 'contributor_email', 'contributor_name', 'creation', 'contribution_status', 'modified_by'])
+	}, fields=['name', 'translated', 'contributor_email', 'contributor_name', 'creation', 'contribution_status', 'modified_by'])
 
 	data['positions'] = frappe.get_all('Source Message Position', filters={
 		'parent': source,
