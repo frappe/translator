@@ -9,13 +9,13 @@ def add_translations(translation_map, contributor_name, contributor_email, langu
 	name_map = frappe._dict({})
 	for source_id, translation_dict in translation_map.items():
 		translation_dict = frappe._dict(translation_dict)
-		existing_doc_name = frappe.db.exists('Translated Message', {
+		existing_doc = frappe.db.get_all('Translated Message', {
 			'source': source_id,
 			'translation_source': 'Community Contribution',
-			'context': translation_dict.context,
 			'contributor_email': contributor_email
 		})
-		if existing_doc_name:
+		if existing_doc:
+			existing_doc_name = existing_doc[0].name
 			name_map[translation_dict.name] = existing_doc_name
 			frappe.set_value('Translated Message', existing_doc_name, 'translated', translation_dict.translated_text)
 		else:
@@ -25,7 +25,6 @@ def add_translations(translation_map, contributor_name, contributor_email, langu
 				'translation_source': 'Community Contribution',
 				'contribution_status': 'Pending',
 				'translated': translation_dict.translated_text,
-				'context': translation_dict.context,
 				'contributor_email': contributor_email,
 				'contributor_name': contributor_name,
 				'language': language
@@ -83,3 +82,13 @@ def get_source_additional_info(source, language=''):
 	}, fields=['position as path', 'line_no', 'app', 'app_version'])
 
 	return data
+
+@frappe.whitelist(allow_guest=True)
+def upvote_translation(translation_id, user_email, site):
+	# translation votes
+	pass
+
+@frappe.whitelist(allow_guest=True)
+def get_contribution_status(translation_id, user_email, site):
+	# contribution status
+	pass
