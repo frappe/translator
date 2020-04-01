@@ -17,7 +17,7 @@ def add_translations(translation_map, contributor_name, contributor_email, langu
 		if existing_doc:
 			existing_doc_name = existing_doc[0].name
 			name_map[translation_dict.name] = existing_doc_name
-			frappe.set_value('Translated Message', existing_doc_name, 'translated', translation_dict.translated_text)
+			frappe.db.set_value('Translated Message', existing_doc_name, 'translated', translation_dict.translated_text)
 		else:
 			doc = frappe.get_doc({
 				'doctype': 'Translated Message',
