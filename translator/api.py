@@ -32,6 +32,8 @@ def add_translations(translation_map, contributor_name, contributor_email, langu
 			doc.insert(ignore_permissions=True)
 			name_map[translation_dict.name] = doc.name
 
+	frappe.db.commit()
+
 	return name_map
 
 
