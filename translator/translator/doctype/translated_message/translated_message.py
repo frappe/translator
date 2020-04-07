@@ -10,5 +10,4 @@ from frappe.model.document import Document
 import re
 
 class TranslatedMessage(Document):
-	def autoname(self):
-		self.name = frappe.generate_hash()
+	pass
