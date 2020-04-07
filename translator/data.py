@@ -386,16 +386,14 @@ def import_new_translations_from_csv(lang, app):
 	normalized_tranlations = []
 	for translation in translations:
 		if len(translation) == 2:
-			normalized_tranlations.append(('', *translation, ''))
-		elif len(translation) == 3:
 			normalized_tranlations.append((*translation, ''))
-		elif len(translation) == 4:
+		elif len(translation) == 3:
 			normalized_tranlations.append(translation)
 
 	count = 0
 	l = len(normalized_tranlations)
 	print('importing', len(normalized_tranlations), 'translations')
-	for i, (path, source_message, translated, context) in enumerate(normalized_tranlations):
+	for i, (source_message, translated, context) in enumerate(normalized_tranlations):
 		source = frappe.db.get_all("Source Message", {
 			"message": source_message,
 			"context": context or '',
