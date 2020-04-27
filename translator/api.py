@@ -91,6 +91,5 @@ def upvote_translation(translation_id, user_email, site):
 	pass
 
 @frappe.whitelist(allow_guest=True)
-def get_contribution_status(translation_id, user_email, site):
-	# contribution status
-	pass
+def get_contribution_status(translation_id, user_email=None, site=None):
+	return frappe.get_doc('Translated Message', translation_id)
