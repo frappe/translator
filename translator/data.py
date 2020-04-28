@@ -235,8 +235,13 @@ def unicode_csv_reader(utf8_data, dialect=csv.excel, **kwargs):
 		yield [safe_decode(cell, 'utf-8') for cell in row]
 
 
-def import_translations_from_csv(lang, path, modified_by='Administrator', if_older_than=None):
-	translations = read_translation_csv_file(path)
+def import_translations_from_old_csv(lang, app):
+	path = os.path.join(frappe.get_app_path(app, "translations", lang + ".csv"))
+	translations = []
+	try:
+		translations = read_translation_csv_file(path)
+	except:
+		return
 
 	normalized_tranlations = []
 	for translation in translations:
@@ -248,44 +253,39 @@ def import_translations_from_csv(lang, path, modified_by='Administrator', if_old
 			normalized_tranlations.append(translation)
 
 	count = 0
+	l = len(normalized_tranlations)
 	print('importing', len(normalized_tranlations), 'translations')
-	for pos, source_message, translated, context in normalized_tranlations:
-
-		source_name = frappe.db.get_value("Source Message", {
+	for i, (path, source_message, translated, _context) in enumerate(normalized_tranlations):
+		source = frappe.db.get_all("Source Message", {
 			"message": source_message,
-			"context": context
-		})
+			"disabled": 0
+		}, limit=1)
 
-		if not source_name:
+		if not source:
 			continue
 
-		source = frappe.get_doc('Source Message', source_name)
+		source_name = source[0].name
 
-		if source.disabled:
-			continue
-
-		dest = frappe.db.get_value("Translated Message", {
+		translation_exists = frappe.db.get_all("Translated Message", {
 			"source": source_name,
 			"language": lang,
 			"translated": translated
-		})
+		}, limit=1)
 
-		if dest:
-			d = frappe.get_doc('Translated Message', dest)
-			if if_older_than and d.modified > if_older_than:
-				continue
-
-			if d.modified_by != "Administrator" or d.translated != translated:
-				frappe.db.set_value("Translated Message", dest, "translated", translated, modified_by=modified_by)
-				count += 1
+		if translation_exists:
+			pass
 		else:
 			dest = frappe.new_doc("Translated Message")
 			dest.language = lang
 			dest.translated = translated
-			dest.source = source.name
-			dest.save()
+			dest.source = source_name
+			dest.translation_source = 'CSV'
+			dest.save(ignore_version=True, ignore_permissions=True)
+			frappe.db.commit()
 			count += 1
-	print('updated', count)
+		update_progress_bar(f"Importing messages for lang {lang} of {app}", i, l)
+
+	print(f'{count} updated for {lang}')
 
 
 def get_translation_from_google(lang, message):
