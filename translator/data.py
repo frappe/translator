@@ -375,7 +375,7 @@ def get_normalized_translations(translations):
 		return []
 
 	first_column_text = translations[0][0]
-	if not first_column_text or first_column_text.startswith('apps/', 'Doctype:'):
+	if not first_column_text or first_column_text.startswith(('apps/', 'Doctype:')):
 		print('Old CSV format detected!')
 		# old csv format with path values in the csv file
 		for translation in translations:
