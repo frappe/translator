@@ -235,59 +235,6 @@ def unicode_csv_reader(utf8_data, dialect=csv.excel, **kwargs):
 		yield [safe_decode(cell, 'utf-8') for cell in row]
 
 
-def import_translations_from_old_csv(lang, app):
-	path = os.path.join(frappe.get_app_path(app, "translations", lang + ".csv"))
-	translations = []
-	try:
-		translations = read_translation_csv_file(path)
-	except:
-		return
-
-	normalized_translations = []
-	for translation in translations:
-		if len(translation) == 2:
-			normalized_translations.append(('', *translation, ''))
-		elif len(translation) == 3:
-			normalized_translations.append((*translation, ''))
-		elif len(translation) == 4:
-			normalized_translations.append(translation)
-
-	count = 0
-	l = len(normalized_translations)
-	print('importing', len(normalized_translations), 'translations')
-	for i, (path, source_message, translated, _context) in enumerate(normalized_translations):
-		source = frappe.db.get_all("Source Message", {
-			"message": source_message,
-			"disabled": 0
-		}, limit=1)
-
-		if not source:
-			continue
-
-		source_name = source[0].name
-
-		translation_exists = frappe.db.get_all("Translated Message", {
-			"source": source_name,
-			"language": lang,
-			"translated": translated
-		}, limit=1)
-
-		if translation_exists:
-			pass
-		else:
-			dest = frappe.new_doc("Translated Message")
-			dest.language = lang
-			dest.translated = translated
-			dest.source = source_name
-			dest.translation_source = 'CSV'
-			dest.save(ignore_version=True, ignore_permissions=True)
-			frappe.db.commit()
-			count += 1
-		update_progress_bar(f"Importing messages for lang {lang} of {app}", i, l)
-
-	print(f'{count} updated for {lang}')
-
-
 def get_translation_from_google(lang, message):
 	if lang == "cz":
 		lang = "cs"
@@ -375,7 +322,8 @@ def make_a_commit(app, commit_msg, co_author_email=None, co_author_name=None):
 	repo.git.add('--all')
 	return repo.index.commit(commit_msg)
 
-def import_new_translations_from_csv(lang, app):
+
+def import_translations_from_csv(lang, app):
 	path = os.path.join(frappe.get_app_path(app, "translations", lang + ".csv"))
 	translations = []
 	try:
@@ -383,12 +331,7 @@ def import_new_translations_from_csv(lang, app):
 	except:
 		return
 
-	normalized_translations = []
-	for translation in translations:
-		if len(translation) == 2:
-			normalized_translations.append((*translation, ''))
-		elif len(translation) == 3:
-			normalized_translations.append(translation)
+	translations = get_normalized_translations(translations)
 
 	count = 0
 	l = len(normalized_translations)
@@ -425,3 +368,29 @@ def import_new_translations_from_csv(lang, app):
 		update_progress_bar(f"Importing messages for lang {lang} of {app}", i, l)
 
 	print(f'{count} updated for {lang}')
+
+def get_normalized_translations(tranlations):
+	normalized_translations = []
+	if not translations:
+		return []
+
+	first_column_text = translations[0][0]
+	if not first_column_text or first_column_text.startswith('apps/', 'Doctype:'):
+		print('Old CSV format detected!')
+		# old csv format with path values in the csv file
+		for translation in translations:
+			if len(translation) == 2:
+				normalized_translations.append((*translation, ''))
+			elif len(translation) == 3:
+				normalized_translations.append((*translation[1:], ''))
+			elif len(translation) == 4:
+				normalized_translations.append(*translation[1:3], '')
+	else:
+		print('Considering New CSV format!')
+		for translation in translations:
+			if len(translation) == 2:
+				normalized_translations.append((*translation, ''))
+			elif len(translation) == 3:
+				normalized_translations.append(translation)
+
+	return normalized_translations

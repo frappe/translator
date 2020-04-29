@@ -4,7 +4,7 @@
 from __future__ import unicode_literals, absolute_import
 from frappe.commands import pass_context
 from translator.data import (import_source_messages, export_untranslated_to_json,
-	import_translations_from_old_csv, import_new_translations_from_csv, translate_untranslated_from_google, get_apps_to_be_translated)
+	import_translations_from_csv, translate_untranslated_from_google, get_apps_to_be_translated)
 from frappe.translate import get_bench_dir
 import frappe.utils.data
 import requests.exceptions
@@ -41,9 +41,9 @@ def _export_untranslated_to_json(context):
 		finally:
 			frappe.destroy()
 
-@click.command('import-new-translations-from-csv')
+@click.command('import-translations-from-csv')
 @pass_context
-def _import_new_translations_from_csv(context):
+def _import_translations_from_csv(context):
 	for site in context.sites:
 		try:
 			frappe.init(site=site)
@@ -51,21 +51,7 @@ def _import_new_translations_from_csv(context):
 			langs = frappe.db.sql_list("select name from tabLanguage")
 			for lang in langs:
 				for app in get_apps_to_be_translated():
-					import_new_translations_from_csv(lang, app)
-		finally:
-			frappe.destroy()
-
-@click.command('import-translations-from-old-csv')
-@pass_context
-def _import_translations_from_old_csv(context):
-	for site in context.sites:
-		try:
-			frappe.init(site=site)
-			frappe.connect()
-			langs = frappe.db.sql_list("select name from tabLanguage")
-			for lang in langs:
-				for app in get_apps_to_be_translated():
-					import_translations_from_old_csv(lang, app)
+					import_translations_from_csv(lang, app)
 		finally:
 			frappe.destroy()
 
@@ -119,8 +105,7 @@ def _translate_untranslated_all(context):
 commands = [
 	_import_source_messages,
 	_export_untranslated_to_json,
-	_import_translations_from_old_csv,
-	_import_new_translations_from_csv,
+	_import_translations_from_csv,
 	_translate_untranslated,
 	_translate_untranslated_all,
 	_copy_translations
