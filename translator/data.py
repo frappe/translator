@@ -331,7 +331,7 @@ def import_translations_from_csv(lang, app):
 	except:
 		return
 
-	translations = get_normalized_translations(translations)
+	normalized_translations = get_normalized_translations(translations)
 
 	count = 0
 	l = len(normalized_translations)
