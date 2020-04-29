@@ -243,19 +243,19 @@ def import_translations_from_old_csv(lang, app):
 	except:
 		return
 
-	normalized_tranlations = []
+	normalized_translations = []
 	for translation in translations:
 		if len(translation) == 2:
-			normalized_tranlations.append(('', *translation, ''))
+			normalized_translations.append(('', *translation, ''))
 		elif len(translation) == 3:
-			normalized_tranlations.append((*translation, ''))
+			normalized_translations.append((*translation, ''))
 		elif len(translation) == 4:
-			normalized_tranlations.append(translation)
+			normalized_translations.append(translation)
 
 	count = 0
-	l = len(normalized_tranlations)
-	print('importing', len(normalized_tranlations), 'translations')
-	for i, (path, source_message, translated, _context) in enumerate(normalized_tranlations):
+	l = len(normalized_translations)
+	print('importing', len(normalized_translations), 'translations')
+	for i, (path, source_message, translated, _context) in enumerate(normalized_translations):
 		source = frappe.db.get_all("Source Message", {
 			"message": source_message,
 			"disabled": 0
@@ -383,17 +383,17 @@ def import_new_translations_from_csv(lang, app):
 	except:
 		return
 
-	normalized_tranlations = []
+	normalized_translations = []
 	for translation in translations:
 		if len(translation) == 2:
-			normalized_tranlations.append((*translation, ''))
+			normalized_translations.append((*translation, ''))
 		elif len(translation) == 3:
-			normalized_tranlations.append(translation)
+			normalized_translations.append(translation)
 
 	count = 0
-	l = len(normalized_tranlations)
-	print('importing', len(normalized_tranlations), 'translations')
-	for i, (source_message, translated, context) in enumerate(normalized_tranlations):
+	l = len(normalized_translations)
+	print('importing', len(normalized_translations), 'translations')
+	for i, (source_message, translated, context) in enumerate(normalized_translations):
 		source = frappe.db.get_all("Source Message", {
 			"message": source_message,
 			"context": context or '',
