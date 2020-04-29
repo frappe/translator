@@ -369,7 +369,7 @@ def import_translations_from_csv(lang, app):
 
 	print(f'{count} updated for {lang}')
 
-def get_normalized_translations(tranlations):
+def get_normalized_translations(translations):
 	normalized_translations = []
 	if not translations:
 		return []
