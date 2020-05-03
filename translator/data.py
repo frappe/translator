@@ -332,39 +332,37 @@ def import_translations_from_csv(lang, app):
 		return
 
 	normalized_translations = get_normalized_translations(translations)
+	source_messages = get_source_messages()
+	translations = get_translations(lang)
 
 	count = 0
 	l = len(normalized_translations)
 	print('importing', len(normalized_translations), 'translations')
 	for i, (source_message, translated, context) in enumerate(normalized_translations):
-		source = frappe.db.get_all("Source Message", {
-			"message": source_message,
-			"context": context or '',
-			"disabled": 0
-		}, limit=1)
-
-		if not source:
-			continue
-
-		source_name = source[0].name
-
-		translation_exists = frappe.db.get_all("Translated Message", {
-			"source": source_name,
-			"language": lang,
-			"translated": translated
-		}, limit=1)
-
-		if translation_exists:
+		if not (source_message, context or None) in source_messages:
+			pass
+		elif translated in translations:
 			pass
 		else:
-			dest = frappe.new_doc("Translated Message")
-			dest.language = lang
-			dest.translated = translated
-			dest.source = source_name
-			dest.translation_source = 'CSV'
-			dest.save(ignore_version=True, ignore_permissions=True)
-			frappe.db.commit()
-			count += 1
+			try:
+				source = frappe.db.get_all("Source Message", {
+					"message": source_message,
+					"context": context or '',
+					"disabled": 0
+				}, limit=1)
+				source_name = source[0].name
+
+				dest = frappe.new_doc("Translated Message")
+				dest.language = lang
+				dest.translated = translated
+				dest.source = source_name
+				dest.translation_source = 'CSV'
+				dest.save(ignore_version=True, ignore_permissions=True)
+				frappe.db.commit()
+			except Exception as e:
+				print(e)
+
+		count += 1
 		update_progress_bar(f"Importing messages for lang {lang} of {app}", i, l)
 
 	print(f'{count} updated for {lang}')
@@ -394,3 +392,20 @@ def get_normalized_translations(translations):
 				normalized_translations.append(translation)
 
 	return normalized_translations
+
+def get_source_messages():
+	source_messages = frappe.cache().get_value('source_messages')
+	if not source_messages:
+		source_messages = frappe.get_all('Source Message', fields=['message', 'context'], filters={
+			"disabled": 0
+		}, as_list=1)
+		source_messages = {(d[0], d[1] or None) for d in source_messages}
+		frappe.cache().set_value('source_messages', source_messages)
+	return source_messages
+
+def get_translations(lang):
+	translations = frappe.get_all('Translated Message', fields=['translated'], filters={
+		"language": lang
+	}, as_list=1)
+	translations = {d[0] for d in translations}
+	return translations

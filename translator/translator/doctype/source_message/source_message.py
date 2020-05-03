@@ -10,8 +10,14 @@ class SourceMessage(Document):
 	def autoname(self):
 		self.name = frappe.generate_hash()
 
+	def on_update(self):
+		frappe.cache().delete_key('source_messages')
+
+	def on_trash(self):
+		frappe.cache().delete_key('source_messages')
+
 	def after_insert(self):
-		pass
+		frappe.cache().delete_key('source_messages')
 		# frappe.enqueue_doc(self.doctype, self.name, 'create_google_translations')
 
 	def create_google_translations(self):
