@@ -359,10 +359,10 @@ def import_translations_from_csv(lang, app):
 				dest.translation_source = 'CSV'
 				dest.save(ignore_version=True, ignore_permissions=True)
 				frappe.db.commit()
+				count += 1
 			except Exception as e:
 				print(e)
 
-		count += 1
 		update_progress_bar(f"Importing messages for lang {lang} of {app}", i, l)
 
 	print(f'{count} updated for {lang}')
