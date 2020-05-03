@@ -104,15 +104,15 @@ scheduler_events = {
 # 	"daily": [
 # 		"translator.tasks.daily"
 # 	],
-	"hourly": [
-		"translator.data.write_csv_for_all_languages"
-	],
+	# "hourly": [
+		# "translator.data.write_csv_for_all_languages"
+	# ],
 	# "weekly": [
 	# 	"translator.helpers.weekly_updates"
 	# ]
-	"monthly": [
-		"translator.helpers.monthly_updates"
-	]
+	# "monthly": [
+		# "translator.helpers.monthly_updates"
+	# ]
 }
 
 get_website_user_home_page = "translator.helpers.get_home_page"
