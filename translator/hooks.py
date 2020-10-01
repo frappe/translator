@@ -12,16 +12,16 @@ clear_cache = "translator.helpers.clear_cache"
 
 fixtures = ["Custom Field"]
 
-website_context = {
-	'logo_image_url': '/assets/translator/img/erp-icon.svg',
-	'brand_html': 'ERPNext Translator',
-	'brand_name': 'ERPNext Translator',
-	"top_bar_items": [
-		{"label": "Hall of Fame", "url": "/hall-of-fame", "right": 1},
-		{"label": "Help", "url": "/help", "right": 1}
-	],
-	"favicon": "/assets/translator/img/favicon.ico",
-}
+# website_context = {
+# 	'logo_image_url': '/assets/translator/img/erp-icon.svg',
+# 	'brand_html': 'ERPNext Translator',
+# 	'brand_name': 'ERPNext Translator',
+# 	"top_bar_items": [
+# 		{"label": "Hall of Fame", "url": "/hall-of-fame", "right": 1},
+# 		{"label": "Help", "url": "/help", "right": 1}
+# 	],
+# 	"favicon": "/assets/translator/img/favicon.ico",
+# }
 
 # Includes in <head>
 # ------------------
@@ -115,7 +115,7 @@ scheduler_events = {
 	# ]
 }
 
-get_website_user_home_page = "translator.helpers.get_home_page"
+# get_website_user_home_page = "translator.helpers.get_home_page"
 
 # Testing
 # -------
