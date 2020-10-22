@@ -12,16 +12,16 @@ clear_cache = "translator.helpers.clear_cache"
 
 fixtures = ["Custom Field"]
 
-website_context = {
-	'logo_image_url': '/assets/translator/img/erp-icon.svg',
-	'brand_html': 'ERPNext Translator',
-	'brand_name': 'ERPNext Translator',
-	"top_bar_items": [
-		{"label": "Hall of Fame", "url": "/hall-of-fame", "right": 1},
-		{"label": "Help", "url": "/help", "right": 1}
-	],
-	"favicon": "/assets/translator/img/favicon.ico",
-}
+# website_context = {
+# 	'logo_image_url': '/assets/translator/img/erp-icon.svg',
+# 	'brand_html': 'ERPNext Translator',
+# 	'brand_name': 'ERPNext Translator',
+# 	"top_bar_items": [
+# 		{"label": "Hall of Fame", "url": "/hall-of-fame", "right": 1},
+# 		{"label": "Help", "url": "/help", "right": 1}
+# 	],
+# 	"favicon": "/assets/translator/img/favicon.ico",
+# }
 
 # Includes in <head>
 # ------------------
@@ -33,12 +33,6 @@ website_context = {
 # include js, css files in header of web template
 web_include_css = [
 	"/assets/translator/css/custom.css",
-	"/assets/translator/css/ion-rangeslider/ion.rangeSlider.css",
-	"/assets/translator/css/ion-rangeslider/ion.rangeSlider.skinFlat.css"
-]
-web_include_js = [
-	"/assets/translator/js/translator.js",
-	"/assets/translator/js/ion.rangeSlider.min.js"
 ]
 
 # Home Pages
@@ -110,18 +104,18 @@ scheduler_events = {
 # 	"daily": [
 # 		"translator.tasks.daily"
 # 	],
-	"hourly": [
-		"translator.data.write_csv_for_all_languages"
-	],
+	# "hourly": [
+		# "translator.data.write_csv_for_all_languages"
+	# ],
 	# "weekly": [
 	# 	"translator.helpers.weekly_updates"
 	# ]
-	"monthly": [
-		"translator.helpers.monthly_updates"
-	]
+	# "monthly": [
+		# "translator.helpers.monthly_updates"
+	# ]
 }
 
-get_website_user_home_page = "translator.helpers.get_home_page"
+# get_website_user_home_page = "translator.helpers.get_home_page"
 
 # Testing
 # -------

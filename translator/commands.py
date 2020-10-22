@@ -4,7 +4,7 @@
 from __future__ import unicode_literals, absolute_import
 from frappe.commands import pass_context
 from translator.data import (import_source_messages, export_untranslated_to_json,
-	import_translations_from_csv, translate_untranslated_from_google, copy_translations)
+	import_translations_from_csv, translate_untranslated_from_google, get_apps_to_be_translated)
 from frappe.translate import get_bench_dir
 import frappe.utils.data
 import requests.exceptions
@@ -41,21 +41,17 @@ def _export_untranslated_to_json(context):
 		finally:
 			frappe.destroy()
 
-
-@click.command('import-from-csv')
-@click.argument('lang')
-@click.argument('csv-file')
-@click.option('--if-older-than')
+@click.command('import-translations-from-csv')
 @pass_context
-def _import_translations_from_csv(context, lang, csv_file, if_older_than=None):
+def _import_translations_from_csv(context):
 	for site in context.sites:
 		try:
 			frappe.init(site=site)
 			frappe.connect()
-			if if_older_than:
-				if_older_than = frappe.utils.data.get_datetime(if_older_than)
-			import_translations_from_csv(lang, csv_file, if_older_than=if_older_than)
-			frappe.db.commit()
+			langs = frappe.db.sql_list("select name from tabLanguage")
+			for lang in langs:
+				for app in get_apps_to_be_translated():
+					import_translations_from_csv(lang, app)
 		finally:
 			frappe.destroy()
 

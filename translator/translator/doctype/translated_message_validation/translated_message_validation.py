@@ -10,7 +10,7 @@ class TranslatedMessageValidation(Document):
 	def before_insert(self):
 		if frappe.db.get_value("Translated Message Validation",
 			{"owner": self.owner, "message": self.message}):
-			frappe.throw(_("You have already verifed"))
+			frappe.throw(_("You have already verified"))
 
 	def after_insert(self):
 		frappe.db.sql("""update `tabTranslated Message`
