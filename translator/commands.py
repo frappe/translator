@@ -5,7 +5,7 @@ from __future__ import unicode_literals, absolute_import
 from frappe.commands import pass_context
 from translator.data import (import_source_messages, export_untranslated_to_json,
 	import_translations_from_csv, translate_untranslated_from_google, get_apps_to_be_translated)
-from frappe.translate import get_bench_dir
+from frappe.utils import get_bench_path
 import frappe.utils.data
 import requests.exceptions
 import click
