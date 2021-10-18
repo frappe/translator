@@ -1,0 +1,40 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2021-10-14 16:39:08.676028",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "source",
+  "disabled"
+ ],
+ "fields": [
+  {
+   "description": "Branch(Version-13) or Tag(v13.11.6)",
+   "fieldname": "source",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Source"
+  },
+  {
+   "default": "0",
+   "fieldname": "disabled",
+   "fieldtype": "Check",
+   "in_list_view": 1,
+   "label": "Disabled"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2021-10-14 16:46:06.497614",
+ "modified_by": "Administrator",
+ "module": "Translator",
+ "name": "Translator App Source",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}
