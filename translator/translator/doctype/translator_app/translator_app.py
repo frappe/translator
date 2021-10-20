@@ -1,7 +1,7 @@
 # Copyright (c) 2015, Frappe Technologies and contributors
 # For license information, please see license.txt
 
-from __future__ import unicode_literals
+from __future__ import unicode_literals, with_statement
 import requests
 import frappe
 import os
@@ -14,7 +14,7 @@ class TranslatorApp(Document):
 		frappe.enqueue(
 			self.create_source_strings,
 			name=self.name,
-			enqueue_after_commit=True
+			enqueue_after_commit=True,
 		)
 		self.status = 'Queued'
 
@@ -41,6 +41,15 @@ class TranslatorApp(Document):
 			file = tarfile.open(fileobj=r.raw, mode="r|gz")
 			file.extractall(path=self.clone_directory)
 
+			from translator.translator.doctype.translator_app.get_strings.process_app import ProcessApp
+			messages = ProcessApp(
+				os.path.join(self.clone_directory, 
+				os.listdir(self.clone_directory)[0]
+				), self.app_name).get_messages()
+			print(messages)
+			with open('messages.txt', 'w') as fp:
+				fp.write(str(messages))
+
 		frappe.db.set_value('Translator App', name, 'status', 'Successful')
 
 
@@ -61,5 +70,5 @@ class TranslatorApp(Document):
 		self.clone_directory = os.path.join(
 			clone_directory, self.app_name, source, random_string(7)
 		)
-		if not os.path.exists(source_directory):
+		if not os.path.exists(clone_directory):
 			os.mkdir(self.clone_directory)

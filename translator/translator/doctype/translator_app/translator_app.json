@@ -9,7 +9,8 @@
   "app_name",
   "owner",
   "sources",
-  "status"
+  "status",
+  "log"
  ],
  "fields": [
   {
@@ -34,10 +35,16 @@
    "fieldtype": "Data",
    "hidden": 1,
    "label": "Status"
+  },
+  {
+   "fieldname": "log",
+   "fieldtype": "Data",
+   "label": "Log"
   }
  ],
  "links": [],
- "modified": "2021-10-14 17:27:13.697679",
+ "migration_hash": "77e754d6c9073143764bdcf17d34d252",
+ "modified": "2021-10-21 01:17:47.769085",
  "modified_by": "Administrator",
  "module": "Translator",
  "name": "Translator App",
