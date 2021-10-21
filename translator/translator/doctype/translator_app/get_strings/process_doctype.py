@@ -4,6 +4,8 @@ import os
 import frappe
 from frappe.modules.import_file import read_doc_from_file
 
+from frappe.translate import is_translatable
+
 from .process_file import ProcessFile
 from .process_folder import ProcessFolder
 
@@ -15,11 +17,6 @@ class ProcessDoctype():
 
 	def get_messages(self):
 		messages = []
-		for item in os.listdir(self.path):
-			if os.path.isdir(os.path.join(self.path, item)):
-				messages.extend(ProcessFolder(os.path.join(self.path, item)).get_messages())
-			else:
-				messages.extend(ProcessFile(os.path.join(self.path, item)).get_messages())
 
 		try:
 			doctype_json = read_doc_from_file(os.path.join(self.path, self.doctype_name + '.json'))
@@ -41,6 +38,16 @@ class ProcessDoctype():
 		for d in doctype_json.get("permissions"):
 			if d.get('role'):
 				messages.append(d.get('role'))
+
+		messages = [message for message in messages if message]
+		messages = [('DocType: ' + self.doctype_name, message) for message in messages if is_translatable(message)]
+
+		for item in os.listdir(self.path):
+			if os.path.isdir(os.path.join(self.path, item)):
+				messages.extend(ProcessFolder(os.path.join(self.path, item)).get_messages())
+			else:
+				messages.extend(ProcessFile(os.path.join(self.path, item)).get_messages())
+
 
 		return messages
 		# add workflow for doctype

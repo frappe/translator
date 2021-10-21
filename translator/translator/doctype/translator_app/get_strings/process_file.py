@@ -20,13 +20,13 @@ class ProcessFile():
 
 		:param path: path of the code file
 		"""
-		frappe.flags.setdefault('scanned_files', [])
-		# TODO: Find better alternative
-		# To avoid duplicate scan
-		if self.path in set(frappe.flags.scanned_files):
-			return []
+		# frappe.flags.setdefault('scanned_files', [])
+		# # TODO: Find better alternative
+		# # To avoid duplicate scan
+		# if self.path in set(frappe.flags.scanned_files):
+		# 	return []
 
-		frappe.flags.scanned_files.append(self.path)
+		# frappe.flags.scanned_files.append(self.path)
 
 		bench_path = get_bench_path()
 		if os.path.exists(self.path):
