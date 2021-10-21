@@ -26,8 +26,8 @@ class ProcessApp:
 		for item in os.listdir(self.path):
 			if item in IGNORED_ITEMS:
 				continue
-			elif item in modules:
-				messages.extend(ProcessModule(os.path.join(self.path, item)).get_messages())
+			elif frappe.unscrub(item) in modules:
+				messages.extend(ProcessModule(os.path.join(self.path, item), item).get_messages())
 			elif os.path.isdir(os.path.join(self.path, item)):
 				messages.extend(ProcessFolder(os.path.join(self.path, item)).get_messages())
 			else:

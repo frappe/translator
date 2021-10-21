@@ -20,29 +20,34 @@ class ProcessReport():
 		messages = []
 		for item in os.listdir(self.path):
 			if os.path.isdir(os.path.join(self.path, item)):
-				messages.extend(ProcessFolder(os.path.join(self.path, item)))
+				messages.extend(ProcessFolder(os.path.join(self.path, item)).get_messages())
 			else:
-				messages.extend(ProcessFile(os.path.join(self.path, item)))
+				messages.extend(ProcessFile(os.path.join(self.path, item)).get_messages())
 
-		report_json = read_doc_from_file(os.path.join(self.path, self.page_name + '.json'))
+		try:
+			report_json = read_doc_from_file(os.path.join(self.path, self.report_name + '.json'))
+		except IOError:
+			return messages
 
-		for d in report_json.get("roles"):
-			if d.get('role'):
-				messages.append(d.get('role'))
+		if report_json.get("roles"):
+			for d in report_json.get("roles"):
+				if d.get('role'):
+					messages.append(d.get('role'))
 
-		messages.extend([report_json.get('report_name'), page_json.get('name')])
+		messages.extend([report_json.get('report_name'), report_json.get('name')])
 
-		report_json = json.loads(report_json.get(json))
+		if report_json.get(json):
+			report_json = json.loads(report_json.get(json))
 
-		if report_json.get('columns'):
-			context = "Column of report '%s'" % report.name # context has to match context in `prepare_columns` in query_report.js
-			messages.extend([(None, report_column.label, context) for report_column in report_json.get('columns')])
+			if report_json.get('columns'):
+				context = "Column of report '%s'" % self.report_name # context has to match context in `prepare_columns` in query_report.js
+				messages.extend([(None, report_column.label, context) for report_column in report_json.get('columns')])
 
-		if report_json.get('filters'):
-			messages.extend([(None, report_filter.label) for report_filter in report_json.get('filters')])
+			if report_json.get('filters'):
+				messages.extend([(None, report_filter.label) for report_filter in report_json.get('filters')])
 
-		if report_json.get('query'):
-			messages.extend([(None, message) for message in re.findall('"([^:,^"]*):', report_json.get('query')) if is_translatable(message)])
+			if report_json.get('query'):
+				messages.extend([(None, message) for message in re.findall('"([^:,^"]*):', report_json.get('query')) if is_translatable(message)])
 
 		return messages
 

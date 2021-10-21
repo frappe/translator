@@ -46,9 +46,9 @@ class TranslatorApp(Document):
 				os.path.join(self.clone_directory, 
 				os.listdir(self.clone_directory)[0]
 				), self.app_name).get_messages()
-			print(messages)
-			with open('messages.txt', 'w') as fp:
-				fp.write(str(messages))
+
+			# with open('messages.txt', 'w') as fp:
+			# 	fp.write(str(len(messages)))
 
 		frappe.db.set_value('Translator App', name, 'status', 'Successful')
 

@@ -33,7 +33,6 @@ class ProcessFile():
 			with open(self.path, 'r') as sourcefile:
 				try:
 					file_contents = sourcefile.read()
-					print(file_contents)
 				except Exception:
 					print("Could not scan file for translation: {0}".format(self.path))
 					return []

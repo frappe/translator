@@ -18,9 +18,9 @@ class ProcessPage():
 		messages = []
 		for item in os.listdir(self.path):
 			if os.path.isdir(os.path.join(self.path, item)):
-				messages.extend(ProcessFolder(os.path.join(self.path, item)))
+				messages.extend(ProcessFolder(os.path.join(self.path, item)).get_messages())
 			else:
-				messages.extend(ProcessFile(os.path.join(self.path, item)))
+				messages.extend(ProcessFile(os.path.join(self.path, item)).get_messages())
 
 		page_json = read_doc_from_file(os.path.join(self.path, self.page_name + '.json'))
 
