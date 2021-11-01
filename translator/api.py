@@ -38,7 +38,7 @@ def add_translations(translation_map, contributor_name, contributor_email, langu
 
 
 @frappe.whitelist(allow_guest=True)
-def get_strings_for_translation(language, start=0, page_length=100, search_text=''):
+def get_strings_for_translation(language, start=0, page_length=100, search_text='', app_name='Frappe'):
 	return frappe.db.sql("""
 		SELECT * FROM (
 			SELECT
@@ -59,8 +59,12 @@ def get_strings_for_translation(language, start=0, page_length=100, search_text=
 						AND translated.language = %(language)s
 						AND (translated.contribution_status='Verified' OR translated.translation_source != 'Community Contribution')
 					)
+				Inner join `tabSource Message Position` as smp
+					on (
+						source.name=smp.parent
+					)
 			WHERE
-				source.disabled != 1 && (source.message like %(search_text)s or translated.translated like %(search_text)s)
+				source.disabled != 1 && ((source.message like %(search_text)s or translated.translated like %(search_text)s) and smp.app=%(app_name)s)
 			ORDER BY
 				translated_by_google
 		) as res
@@ -68,7 +72,7 @@ def get_strings_for_translation(language, start=0, page_length=100, search_text=
 		ORDER BY  res.translated, res.translated_by_google, res.creation
 		LIMIT %(page_length)s
 		OFFSET %(start)s
-	""", dict(language=language, search_text='%' + search_text + '%', page_length=cint(page_length), start=cint(start)), as_dict=1)
+	""", dict(language=language, search_text='%' + search_text + '%', page_length=cint(page_length), start=cint(start), app_name=app_name), as_dict=1 )
 
 @frappe.whitelist(allow_guest=True)
 def get_source_additional_info(source, language=''):

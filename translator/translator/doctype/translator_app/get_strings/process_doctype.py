@@ -42,12 +42,28 @@ class ProcessDoctype():
 		messages = [message for message in messages if message]
 		messages = [('DocType: ' + self.doctype_name, message) for message in messages if is_translatable(message)]
 
+
+		messages = [
+			{
+				'position': os.path.join(self.path, self.doctype_name + '.json'),
+				'source_text': message[1],
+				'context' : message[2] or '' if len(message) > 2 else '',
+				'line_no' : message[3] or 0 if len(message) == 4 else 0,
+			}
+			for message in messages
+		]
+
 		for item in os.listdir(self.path):
 			if os.path.isdir(os.path.join(self.path, item)):
 				messages.extend(ProcessFolder(os.path.join(self.path, item)).get_messages())
 			else:
 				messages.extend(ProcessFile(os.path.join(self.path, item)).get_messages())
 
+		for message in messages:
+			message['type'] = 'Document Type'
+			message['document_type'] = frappe.unscrub(self.doctype_name)
 
 		return messages
 		# add workflow for doctype
+
+

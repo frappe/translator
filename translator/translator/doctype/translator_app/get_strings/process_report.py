@@ -8,6 +8,7 @@ from frappe.modules.import_file import read_doc_from_file
 
 from .process_file import ProcessFile
 from .process_folder import ProcessFolder
+from frappe.translate import is_translatable
 
 
 
@@ -18,11 +19,7 @@ class ProcessReport():
 
 	def get_messages(self):
 		messages = []
-		for item in os.listdir(self.path):
-			if os.path.isdir(os.path.join(self.path, item)):
-				messages.extend(ProcessFolder(os.path.join(self.path, item)).get_messages())
-			else:
-				messages.extend(ProcessFile(os.path.join(self.path, item)).get_messages())
+
 
 		try:
 			report_json = read_doc_from_file(os.path.join(self.path, self.report_name + '.json'))
@@ -35,6 +32,8 @@ class ProcessReport():
 					messages.append(d.get('role'))
 
 		messages.extend([report_json.get('report_name'), report_json.get('name')])
+		messages = [message for message in messages if message]
+		messages = [('Report: ' + self.report_name, message) for message in messages if is_translatable(message)]
 
 		if report_json.get(json):
 			report_json = json.loads(report_json.get(json))
@@ -49,9 +48,25 @@ class ProcessReport():
 			if report_json.get('query'):
 				messages.extend([(None, message) for message in re.findall('"([^:,^"]*):', report_json.get('query')) if is_translatable(message)])
 
+		messages = [
+			{
+				'position': os.path.join(self.path, self.report_name + '.json'),
+				'source_text': message[1],
+				'context' : message[2] or '' if len(message) > 2 else '',
+				'line_no' : message[3] or 0 if len(message) == 4 else 0,
+			}
+			for message in messages
+		]
+
+		for item in os.listdir(self.path):
+			if os.path.isdir(os.path.join(self.path, item)):
+				messages.extend(ProcessFolder(os.path.join(self.path, item)).get_messages())
+			else:
+				messages.extend(ProcessFile(os.path.join(self.path, item)).get_messages())
+
+		for message in messages:
+			message['type'] = 'Report'
+			message['report'] = frappe.unscrub(self.report_name)
+
 		return messages
 
-def is_translatable(m):
-	if re.search("[a-zA-Z]", m) and not m.startswith("fa fa-") and not m.endswith("px") and not m.startswith("eval:"):
-		return True
-	return False

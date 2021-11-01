@@ -1,17 +1,39 @@
 import os
 import re
+import ast
 from typing import List, Tuple
 import frappe
+from frappe.exceptions import ValidationError
 from frappe.model.utils import InvalidIncludePath, render_include
-from frappe.utils import get_bench_path
 
-class ProcessFile():
+class C(ast.NodeVisitor):
+
+	def __init__(self, path):
+		self.path = path
+		self.messages = []
+		super().__init__()
+
+	def visit_keyword(self, node):
+		import ast
+
+		if node.arg in ('label', 'role'):
+			if isinstance(node.value, ast.Constant):
+				self.messages.append(node.value.value)
+			# except AttributeError:
+			# 	frappe.throw(ast.dump(node) +  self.path)
+
+		#  print(node.value.value)
+
+		super().generic_visit( node)
+
+
+class  ProcessFile():
 
 	def __init__(self, path) -> None:
 		self.path = path
 
 	def get_messages(self):
-		if not (self.path.endswith(".js") or self.path.endswith(".html") or self.path.endswith('.vue')):
+		if not (self.path.endswith(".js") or self.path.endswith(".html") or self.path.endswith('.vue') or self.path.endswith('.py')):
 			return []
 		return self.get_messages_from_file()
 
@@ -28,7 +50,6 @@ class ProcessFile():
 
 		# frappe.flags.scanned_files.append(self.path)
 
-		bench_path = get_bench_path()
 		if os.path.exists(self.path):
 			with open(self.path, 'r') as sourcefile:
 				try:
@@ -38,7 +59,13 @@ class ProcessFile():
 					return []
 
 				return [
-					(self.path, message, context, line)
+					{
+						'position': self.path,
+						'source_text': message,
+						'context': context,
+						'line_no': line
+					}
+
 					for (line, message, context) in self.extract_messages_from_code(file_contents)
 				]
 		else:
@@ -73,7 +100,20 @@ class ProcessFile():
 			if self.is_translatable(message):
 				messages.append([pos, message, context])
 
-		return self.add_line_number(messages, code)
+
+		# india_setup = ast.parse(''.join(lines))
+	
+		messages = self.add_line_number(messages, code)
+		if self.path.endswith('.py'):
+
+			c = C(self.path)
+
+			c.visit(ast.parse(code))
+			# print(c.messages)
+
+			messages.extend([[None,message, None] for message in c.messages])
+		# print(messages)
+		return messages
 
 	def is_translatable(self, m):
 		if re.search("[a-zA-Z]", m) and not m.startswith("fa fa-") and not m.endswith("px") and not m.startswith("eval:"):

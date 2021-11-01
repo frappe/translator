@@ -7,7 +7,7 @@
  "engine": "InnoDB",
  "field_order": [
   "app_name",
-  "owner",
+  "repository_owner",
   "sources",
   "status",
   "log"
@@ -26,11 +26,6 @@
    "options": "Translator App Source"
   },
   {
-   "fieldname": "owner",
-   "fieldtype": "Data",
-   "label": "Owner(Team or Personal)"
-  },
-  {
    "fieldname": "status",
    "fieldtype": "Data",
    "hidden": 1,
@@ -38,13 +33,22 @@
   },
   {
    "fieldname": "log",
-   "fieldtype": "Data",
+   "fieldtype": "Code",
    "label": "Log"
+  },
+  {
+   "fieldname": "repository_owner",
+   "fieldtype": "Data",
+   "label": "Repository Owner"
   }
  ],
- "links": [],
- "migration_hash": "77e754d6c9073143764bdcf17d34d252",
- "modified": "2021-10-21 01:17:47.769085",
+ "links": [
+  {
+   "link_doctype": "Extract Strings Job",
+   "link_fieldname": "translator_app"
+  }
+ ],
+ "modified": "2021-11-01 20:44:51.582400",
  "modified_by": "Administrator",
  "module": "Translator",
  "name": "Translator App",
