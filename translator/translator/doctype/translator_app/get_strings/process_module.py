@@ -21,28 +21,23 @@ class ProcessModule:
 	def get_messages(self):
 
 		messages = []
-
 		for item in os.listdir(self.path):
 			if item == 'doctype':
 				for doctype in os.listdir(os.path.join(self.path, item)):
 					if isdir(os.path.join(self.path, item, doctype)) and doctype not in ('__pycache__'):
-						print("inside doctype", doctype)
 
 						messages.extend(ProcessDoctype(os.path.join(self.path, item, doctype), doctype).get_messages())
 			elif item == 'report':
 
 				for report in os.listdir(os.path.join(self.path, item)):
 					if isdir(os.path.join(self.path, item, report)) and report not in ('__pycache__'):
-						print("inside report", report)
 
 						messages.extend(ProcessReport(os.path.join(self.path, item, report), report).get_messages())
 			elif item == 'page':
 				for page in os.listdir(os.path.join(self.path, item)):
 					if isdir(os.path.join(self.path, item, page)) and page not in ('__pycache__'):
-						print("inside page", page)
 						messages.extend(ProcessPage(os.path.join(self.path, item, page), page).get_messages())
 			elif os.path.isdir(os.path.join(self.path, item)):
-				print('inside folder', item )
 				messages.extend(ProcessFolder(os.path.join(self.path, item)).get_messages())
 			else:
 				messages.extend(ProcessFile(os.path.join(self.path, item)).get_messages())

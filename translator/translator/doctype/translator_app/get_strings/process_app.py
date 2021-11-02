@@ -32,5 +32,4 @@ class ProcessApp:
 				messages.extend(ProcessFolder(os.path.join(self.path, item)).get_messages())
 			else:
 				messages.extend(ProcessFile(os.path.join(self.path, item)).get_messages())
-
 		return messages

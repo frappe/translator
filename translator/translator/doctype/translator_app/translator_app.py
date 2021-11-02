@@ -16,5 +16,4 @@ class TranslatorApp(Document):
 
 @frappe.whitelist()
 def extract_strings_from_app(app_name):
-	print("app_name" * 255)
 	frappe.get_doc('Translator App', app_name).extract_strings_from_app()

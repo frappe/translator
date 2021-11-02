@@ -1,5 +1,6 @@
 {
  "actions": [],
+ "allow_import": 1,
  "creation": "2015-02-20 18:51:19.081495",
  "doctype": "DocType",
  "document_type": "Setup",
@@ -45,7 +46,7 @@
   }
  ],
  "links": [],
- "modified": "2020-03-11 14:13:06.729978",
+ "modified": "2021-11-02 17:05:17.521756",
  "modified_by": "Administrator",
  "module": "Translator",
  "name": "Source Message",

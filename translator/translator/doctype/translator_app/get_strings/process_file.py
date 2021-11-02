@@ -5,6 +5,7 @@ from typing import List, Tuple
 import frappe
 from frappe.exceptions import ValidationError
 from frappe.model.utils import InvalidIncludePath, render_include
+from frappe.utils import get_bench_path
 
 class C(ast.NodeVisitor):
 
@@ -60,7 +61,7 @@ class  ProcessFile():
 
 				return [
 					{
-						'position': self.path,
+						'position': os.path.relpath(self.path, get_bench_path()),
 						'source_text': message,
 						'context': context,
 						'line_no': line

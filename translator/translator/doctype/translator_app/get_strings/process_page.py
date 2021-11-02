@@ -7,6 +7,7 @@ from frappe.translate import is_translatable
 
 from .process_file import ProcessFile
 from .process_folder import ProcessFolder
+from frappe.utils import get_bench_path
 
 
 
@@ -31,7 +32,7 @@ class ProcessPage():
 
 		messages = [
 			{
-				'position': os.path.join(self.path, self.page_name + '.json'),
+				'position': os.path.relpath(os.path.join(self.path, self.page_name + '.json'), get_bench_path()),
 				'source_text': message[1],
 				'context' : message[2] or '' if len(message) > 2 else '',
 				'line_no' : message[3] or 0 if len(message) == 4 else 0,

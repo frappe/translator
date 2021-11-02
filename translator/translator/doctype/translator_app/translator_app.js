@@ -9,7 +9,7 @@ frappe.ui.form.on('Translator App', {
 				args: { app_name: frm.doc.name },
 			}).then(() => {
 				frappe.show_alert({
-					message:__('"String Extraction Job scheduled successfully'),
+					message:__('String Extraction Job scheduled successfully'),
 					indicator:'green'
 				}, 5);
 			});

@@ -3,6 +3,7 @@
 
 from __future__ import unicode_literals
 import frappe
+import requests
 from frappe.model.document import Document
 from translator.data import get_translation_from_google
 
