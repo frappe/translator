@@ -16,7 +16,7 @@ class C(ast.NodeVisitor):
 	def visit_keyword(self, node):
 		import ast
 
-		if node.arg in ('label', 'role'):
+		if node.arg in ('label', 'role', 'options'):
 			if isinstance(node.value, ast.Constant):
 				self.messages.append(node.value.value)
 			# except AttributeError:
