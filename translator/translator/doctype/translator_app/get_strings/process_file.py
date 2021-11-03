@@ -1,30 +1,37 @@
 import os
 import re
 import ast
+import json
 from typing import List, Tuple
 import frappe
 from frappe.exceptions import ValidationError
 from frappe.model.utils import InvalidIncludePath, render_include
 from frappe.utils import get_bench_path
+from frappe.modules.import_file import read_doc_from_file
 
 class C(ast.NodeVisitor):
 
 	def __init__(self, path):
 		self.path = path
 		self.messages = []
+		self.targets = ('label', 'role', 'options',
+			'workflow_state_name', 'workflow_action_name',
+			'item_label', 'item_type', 'description')
 		super().__init__()
+
+	def visit_Dict(self, node):
+		for key, value in zip(node.keys, node.values):
+			if isinstance(key, ast.Constant) and  isinstance(value, ast.Constant):
+				if key.value in self.targets:
+					self.messages.append(value.value)
+		super().generic_visit( node)
 
 	def visit_keyword(self, node):
 		import ast
 
-		if node.arg in ('label', 'role', 'options'):
+		if node.arg in self.targets:
 			if isinstance(node.value, ast.Constant):
 				self.messages.append(node.value.value)
-			# except AttributeError:
-			# 	frappe.throw(ast.dump(node) +  self.path)
-
-		#  print(node.value.value)
-
 		super().generic_visit( node)
 
 
@@ -34,22 +41,67 @@ class  ProcessFile():
 		self.path = path
 
 	def get_messages(self):
-		if not (self.path.endswith(".js") or self.path.endswith(".html") or self.path.endswith('.vue') or self.path.endswith('.py')):
+		if (self.path.endswith(".js") or self.path.endswith(".html") or self.path.endswith('.vue') or self.path.endswith('.py')):
+			return self.get_messages_from_file()
+		# elif (self.path.endswith(".json")):
+		# 	return self.get_messages_from_json()
+		else:
 			return []
-		return self.get_messages_from_file()
+
+	def get_messages_from_doc(self, doc):
+		messages = []
+		messages.extend([doc.get('label'), doc.get('description'), doc.get('name')])
+
+		if doc.get('fields'):
+			for field in doc.get('fields'):
+				messages.extend([field.get('label'), field.get('description')])
+
+				if field.get('fieldtype')=='Select' and field.get('options'):
+					options = field.get('options').split('\n')
+					if not "icon" in options[0]:
+						messages.extend(options)
+				if field.get('fieldtype')=='HTML' and field.get('options'):
+					messages.append(field.get('options'))
+		if doc.get('permissions'):
+			for d in doc.get("permissions"):
+				if d.get('role'):
+					messages.append(d.get('role'))
+
+		messages = [message for message in messages if message]
+		messages = [(self.path, message) for message in messages if self.is_translatable(message)]
+
+		messages = [
+			{
+				'position': os.path.relpath(os.path.join(self.path), get_bench_path()) ,
+				'source_text': message[1],
+				'context' : message[2] or '' if len(message) > 2 else '',
+				'line_no' : message[3] or 0 if len(message) == 4 else 0,
+			}
+			for message in messages
+		]
+		return messages
+
+	def get_messages_from_json(self):
+		messages = []
+		try:
+			json_doc = read_doc_from_file(self.path)
+		except IOError:
+			return messages
+
+		if type(json_doc) == type([]):
+			[messages.extend(self.get_messages_from_doc(json.loads(doc))) for doc in json_doc]
+		else:
+			messages.extend(self.get_messages_from_doc(json_doc))
+
+		return messages
+
+
 
 	def get_messages_from_file(self) -> List[Tuple[str, str, str, str]]:
 		"""Returns a list of transatable strings from a code file
 
 		:param path: path of the code file
 		"""
-		# frappe.flags.setdefault('scanned_files', [])
-		# # TODO: Find better alternative
-		# # To avoid duplicate scan
-		# if self.path in set(frappe.flags.scanned_files):
-		# 	return []
-
-		# frappe.flags.scanned_files.append(self.path)
 
 		if os.path.exists(self.path):
 			with open(self.path, 'r') as sourcefile:
@@ -106,14 +158,9 @@ class  ProcessFile():
 	
 		messages = self.add_line_number(messages, code)
 		if self.path.endswith('.py'):
-
 			c = C(self.path)
-
 			c.visit(ast.parse(code))
-			# print(c.messages)
-
 			messages.extend([[None,message, None] for message in c.messages])
-		# print(messages)
 		return messages
 
 	def is_translatable(self, m):

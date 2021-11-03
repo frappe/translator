@@ -22,9 +22,10 @@ class ProcessDoctype():
 		try:
 			doctype_json = read_doc_from_file(os.path.join(self.path, self.doctype_name + '.json'))
 		except IOError:
+			messages.extend(ProcessFolder(os.path.join(self.path)).get_messages())
 			return messages
 
-		messages.extend([doctype_json.get('label'), doctype_json.get('description')])
+		messages.extend([doctype_json.get('label'), doctype_json.get('description'), doctype_json.get('name')])
 
 		for field in doctype_json.get('fields'):
 			messages.extend([field.get('label'), field.get('description')])

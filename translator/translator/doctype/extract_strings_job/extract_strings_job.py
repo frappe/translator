@@ -18,6 +18,8 @@ class ExtractStringsJob(Document):
 		frappe.enqueue(
 			self.create_source_strings_wrapper,
 			enqueue_after_commit=True,
+			queue='long',
+			job_name=f'Extract strings from {self.repository_owner}/{self.translator_app}@{self.translator_app_source}'
 		)
 
 
@@ -130,6 +132,7 @@ def import_source_messages(message_map, name):
 		d.set('positions', positions)
 
 		d.save(ignore_version=True, ignore_permissions=True)
+		frappe.db.commit()
 
 
 def get_postions_to_save(old_positions, new_positions):

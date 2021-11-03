@@ -25,6 +25,7 @@ class ProcessReport():
 		try:
 			report_json = read_doc_from_file(os.path.join(self.path, self.report_name + '.json'))
 		except IOError:
+			messages.extend(ProcessFolder(os.path.join(self.path)).get_messages())
 			return messages
 
 		if report_json.get("roles"):
@@ -36,18 +37,24 @@ class ProcessReport():
 		messages = [message for message in messages if message]
 		messages = [('Report: ' + self.report_name, message) for message in messages if is_translatable(message)]
 
-		if report_json.get(json):
-			report_json = json.loads(report_json.get(json))
 
-			if report_json.get('columns'):
-				context = "Column of report '%s'" % self.report_name # context has to match context in `prepare_columns` in query_report.js
-				messages.extend([(None, report_column.label, context) for report_column in report_json.get('columns')])
+		if report_json.get('query'):
+			messages.extend([(None, message) for message in re.findall('"([^:,^"]*):', report_json.get('query')) if is_translatable(message)])
 
-			if report_json.get('filters'):
-				messages.extend([(None, report_filter.label) for report_filter in report_json.get('filters')])
+
+		if report_json.get('json'):
+			report_json = json.loads(report_json.get('json'))
+
+			# if report_json.get('columns'):
+			# 	context = "Column of report '%s'" % self.report_name # context has to match context in `prepare_columns` in query_report.js
+			# 	messages.extend([(None, report_column[1], context) for report_column in report_json.get('columns')])
+
+			# if report_json.get('filters'):
+			# 	messages.extend([(None, report_filter.label) for report_filter in report_json.get('filters')])
 
 			if report_json.get('query'):
 				messages.extend([(None, message) for message in re.findall('"([^:,^"]*):', report_json.get('query')) if is_translatable(message)])
+
 
 		messages = [
 			{

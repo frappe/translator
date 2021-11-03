@@ -18,9 +18,14 @@ class ProcessPage():
 
 	def get_messages(self):
 		messages = []
-		page_json = read_doc_from_file(os.path.join(self.path, self.page_name + '.json'))
 
-		messages.extend([page_json.get('title'), page_json.get('page_name')])
+		try:
+			page_json = read_doc_from_file(os.path.join(self.path, self.page_name + '.json'))
+		except IOError:
+			messages.extend(ProcessFolder(os.path.join(self.path)).get_messages())
+			return messages
+
+		messages.extend([page_json.get('title'), page_json.get('page_name'), page_json.get('name')])
 
 		for d in page_json.get("roles"):
 			if d.get('role'):
