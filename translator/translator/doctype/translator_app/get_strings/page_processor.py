@@ -5,13 +5,13 @@ import frappe
 from frappe.modules.import_file import read_doc_from_file
 from frappe.translate import is_translatable
 
-from .process_file import ProcessFile
-from .process_folder import ProcessFolder
+from .file_processor import FileProcessor
+from .folder_processor import FolderProcessor
 from frappe.utils import get_bench_path
 
 
 
-class ProcessPage():
+class PageProcessor():
 	def __init__(self, path, page_name):
 		self.path = path
 		self.page_name = page_name
@@ -22,7 +22,7 @@ class ProcessPage():
 		try:
 			page_json = read_doc_from_file(os.path.join(self.path, self.page_name + '.json'))
 		except IOError:
-			messages.extend(ProcessFolder(os.path.join(self.path)).get_messages())
+			messages.extend(FolderProcessor(os.path.join(self.path)).get_messages())
 			return messages
 
 		messages.extend([page_json.get('title'), page_json.get('page_name'), page_json.get('name')])
@@ -48,9 +48,9 @@ class ProcessPage():
 
 		for item in os.listdir(self.path):
 			if os.path.isdir(os.path.join(self.path, item)):
-				messages.extend(ProcessFolder(os.path.join(self.path, item)).get_messages())
+				messages.extend(FolderProcessor(os.path.join(self.path, item)).get_messages())
 			else:
-				messages.extend(ProcessFile(os.path.join(self.path, item)).get_messages())
+				messages.extend(FileProcessor(os.path.join(self.path, item)).get_messages())
 
 		for message in messages:
 			message['type'] = 'Page'

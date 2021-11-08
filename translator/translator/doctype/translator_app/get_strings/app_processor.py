@@ -2,9 +2,9 @@ import os
 
 import frappe
 
-from .process_module import ProcessModule
-from .process_folder import ProcessFolder
-from .process_file import ProcessFile
+from .module_processor import ModuleProcessor
+from .folder_processor import FolderProcessor
+from .file_processor import FileProcessor
 from frappe.utils import get_bench_path
 
 
@@ -14,7 +14,7 @@ IGNORED_ITEMS = ['change_log', 'demo' 'patches',  'translations', 'modules.txt',
 
 
 
-class ProcessApp:
+class AppProcessor:
 
 	def __init__(self, path, app_name):
 		self.path = os.path.join(path, app_name)
@@ -40,9 +40,9 @@ class ProcessApp:
 			if item in IGNORED_ITEMS:
 				continue
 			elif item in modules:
-				messages.extend(ProcessModule(os.path.join(self.path, item), item).get_messages())
+				messages.extend(ModuleProcessor(os.path.join(self.path, item), item).get_messages())
 			elif os.path.isdir(os.path.join(self.path, item)):
-				messages.extend(ProcessFolder(os.path.join(self.path, item)).get_messages())
+				messages.extend(FolderProcessor(os.path.join(self.path, item)).get_messages())
 			else:
-				messages.extend(ProcessFile(os.path.join(self.path, item)).get_messages())
+				messages.extend(FileProcessor(os.path.join(self.path, item)).get_messages())
 		return messages

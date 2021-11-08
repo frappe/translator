@@ -63,8 +63,8 @@ class ExtractStringsJob(Document):
 		file = tarfile.open(fileobj=r.raw, mode="r|gz")
 		file.extractall(path=self.clone_directory)
 
-		from translator.translator.doctype.translator_app.get_strings.process_app import ProcessApp
-		messages = ProcessApp(
+		from translator.translator.doctype.translator_app.get_strings.app_processor import AppProcessor
+		messages = AppProcessor(
 			os.path.join(self.clone_directory,
 			os.listdir(self.clone_directory)[0]
 			), self.translator_app).get_messages()

@@ -35,7 +35,7 @@ class C(ast.NodeVisitor):
 		super().generic_visit( node)
 
 
-class  ProcessFile():
+class  FileProcessor():
 
 	def __init__(self, path) -> None:
 		self.path = path
