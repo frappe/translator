@@ -6,7 +6,8 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "clone_directory"
+  "clone_directory",
+  "translation_dumps"
  ],
  "fields": [
   {
@@ -16,12 +17,18 @@
    "in_list_view": 1,
    "label": "Clone Directory",
    "reqd": 1
+  },
+  {
+   "fieldname": "translation_dumps",
+   "fieldtype": "Data",
+   "label": "Translation Dumps",
+   "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2021-10-18 12:24:24.235390",
+ "modified": "2021-11-16 18:11:12.867497",
  "modified_by": "Administrator",
  "module": "Translator",
  "name": "Translation Settings",

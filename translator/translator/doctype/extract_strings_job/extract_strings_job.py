@@ -96,7 +96,7 @@ class ExtractStringsJob(Document):
 		self.clone_directory = os.path.join(
 			clone_directory, self.translator_app, source, random_string(7)
 		)
-		if not os.path.exists(clone_directory):
+		if not os.path.exists(self.clone_directory):
 			os.mkdir(self.clone_directory)
 
 
