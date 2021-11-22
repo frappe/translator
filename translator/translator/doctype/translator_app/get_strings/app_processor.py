@@ -27,7 +27,7 @@ class AppProcessor:
 
 		[
 			messages.append({
-				'position': os.path.relpath(os.path.join(self.path, MODULES_FILE), get_bench_path()) ,
+				'position': os.path.join(self.path, MODULES_FILE),
 				'source_text': module,
 				'context' : 'Module Name',
 				'line_no' : 0

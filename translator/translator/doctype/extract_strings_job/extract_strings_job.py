@@ -72,7 +72,7 @@ class ExtractStringsJob(Document):
 		# with open('messages.txt', 'w') as fp:
 		# 	fp.write(str(len(messages)))
 
-		formatted_messages = get_formatted_messages(messages, self.translator_app, self.translator_app_source)
+		formatted_messages = get_formatted_messages(messages, self.translator_app, self.translator_app_source, self.clone_directory)
 		import_source_messages(formatted_messages, self.translator_app)
 
 		self.set_status('Completed')
@@ -139,14 +139,14 @@ def get_postions_to_save(old_positions, new_positions):
 	final_positions =  list(old_positions + new_positions)
 	return final_positions
 
-def get_formatted_messages(messages, app, app_version):
+def get_formatted_messages(messages, app, app_version, clone_directory):
 	message_map = frappe._dict({})
 
 	# messages structure
 	# [(position, source_text_1, context, line_no), (position, source_text_2)]
 	for message_data in messages:
 		if not message_data: continue
-		position = message_data.get('position')
+		position = os.path.relpath(message_data.get('position'), clone_directory)
 		message = message_data.get('source_text')
 		context = message_data.get('context')
 		line_no = message_data.get('line_no')

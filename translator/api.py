@@ -38,7 +38,7 @@ def add_translations(translation_map, contributor_name, contributor_email, langu
 
 
 @frappe.whitelist(allow_guest=True)
-def get_strings_for_translation(language, start=0, page_length=100, search_text='', app_name='Frappe'):
+def get_strings_for_translation(language, start=0, page_length=100, search_text='', app_name='Healthcare'):
 	return frappe.db.sql("""
 		SELECT * FROM (
 			SELECT

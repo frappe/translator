@@ -61,7 +61,7 @@ class TranslatorAppRelease(WebsiteGenerator):
 			# "folder": folder,
 			"file_name": self.random + '.tar.gz',
 			"file_url": self.random + '.tar.gz',
-			"is_private": 1,
+			"is_private": 0,
 			"content": self.tar
 		})
 		ret.save(ignore_permissions=True)

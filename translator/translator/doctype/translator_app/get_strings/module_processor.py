@@ -43,7 +43,7 @@ class ModuleProcessor:
 					if page in ('__pycache__'):
 						continue
 					if isdir(os.path.join(self.path, item, page)):
-						messages.extend(ProcessPage(os.path.join(self.path, item, page), page).get_messages())
+						messages.extend(PageProcessor(os.path.join(self.path, item, page), page).get_messages())
 					else:
 						messages.extend(FileProcessor(os.path.join(self.path, item, page)).get_messages())
 			elif os.path.isdir(os.path.join(self.path, item)):

@@ -47,7 +47,7 @@ class DoctypeProcessor():
 
 		messages = [
 			{
-				'position': os.path.relpath(os.path.join(self.path, self.doctype_name + '.json'), get_bench_path()) ,
+				'position': os.path.join(self.path, self.doctype_name + '.json'),
 				'source_text': message[1],
 				'context' : message[2] or '' if len(message) > 2 else '',
 				'line_no' : message[3] or 0 if len(message) == 4 else 0,

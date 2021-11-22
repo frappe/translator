@@ -18,6 +18,9 @@
   {
    "fieldname": "translator_app",
    "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_preview": 1,
+   "in_standard_filter": 1,
    "label": "Translator App",
    "options": "Translator App",
    "reqd": 1
@@ -60,7 +63,7 @@
  ],
  "has_web_view": 1,
  "links": [],
- "modified": "2021-11-17 15:33:33.339075",
+ "modified": "2021-11-23 01:06:50.207672",
  "modified_by": "Administrator",
  "module": "Translator",
  "name": "Translator App Release",

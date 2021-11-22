@@ -72,7 +72,7 @@ class  FileProcessor():
 
 		messages = [
 			{
-				'position': os.path.relpath(os.path.join(self.path), get_bench_path()) ,
+				'position': os.path.join(self.path),
 				'source_text': message[1],
 				'context' : message[2] or '' if len(message) > 2 else '',
 				'line_no' : message[3] or 0 if len(message) == 4 else 0,
@@ -113,7 +113,7 @@ class  FileProcessor():
 
 				return [
 					{
-						'position': os.path.relpath(self.path, get_bench_path()),
+						'position': self.path,
 						'source_text': message,
 						'context': context,
 						'line_no': line
