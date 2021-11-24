@@ -3,7 +3,7 @@
 
 frappe.ui.form.on('Translator App Release', {
 	refresh: function(frm) {
-		frm.add_custom_button(__('Schedule String Extraction Job'), function () {
+		frm.add_custom_button(__('Schedule Translation Release Job'), function () {
 			frm.call({
 				method: "create_release_job",
 				args: { release: frm.doc.name },
