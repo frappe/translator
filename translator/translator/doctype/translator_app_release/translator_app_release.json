@@ -12,7 +12,8 @@
   "translator_app_source",
   "route",
   "amended_from",
-  "is_published"
+  "is_published",
+  "weekly_release"
  ],
  "fields": [
   {
@@ -59,6 +60,12 @@
    "fieldname": "is_published",
    "fieldtype": "Check",
    "label": "Is Published"
+  },
+  {
+   "default": "0",
+   "fieldname": "weekly_release",
+   "fieldtype": "Check",
+   "label": "Weekly Release"
   }
  ],
  "has_web_view": 1,
@@ -68,7 +75,7 @@
    "link_fieldname": "translator_app_release"
   }
  ],
- "modified": "2021-11-24 13:51:38.046890",
+ "modified": "2021-11-25 16:46:53.068312",
  "modified_by": "Administrator",
  "module": "Translator",
  "name": "Translator App Release",

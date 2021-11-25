@@ -37,3 +37,7 @@ def extract_strings_from_app(app_name):
 @frappe.whitelist()
 def create_release_job(release):
 	frappe.get_doc('Translator App Release', release).create_release_job(),
+
+def create_release_weekly():
+	for release in frappe.get_all('Translator App Release', ['name'], [['weekly_release','=', True]], pluck = 'name'):
+		create_release_job(release)

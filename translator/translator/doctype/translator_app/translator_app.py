@@ -17,3 +17,7 @@ class TranslatorApp(Document):
 @frappe.whitelist()
 def extract_strings_from_app(app_name):
 	frappe.get_doc('Translator App', app_name).extract_strings_from_app()
+
+def extract_strings_weekly():
+	for release in frappe.get_all('Translator App', ['name'], [['weekly_string_extraction','=', True]], pluck = 'name'):
+		extract_strings_from_app(release)
