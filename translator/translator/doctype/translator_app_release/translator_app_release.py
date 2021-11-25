@@ -19,8 +19,15 @@ class TranslatorAppRelease(WebsiteGenerator):
 			"translator_app_release": self.name
 		}).save()
 
+	def get_context(self, context):
+		link = frappe.get_all("File", fields=["file_url"],
+		filters = {"attached_to_name": self.name, "attached_to_doctype": self.doctype},
+		pluck = 'file_url', order_by='modified desc', limit = 1 )
 
-
+		redirect_url = link[0]
+		frappe.local.response['type'] = 'redirect'
+		frappe.local.response['location'] = redirect_url
+		raise frappe.Redirect
 
 @frappe.whitelist()
 def extract_strings_from_app(app_name):
