@@ -74,7 +74,7 @@ class ReportProcessor():
 
 		for message in messages:
 			message['type'] = 'Report'
-			message['report'] = frappe.unscrub(self.report_name)
+			message['document_name'] = frappe.unscrub(self.report_name)
 
 		return messages
 

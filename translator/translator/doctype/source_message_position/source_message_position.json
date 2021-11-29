@@ -11,9 +11,7 @@
   "app_version",
   "module",
   "type",
-  "document_type",
-  "page",
-  "report"
+  "document_name"
  ],
  "fields": [
   {
@@ -52,25 +50,14 @@
    "options": "\nDocument Type\nPage\nReport"
   },
   {
-   "fieldname": "page",
+   "fieldname": "document_name",
    "fieldtype": "Data",
-   "label": "Page"
-  },
-  {
-   "fieldname": "report",
-   "fieldtype": "Data",
-   "label": "Report"
-  },
-  {
-   "fieldname": "document_type",
-   "fieldtype": "Data",
-   "label": "Document Type"
+   "label": "Document Name"
   }
  ],
  "istable": 1,
  "links": [],
- "migration_hash": "2bba67e6825dbdfe8ebb193fb34871f9",
- "modified": "2021-10-21 23:19:59.736468",
+ "modified": "2021-11-29 11:21:40.089874",
  "modified_by": "Administrator",
  "module": "Translator",
  "name": "Source Message Position",

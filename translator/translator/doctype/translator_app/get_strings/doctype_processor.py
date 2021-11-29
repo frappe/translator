@@ -63,7 +63,7 @@ class DoctypeProcessor():
 
 		for message in messages:
 			message['type'] = 'Document Type'
-			message['document_type'] = frappe.unscrub(self.doctype_name)
+			message['document_name'] = frappe.unscrub(self.doctype_name)
 
 		return messages
 		# add workflow for doctype

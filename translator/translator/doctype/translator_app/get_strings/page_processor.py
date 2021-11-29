@@ -54,6 +54,6 @@ class PageProcessor():
 
 		for message in messages:
 			message['type'] = 'Page'
-			message['page'] = frappe.unscrub(self.page_name)
+			message['document_name'] = frappe.unscrub(self.page_name)
 
 		return messages
