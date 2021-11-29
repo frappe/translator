@@ -21,3 +21,19 @@ def extract_strings_from_app(app_name):
 def extract_strings_weekly():
 	for release in frappe.get_all('Translator App', ['name'], [['weekly_string_extraction','=', True]], pluck = 'name'):
 		extract_strings_from_app(release)
+
+
+from translator.data import (import_source_messages, export_untranslated_to_json,
+import_translations_from_csv, translate_untranslated_from_google, get_apps_to_be_translated)
+import requests
+
+
+def translate_from_google():
+	for lang in frappe.db.sql_list("select name from tabLanguage"):
+		try:
+			translate_untranslated_from_google(lang)
+		except requests.exceptions.HTTPError:
+			print("skipping {0}".format(lang))
+			continue
+		finally:
+			frappe.db.commit()

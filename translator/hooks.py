@@ -26,8 +26,9 @@ doc_events = {
 # ---------------
 
 scheduler_events = {
-	"all": [
+	"Weekly Long": [
 		"translator.translator.doctype.translator_app_release.translator_app_release.create_release_weekly",
-		"translator.translator.doctype.translator_app.translator_app.extract_strings_weekly"
+		"translator.translator.doctype.translator_app.translator_app.extract_strings_weekly",
+		"translator.translator.doctype.translator_app.translator_app.translate_from_google",
 	]
 }

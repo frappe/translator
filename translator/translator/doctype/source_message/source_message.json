@@ -46,7 +46,7 @@
   }
  ],
  "links": [],
- "modified": "2021-11-02 17:05:17.521756",
+ "modified": "2021-11-25 19:13:00.021144",
  "modified_by": "Administrator",
  "module": "Translator",
  "name": "Source Message",
@@ -61,6 +61,7 @@
    "write": 1
   }
  ],
+ "show_title_field_in_link": 1,
  "sort_field": "modified",
  "sort_order": "DESC",
  "title_field": "message",

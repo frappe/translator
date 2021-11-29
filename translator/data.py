@@ -293,7 +293,6 @@ def get_lang_name(lang):
 		"key": frappe.conf.google_api_key,
 		"target": "en"
 	})
-
 	languages = resp.json()['data']['languages']
 	for l in languages:
 		if l['language'] == lang:

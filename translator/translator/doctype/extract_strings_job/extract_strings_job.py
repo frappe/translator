@@ -12,6 +12,7 @@ from frappe.model.document import Document
 
 from frappe.utils import  get_site_path, random_string
 
+from frappe.core.utils import find
 
 class ExtractStringsJob(Document):
 	def validate(self):
@@ -117,13 +118,13 @@ def import_source_messages(message_map, name):
 			FROM `tabSource Message`
 			WHERE `message` = BINARY %s AND coalesce(`tabSource Message`.context, '') = %s
 			LIMIT 1
-		""", (message, context), as_dict=1)
+		""", (message, context if context else '' ), as_dict=1)
 
 
 		source_message = source_message[0] if source_message else None
 		if source_message:
 			d = frappe.get_doc("Source Message", source_message['name'])
-			d.disabled = 0
+			# d.disabled = 0
 			positions = get_postions_to_save(d.positions, positions)
 		else:
 			d = frappe.new_doc('Source Message')
@@ -136,7 +137,15 @@ def import_source_messages(message_map, name):
 
 
 def get_postions_to_save(old_positions, new_positions):
-	final_positions =  list(old_positions + new_positions)
+	final_positions = []
+	for row in new_positions:
+		old_row = find(old_positions, lambda d: d.position == row['position'])
+		if old_row:
+			old_row.update(row)
+			final_positions.append(old_row)
+			old_positions.remove(old_row)
+		else:
+			final_positions.append(row)
 	return final_positions
 
 def get_formatted_messages(messages, app, app_version, clone_directory):
@@ -147,6 +156,7 @@ def get_formatted_messages(messages, app, app_version, clone_directory):
 	for message_data in messages:
 		if not message_data: continue
 		position = os.path.relpath(message_data.get('position'), clone_directory)
+		position = '/'.join(position.split('/')[1:])
 		message = message_data.get('source_text')
 		context = message_data.get('context')
 		line_no = message_data.get('line_no')
@@ -156,9 +166,9 @@ def get_formatted_messages(messages, app, app_version, clone_directory):
 			'app': app,
 			'app_version': app_version,
 			'type': message_data.get('type'),
-			'report': message_data.get('report'),
-			'page': message_data.get('page'),
-			'document_type': message_data.get('document_type'),
+			# 'report': message_data.get('report'),
+			# 'page': message_data.get('page'),
+			'document_name': message_data.get('document_name'),
 			'module': message_data.get('module')
 		})
 		if not message_map.get((message, context)):

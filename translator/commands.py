@@ -83,6 +83,15 @@ def _copy_translations(context, from_lang, to_lang):
 		finally:
 			frappe.destroy()
 
+def translate_from_google():
+	for lang in frappe.db.sql_list("select name from tabLanguage"):
+		try:
+			translate_untranslated_from_google(lang)
+		except requests.exceptions.HTTPError:
+			print("skipping {0}".format(lang))
+			continue
+		finally:
+			frappe.db.commit()
 
 @click.command('translate-untranslated-all')
 @pass_context
@@ -91,14 +100,7 @@ def _translate_untranslated_all(context):
 		try:
 			frappe.init(site=site)
 			frappe.connect()
-			for lang in frappe.db.sql_list("select name from tabLanguage"):
-				try:
-					translate_untranslated_from_google(lang)
-				except requests.exceptions.HTTPError:
-					print("skipping {0}".format(lang))
-					continue
-				finally:
-					frappe.db.commit()
+			translate_from_google()
 		finally:
 			frappe.destroy()
 
