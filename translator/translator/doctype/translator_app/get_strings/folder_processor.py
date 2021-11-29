@@ -2,8 +2,8 @@ import os
 
 from .file_processor import FileProcessor
 
-class FolderProcessor():
 
+class FolderProcessor:
 	def __init__(self, path) -> None:
 		self.path = path
 

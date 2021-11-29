@@ -4,5 +4,6 @@
 # import frappe
 import unittest
 
+
 class TestExtractStringsJob(unittest.TestCase):
 	pass
