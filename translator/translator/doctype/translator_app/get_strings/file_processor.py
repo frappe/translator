@@ -170,7 +170,7 @@ class FileProcessor:
 		if self.path.endswith(".py"):
 			c = C(self.path)
 			c.visit(ast.parse(code))
-			messages.extend([[None, message, None] for message in c.messages])
+			messages.extend([[0, message, None] for message in c.messages])
 		return messages
 
 	def is_translatable(self, m):
