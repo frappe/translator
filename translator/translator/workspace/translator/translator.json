@@ -1,0 +1,118 @@
+{
+ "charts": [],
+ "content": "[{\"type\":\"header\",\"data\":{\"text\":\"Translator\\n\\t\\t\\t\\n\\t\\t\\n\\t\\t\\t\\n\\t\\t\\n\\t\\t\\t\\n\\t\\t\",\"level\":4,\"col\":12}},{\"type\":\"card\",\"data\":{\"card_name\":\"Extract\",\"col\":4}},{\"type\":\"card\",\"data\":{\"card_name\":\"Release\",\"col\":4}},{\"type\":\"card\",\"data\":{\"card_name\":\"Masters\",\"col\":4}}]",
+ "creation": "2022-01-11 19:16:58.452893",
+ "docstatus": 0,
+ "doctype": "Workspace",
+ "hide_custom": 0,
+ "icon": "oranisation",
+ "idx": 0,
+ "label": "Translator",
+ "links": [
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Extract",
+   "link_count": 2,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Extract Strings Job",
+   "link_count": 0,
+   "link_to": "Extract Strings Job",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Translator App",
+   "link_count": 0,
+   "link_to": "Translator App",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Release",
+   "link_count": 2,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Translations Release Job",
+   "link_count": 0,
+   "link_to": "Translations Release Job",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Translator App Release",
+   "link_count": 0,
+   "link_to": "Translator App Release",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Masters",
+   "link_count": 3,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Source Message",
+   "link_count": 0,
+   "link_to": "Source Message",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Translated Message",
+   "link_count": 0,
+   "link_to": "Translated Message",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Contributed Translation",
+   "link_count": 0,
+   "link_to": "Contributed Translation",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  }
+ ],
+ "modified": "2022-01-11 20:01:14.817898",
+ "modified_by": "Administrator",
+ "module": "Translator",
+ "name": "Translator",
+ "owner": "Administrator",
+ "parent_page": "",
+ "public": 1,
+ "roles": [],
+ "sequence_id": 8,
+ "shortcuts": [],
+ "title": "Translator"
+}
