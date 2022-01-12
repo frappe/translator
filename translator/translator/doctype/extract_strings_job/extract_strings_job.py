@@ -165,6 +165,7 @@ def get_formatted_messages(messages, app, app_version, clone_directory):
 			continue
 		position = os.path.relpath(message_data.get("position"), clone_directory)
 		position = "/".join(position.split("/")[1:])
+		position = f'apps{os.sep}{app}{os.sep}{position}'
 		message = message_data.get("source_text")
 		context = message_data.get("context")
 		line_no = message_data.get("line_no")
