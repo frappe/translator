@@ -14,17 +14,16 @@ from translator.data import write_csv_for_all_languages
 
 class TranslationsReleaseJob(Document):
 	def validate(self):
-		print(
-			frappe.enqueue(
-				self.create_release_wrapper,
-				enqueue_after_commit=True,
-				queue="long",
-				job_name=(
-					"Release translations for"
-					f" {self.repository_owner}/{self.translator_app}@{self.translator_app_source}"
-				),
-			)
+		frappe.enqueue(
+			self.create_release_wrapper,
+			enqueue_after_commit=True,
+			queue="long",
+			job_name=(
+				"Release translations for"
+				f" {self.repository_owner}/{self.translator_app}@{self.translator_app_source}"
+			),
 		)
+
 
 	def get_endpoint(self):
 		return f"https://api.github.com/repos/{self.repository_owner}/{self.translator_app}/tarball/{self.translator_app_source}"
@@ -76,7 +75,7 @@ class TranslationsReleaseJob(Document):
 
 		file_out = BIO()
 		tar = tarfile.open(mode="w:gz", fileobj=file_out)
-		tar.add(self.clone_directory, arcname=self.random + "random")
+		tar.add(self.clone_directory, arcname="")
 		# for p in path:
 		# 	tar.add(p)
 		tar.close()

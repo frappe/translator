@@ -95,7 +95,7 @@
  ],
  "icon": "icon-comment",
  "links": [],
- "modified": "2021-11-16 18:57:14.617471",
+ "modified": "2022-01-11 19:09:15.021447",
  "modified_by": "Administrator",
  "module": "Translator",
  "name": "Translated Message",
@@ -111,5 +111,6 @@
  ],
  "sort_field": "modified",
  "sort_order": "DESC",
+ "states": [],
  "title_field": "translated"
 }

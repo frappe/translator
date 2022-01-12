@@ -11,6 +11,7 @@
  ],
  "fields": [
   {
+   "default": "cloned_apps",
    "description": "The folder will be created inside the site's directory.",
    "fieldname": "clone_directory",
    "fieldtype": "Data",
@@ -19,6 +20,7 @@
    "reqd": 1
   },
   {
+   "default": "translations",
    "fieldname": "translation_dumps",
    "fieldtype": "Data",
    "label": "Translation Dumps",
@@ -28,7 +30,7 @@
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2021-11-16 18:11:12.867497",
+ "modified": "2022-01-11 18:35:03.057147",
  "modified_by": "Administrator",
  "module": "Translator",
  "name": "Translation Settings",
@@ -47,5 +49,6 @@
  ],
  "sort_field": "modified",
  "sort_order": "DESC",
+ "states": [],
  "track_changes": 1
 }
