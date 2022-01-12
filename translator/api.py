@@ -38,7 +38,7 @@ def add_translations(translation_map, contributor_name, contributor_email, langu
 
 
 @frappe.whitelist(allow_guest=True)
-def get_strings_for_translation(language, start=0, page_length=100, search_text='', app_name='Wiki'):
+def get_strings_for_translation(language, start=0, page_length=100, search_text='', app_name='%'):
 	return frappe.db.sql("""
 		SELECT * FROM (
 			SELECT
@@ -64,7 +64,7 @@ def get_strings_for_translation(language, start=0, page_length=100, search_text=
 						source.name=smp.parent
 					)
 			WHERE
-				source.disabled != 1 && ((source.message like %(search_text)s or translated.translated like %(search_text)s) and smp.app=%(app_name)s)
+				source.disabled != 1 && ((source.message like %(search_text)s or translated.translated like %(search_text)s) and smp.app like %(app_name)s)
 			ORDER BY
 				translated_by_google
 		) as res
@@ -85,7 +85,8 @@ def get_source_additional_info(source, language=''):
 
 	data['positions'] = frappe.get_all('Source Message Position', filters={
 		'parent': source,
-	}, fields=['position as path', 'line_no', 'app', 'app_version'])
+	}, fields=['position as path', 'line_no', 'app',
+		'app_version', 'module', 'type', 'document_name'])
 
 	return data
 
