@@ -87,7 +87,7 @@ class TestExtractStringsJob(unittest.TestCase):
 	def test_file_processor(self):
 		self.maxDiff = None
 		messages = FileProcessor(get_file_path()).get_messages()
-		process_extracted_messages(messages, True)
+		process_extracted_messages(messages)
 		messages_target = read_csv(get_result_path('file_result.csv'))
 		process_stored_messages(messages_target)
 		self.assertCountEqual(messages, messages_target)
@@ -104,12 +104,8 @@ def process_extracted_messages(messages, file=False):
 			val = message_data.get(key)
 			message_data[key] = str(val) if val else ''
 
-		if file:
-			val = message_data.get('line_no')
-			message_data['line_no'] = str(val) if val else ''
-		else:
-			val = message_data.get('line_no')
-			message_data['line_no'] = str(val) if val else '0'
+		val = message_data.get('line_no')
+		message_data['line_no'] = str(val) if val else '0'
 
 def process_stored_messages(messages):
 	for message_data in messages:
@@ -343,6 +339,7 @@ def read_csv(filename):
 # dict_writer = csv.DictWriter(a_file, keys)
 # dict_writer.writeheader()
 # messages = FileProcessor(get_file_path()).get_messages()
+# process_extracted_messages(messages)
 # for message_data in messages:
 # 	if not message_data:
 # 		continue

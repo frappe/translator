@@ -11,7 +11,7 @@ from frappe.modules.import_file import read_doc_from_file
 from frappe.utils import get_bench_path
 
 
-class C(ast.NodeVisitor):
+class AstParser(ast.NodeVisitor):
 	def __init__(self, path):
 		self.path = path
 		self.messages = []
@@ -167,11 +167,22 @@ class FileProcessor:
 		# india_setup = ast.parse(''.join(lines))
 
 		messages = self.add_line_number(messages, code)
-		if self.path.endswith(".py"):
-			c = C(self.path)
-			c.visit(ast.parse(code))
-			messages.extend([[0, message, None] for message in c.messages])
+		if self.is_ast_parse_needed():
+			ast_parser = AstParser(self.path)
+			ast_parser.visit(ast.parse(code))
+			messages.extend([[0, message, None] for message in ast_parser.messages])
 		return messages
+
+	def is_ast_parse_needed(self):
+		file_names = [
+			'setup.py',
+			'install.py',]
+		if not self.path.endswith(".py"):
+			return False
+		print(self.path)
+		print(self.path.split('/')[-1])
+		if self.path.split('/')[-1] in file_names:
+			return True
 
 	def is_translatable(self, m):
 		if (
