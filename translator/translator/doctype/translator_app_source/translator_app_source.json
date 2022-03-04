@@ -7,7 +7,11 @@
  "engine": "InnoDB",
  "field_order": [
   "source",
-  "disabled"
+  "column_break_4",
+  "disabled",
+  "extract_strings_weekly",
+  "release_weekly",
+  "strings_extracted"
  ],
  "fields": [
   {
@@ -23,12 +27,37 @@
    "fieldtype": "Check",
    "in_list_view": 1,
    "label": "Disabled"
+  },
+  {
+   "default": "0",
+   "fieldname": "strings_extracted",
+   "fieldtype": "Check",
+   "label": "Strings Extracted",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_4",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "extract_strings_weekly",
+   "fieldtype": "Check",
+   "in_list_view": 1,
+   "label": "Extract Strings Weekly"
+  },
+  {
+   "default": "0",
+   "fieldname": "release_weekly",
+   "fieldtype": "Check",
+   "in_list_view": 1,
+   "label": "Release Weekly"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2021-10-14 16:46:06.497614",
+ "modified": "2022-03-04 17:29:43.966337",
  "modified_by": "Administrator",
  "module": "Translator",
  "name": "Translator App Source",
@@ -36,5 +65,6 @@
  "permissions": [],
  "sort_field": "modified",
  "sort_order": "DESC",
+ "states": [],
  "track_changes": 1
 }

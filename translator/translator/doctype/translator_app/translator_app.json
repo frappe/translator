@@ -8,8 +8,7 @@
  "field_order": [
   "app_name",
   "repository_owner",
-  "sources",
-  "weekly_string_extraction"
+  "sources"
  ],
  "fields": [
   {
@@ -28,12 +27,6 @@
    "fieldname": "repository_owner",
    "fieldtype": "Data",
    "label": "Repository Owner"
-  },
-  {
-   "default": "0",
-   "fieldname": "weekly_string_extraction",
-   "fieldtype": "Check",
-   "label": "Weekly String Extraction"
   }
  ],
  "links": [
@@ -42,7 +35,7 @@
    "link_fieldname": "translator_app"
   }
  ],
- "modified": "2021-11-25 16:55:31.124197",
+ "modified": "2022-03-04 17:27:26.817134",
  "modified_by": "Administrator",
  "module": "Translator",
  "name": "Translator App",
@@ -58,5 +51,6 @@
   }
  ],
  "sort_field": "modified",
- "sort_order": "DESC"
+ "sort_order": "DESC",
+ "states": []
 }

@@ -73,13 +73,12 @@ class ExtractStringsJob(Document):
 			self.translator_app,
 		).get_messages()
 
-		# with open('messages.txt', 'w') as fp:
-		# 	fp.write(str(len(messages)))
-
 		formatted_messages = get_formatted_messages(
 			messages, self.translator_app, self.translator_app_source, self.clone_directory
 		)
 		import_source_messages(formatted_messages, self.translator_app)
+
+		self.set_strings_extracted_for_source()
 
 		self.set_status("Completed")
 
@@ -103,6 +102,16 @@ class ExtractStringsJob(Document):
 		)
 		if not os.path.exists(self.clone_directory):
 			os.mkdir(self.clone_directory)
+
+	def set_strings_extracted_for_source(self):
+		TranslatorApp = frappe.qb.DocType("Translator App")
+		TranslatorAppSource = frappe.qb.DocType("Translator App Source")
+		frappe.qb.update(TranslatorApp).inner_join(TranslatorAppSource).on(
+			TranslatorApp.name == TranslatorAppSource.parent
+		).set(TranslatorAppSource.strings_extracted, True).where(
+			(TranslatorApp.name == self.translator_app)
+			& (TranslatorAppSource.source == self.translator_app_source)
+		).run()
 
 
 def import_source_messages(message_map, name):
@@ -165,7 +174,7 @@ def get_formatted_messages(messages, app, app_version, clone_directory):
 			continue
 		position = os.path.relpath(message_data.get("position"), clone_directory)
 		position = "/".join(position.split("/")[1:])
-		position = f'apps{os.sep}{app}{os.sep}{position}'
+		position = f"apps{os.sep}{app}{os.sep}{position}"
 		message = message_data.get("source_text")
 		context = message_data.get("context")
 		line_no = message_data.get("line_no")
