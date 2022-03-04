@@ -1,6 +1,6 @@
 {
  "charts": [],
- "content": "[{\"type\":\"header\",\"data\":{\"text\":\"Translator\\n\\t\\t\\t\\n\\t\\t\\n\\t\\t\\t\\n\\t\\t\\n\\t\\t\\t\\n\\t\\t\",\"level\":4,\"col\":12}},{\"type\":\"card\",\"data\":{\"card_name\":\"Extract\",\"col\":4}},{\"type\":\"card\",\"data\":{\"card_name\":\"Release\",\"col\":4}},{\"type\":\"card\",\"data\":{\"card_name\":\"Masters\",\"col\":4}}]",
+ "content": "[{\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Translator\\n\\t\\t\\t\\n\\t\\t\\n\\t\\t\\t\\n\\t\\t\\n\\t\\t\\t\\n\\t\\t</span>\",\"col\":12}},{\"type\":\"card\",\"data\":{\"card_name\":\"Extract\",\"col\":4}},{\"type\":\"card\",\"data\":{\"card_name\":\"Release\",\"col\":4}},{\"type\":\"card\",\"data\":{\"card_name\":\"Review\",\"col\":4}},{\"type\":\"card\",\"data\":{\"card_name\":\"Masters\",\"col\":4}}]",
  "creation": "2022-01-11 19:16:58.452893",
  "docstatus": 0,
  "doctype": "Workspace",
@@ -9,34 +9,6 @@
  "idx": 0,
  "label": "Translator",
  "links": [
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Extract",
-   "link_count": 2,
-   "onboard": 0,
-   "type": "Card Break"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Extract Strings Job",
-   "link_count": 0,
-   "link_to": "Extract Strings Job",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Translator App",
-   "link_count": 0,
-   "link_to": "Translator App",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
   {
    "hidden": 0,
    "is_query_report": 0,
@@ -68,8 +40,44 @@
   {
    "hidden": 0,
    "is_query_report": 0,
+   "label": "Review",
+   "link_count": 1,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Translation Reviewer",
+   "link_count": 0,
+   "link_to": "Translation Reviewer",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Extract",
+   "link_count": 1,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Extract Strings Job",
+   "link_count": 0,
+   "link_to": "Extract Strings Job",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
    "label": "Masters",
-   "link_count": 3,
+   "link_count": 4,
    "onboard": 0,
    "type": "Card Break"
   },
@@ -102,9 +110,19 @@
    "link_type": "DocType",
    "onboard": 0,
    "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Translator App",
+   "link_count": 0,
+   "link_to": "Translator App",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
   }
  ],
- "modified": "2022-01-11 20:01:14.817898",
+ "modified": "2022-03-04 19:07:36.624949",
  "modified_by": "Administrator",
  "module": "Translator",
  "name": "Translator",
@@ -112,7 +130,7 @@
  "parent_page": "",
  "public": 1,
  "roles": [],
- "sequence_id": 8,
+ "sequence_id": 8.0,
  "shortcuts": [],
  "title": "Translator"
 }
