@@ -1,5 +1,6 @@
 {
  "actions": [],
+ "allow_import": 1,
  "autoname": "hash",
  "creation": "2014-08-22 16:14:17.178029",
  "doctype": "DocType",
@@ -94,10 +95,11 @@
  ],
  "icon": "icon-comment",
  "links": [],
- "modified": "2020-03-11 22:51:45.236729",
+ "modified": "2022-01-11 19:09:15.021447",
  "modified_by": "Administrator",
  "module": "Translator",
  "name": "Translated Message",
+ "naming_rule": "Random",
  "owner": "Administrator",
  "permissions": [
   {
@@ -109,5 +111,6 @@
  ],
  "sort_field": "modified",
  "sort_order": "DESC",
+ "states": [],
  "title_field": "translated"
 }

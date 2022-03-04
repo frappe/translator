@@ -1,0 +1,95 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "hash",
+ "creation": "2021-11-24 13:20:34.801751",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "status",
+  "translator_app_release",
+  "translator_app",
+  "translator_app_source",
+  "repository_owner",
+  "failure_log"
+ ],
+ "fields": [
+  {
+   "allow_on_submit": 1,
+   "default": "Queued",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "hidden": 1,
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Status",
+   "options": "Queued\nPreparing\nWriting Files\nReleasing\nCompleted\nFailed",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "translator_app_release.translator_app",
+   "fieldname": "translator_app",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Translator App",
+   "options": "Translator App"
+  },
+  {
+   "fetch_from": "translator_app_release.translator_app_source",
+   "fieldname": "translator_app_source",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Translator App Source",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "translator_app.repository_owner",
+   "fieldname": "repository_owner",
+   "fieldtype": "Data",
+   "label": "Repository Owner"
+  },
+  {
+   "allow_on_submit": 1,
+   "default": "No Logs Found. Please check Background Jobs Log.",
+   "depends_on": "eval: doc.status == 'Failed'",
+   "fieldname": "failure_log",
+   "fieldtype": "Code",
+   "label": "Failure Log",
+   "no_copy": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "translator_app_release",
+   "fieldtype": "Link",
+   "label": "Translator App Release",
+   "options": "Translator App Release"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2021-11-24 14:30:06.092712",
+ "modified_by": "Administrator",
+ "module": "Translator",
+ "name": "Translations Release Job",
+ "naming_rule": "Random",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC"
+}

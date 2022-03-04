@@ -78,13 +78,12 @@ def get_formatted_messages():
 				message_map[(message, context)].append(position_dict)
 	return message_map
 
-def write_csv_for_all_languages():
+def write_csv_for_all_languages(app, basepath):
 	langs = frappe.db.sql_list("select name from tabLanguage")
 	for lang in langs:
-		for app in get_apps_to_be_translated():
-			print("Writing for {0}-{1}".format(app, lang))
-			path = os.path.join(frappe.get_app_path(app, "translations", lang + ".csv"))
-			write_csv(app, lang, path)
+		print("Writing for {0}-{1}".format(app, lang))
+		path = os.path.join(basepath,lang + ".csv")
+		write_csv(app, lang, path)
 
 def write_csv(app, lang, path):
 	translations = get_translations_for_export(app, lang)
@@ -294,7 +293,6 @@ def get_lang_name(lang):
 		"key": frappe.conf.google_api_key,
 		"target": "en"
 	})
-
 	languages = resp.json()['data']['languages']
 	for l in languages:
 		if l['language'] == lang:

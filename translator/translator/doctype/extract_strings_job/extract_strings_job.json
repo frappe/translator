@@ -1,0 +1,88 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "hash",
+ "creation": "2021-11-01 20:23:47.185465",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "status",
+  "translator_app",
+  "translator_app_source",
+  "repository_owner",
+  "failure_log"
+ ],
+ "fields": [
+  {
+   "allow_on_submit": 1,
+   "default": "Queued",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "hidden": 1,
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Status",
+   "no_copy": 1,
+   "options": "Queued\nValidating\nExtracting Strings\nCompleted\nFailed",
+   "read_only": 1
+  },
+  {
+   "fieldname": "translator_app",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Translator App",
+   "options": "Translator App"
+  },
+  {
+   "allow_on_submit": 1,
+   "default": "No Logs Found. Please check Background Jobs Log.",
+   "depends_on": "eval: doc.status == 'Failed'",
+   "fieldname": "failure_log",
+   "fieldtype": "Code",
+   "label": "Failure Log",
+   "no_copy": 1,
+   "read_only": 1
+  },
+  {
+   "fetch_from": "translator_app.repository_owner",
+   "fieldname": "repository_owner",
+   "fieldtype": "Data",
+   "label": "Repository Owner"
+  },
+  {
+   "fieldname": "translator_app_source",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Translator App Source",
+   "read_only": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2022-03-04 18:04:12.360684",
+ "modified_by": "Administrator",
+ "module": "Translator",
+ "name": "Extract Strings Job",
+ "naming_rule": "Random",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

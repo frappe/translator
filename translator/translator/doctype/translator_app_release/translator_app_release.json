@@ -1,0 +1,95 @@
+{
+ "actions": [],
+ "allow_guest_to_view": 1,
+ "allow_rename": 1,
+ "creation": "2021-11-08 18:27:29.922787",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "translator_app",
+  "repository_owner",
+  "translator_app_source",
+  "route",
+  "amended_from",
+  "is_published"
+ ],
+ "fields": [
+  {
+   "fieldname": "translator_app",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_preview": 1,
+   "in_standard_filter": 1,
+   "label": "Translator App",
+   "options": "Translator App",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "translator_app.repository_owner",
+   "fieldname": "repository_owner",
+   "fieldtype": "Data",
+   "label": "Repository Owner",
+   "read_only": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "route",
+   "fieldtype": "Data",
+   "label": "Route"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Translator App Release",
+   "print_hide": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "translator_app_source",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Translator App Source",
+   "reqd": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "is_published",
+   "fieldtype": "Check",
+   "label": "Is Published"
+  }
+ ],
+ "has_web_view": 1,
+ "links": [
+  {
+   "link_doctype": "Translations Release Job",
+   "link_fieldname": "translator_app_release"
+  }
+ ],
+ "modified": "2022-03-04 17:22:21.065269",
+ "modified_by": "Administrator",
+ "module": "Translator",
+ "name": "Translator App Release",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "route": "translations",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}
